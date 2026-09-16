@@ -47,7 +47,6 @@
     }
     .nav-container { max-width: 1200px; margin: auto; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; min-height: 90px; }
     
-    /* Logo updated to Background.png */
     .brand-logo { height: 75px; width: auto; max-width: 400px; object-fit: contain; }
     
     nav { display: flex; gap: 20px; align-items: center; }
@@ -71,11 +70,11 @@
     h1, h2, h3 { font-family: var(--font-brand); text-transform: uppercase; margin-bottom: 15px; color: #fff; }
     h1 { font-size: 2.2rem; margin-top: -80px; margin-bottom: 40px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
     h2 { font-size: 1.4rem; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); margin-bottom: 25px; }
-    p { color: var(--text-muted); margin-bottom: 15px; }
+    p { color: var(--text-muted); margin-bottom: 15px; font-size: 0.95rem; }
 
     /* Panels with Gradient Borders */
-    .grid-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
-    @media (max-width: 850px) { .grid-layout { grid-template-columns: 1fr; } }
+    .grid-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+    @media (max-width: 900px) { .grid-layout { grid-template-columns: 1fr; } }
     
     .panel { 
       background: var(--bg-panel); 
@@ -86,8 +85,15 @@
       border-image: var(--brand-gradient);
       border-image-slice: 1;
     }
-    .panel h3 { font-size: 1.1rem; font-family: var(--font-ui); font-weight: 700; letter-spacing: -0.5px; }
     
+    /* Info Lists (ARL Style) */
+    .info-list { list-style: none; padding: 0; margin-top: 10px; margin-bottom: 25px; }
+    .info-list li { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; font-size: 0.9rem; color: var(--text-muted); }
+    .info-list li::before { content: '—'; color: var(--brand-red); font-weight: bold; }
+    .info-list li strong { color: #fff; font-weight: 500; margin-left: 4px; }
+    .info-list a { color: var(--brand-red); text-decoration: none; transition: opacity 0.2s; }
+    .info-list a:hover { opacity: 0.8; text-decoration: underline; }
+
     /* Tables with Gradient Borders */
     .table-wrapper { 
       background: var(--bg-panel); 
@@ -136,20 +142,62 @@
 
     <!-- TAB: OVERVIEW (Home) -->
     <div id="tab-home" class="tab-view active">
-      <div class="grid-layout">
-        <div>
-          <div class="panel" style="margin-bottom: 20px;">
-            <h3>Welcome to Season 1</h3>
-            <p>The AESPCC brings premier single-make racing to the Oceanic region. Utilizing the Porsche 911 GT3 Cup (992.2) on iRacing, the championship delivers a highly competitive, open-setup environment divided into Pro, Pro-Am, and Am classifications.</p>
+      <div class="panel" style="margin-bottom: 20px;">
+        <div class="grid-layout">
+          
+          <!-- Left Column: Description -->
+          <div>
+            <h2 style="border: none; margin-bottom: 10px; font-size: 1.8rem;">AESPCC Season 1</h2>
+            <p>Get ready for the inaugural season of the Australian E-Sport Porsche Cup Championship! Kicking off this October, we are bringing premier single-make racing to the Oceanic region utilizing iRacing's Porsche 911 GT3 Cup (992.2) car.</p>
+            <p>Our calendar mirrors the official iRacing Porsche Cup series, ensuring drivers can easily prepare and practice. Drivers will battle across diverse track layouts and four distinct weekend formats, ranging from 16-minute super sprints with inverted grids to 60-minute endurance features with compulsory pit stops.</p>
+            <p>With a 60-driver capacity, the field is split into three competitive driver divisions (Pro, Pro-Am, and Am) following a mandatory pre-qualifying week. Trophies await the class champions, along with an estimated $500 AUD prize pool for the Pro category.</p>
+            <p>As long as you hold a D class sports car license, you can register for the series. Pay your entry fee, join the Discord, and get your name down to secure a spot on the grid!</p>
           </div>
-        </div>
 
-        <div>
-          <div class="panel">
-            <h3>League Bulletins</h3>
-            <p style="font-size: 0.9rem; margin-bottom: 10px;"><strong style="color:#fff;">Sep 16:</strong> Entry Fees Due</p>
-            <p style="font-size: 0.9rem;"><strong style="color:#fff;">Sep 10:</strong> Pre-Qualifying Opens</p>
+          <!-- Right Column: Info Grids -->
+          <div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              
+              <div>
+                <h3 style="font-size: 1rem; margin-bottom: 5px;">Race Day Schedule</h3>
+                <ul class="info-list">
+                  <li>Practice: <strong>19:00 AEST</strong></li>
+                  <li>Qualifying: <strong>20:00 AEST</strong></li>
+                  <li>Race(s) start: <strong>20:15 AEST</strong></li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 style="font-size: 1rem; margin-bottom: 5px;">Series Info</h3>
+                <ul class="info-list">
+                  <li>Car: <strong>Porsche 911 GT3 Cup (992.2)</strong></li>
+                  <li>Setup: <strong>Open Setup</strong></li>
+                  <li>Prize Pool: <strong>$500 AUD (Pro) + Trophies</strong></li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 style="font-size: 1rem; margin-bottom: 5px;">Championships</h3>
+                <ul class="info-list">
+                  <li>Drivers: <strong>Pro</strong></li>
+                  <li>Drivers: <strong>Pro-Am</strong></li>
+                  <li>Drivers: <strong>Am</strong></li>
+                  <li>Teams: <strong>Overall</strong></li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 style="font-size: 1rem; margin-bottom: 5px;">Useful Links</h3>
+                <ul class="info-list">
+                  <li>Rules & Regs: <strong><a href="#">Coming Soon</a></strong></li>
+                  <li>Discord: <strong><a href="https://discord.gg/your-invite-link" target="_blank">AESPCC Discord</a></strong></li>
+                  <li>Registration: <strong><a href="#">Open Now</a></strong></li>
+                </ul>
+              </div>
+              
+            </div>
           </div>
+
         </div>
       </div>
     </div>
