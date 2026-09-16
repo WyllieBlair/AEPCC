@@ -16,8 +16,8 @@
     }
 
     :root {
-      /* Simplified Color Palette */
       --brand-red: #da291c;
+      --brand-discord: #5865F2;
       --bg-page: #0f1115;
       --bg-panel: #181b21;
       --bg-panel-hover: #1e222a;
@@ -34,14 +34,15 @@
 
     /* Clean Navbar */
     header { background: var(--bg-panel); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; }
-    .nav-container { max-width: 1200px; margin: auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; height: 70px; }
-    .brand-logo { height: 45px; width: auto; }
+    .nav-container { max-width: 1200px; margin: auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; height: 75px; }
+    .brand-logo { height: 40px; width: auto; }
     
     nav { display: flex; gap: 20px; align-items: center; }
     nav button { background: none; border: none; color: var(--text-muted); font-family: var(--font-ui); font-size: 0.95rem; font-weight: 600; cursor: pointer; padding: 24px 0; border-bottom: 2px solid transparent; transition: color 0.2s; }
     nav button:hover, nav button.active { color: #fff; border-bottom-color: var(--brand-red); }
-    .btn-protest { background: var(--border-color); color: #fff; padding: 8px 16px; border-radius: 4px; font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: background 0.2s; }
-    .btn-protest:hover { background: var(--brand-red); }
+    
+    .btn-discord { background: var(--brand-discord); color: #fff; padding: 8px 16px; border-radius: 4px; font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: opacity 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-discord:hover { opacity: 0.9; }
 
     /* Simple Hero Image */
     .hero { width: 100%; height: 350px; background: url('PESCAPAC_Adelaide_Race_7_080126.png') center/cover no-repeat; border-bottom: 1px solid var(--border-color); position: relative; }
@@ -76,16 +77,6 @@
     
     .text-highlight { color: #fff; font-weight: 600; }
     .subtext { display: block; font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
-    
-    .status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; }
-    .dot-green { background: #10b981; }
-    .dot-red { background: #ef4444; }
-
-    /* News Items */
-    .news-list { display: flex; flex-direction: column; gap: 20px; }
-    .news-item { display: flex; gap: 15px; align-items: center; }
-    .news-item img { width: 60px; height: 60px; border-radius: 6px; object-fit: cover; }
-    .news-date { font-size: 0.75rem; color: var(--brand-red); font-weight: 600; text-transform: uppercase; }
   </style>
 </head>
 <body>
@@ -94,13 +85,13 @@
   <header>
     <div class="nav-container">
       <a href="#" onclick="switchTab('home')">
-        <img src="iracinglogoDocument.png" alt="iRacing Logo" class="brand-logo">
+        <img src="AESPCC-Long.png" alt="AESPCC Logo" class="brand-logo">
       </a>
       <nav id="nav-tabs">
         <button class="active" onclick="switchTab('home')">Overview</button>
         <button onclick="switchTab('standings')">Standings</button>
         <button onclick="switchTab('results')">Results</button>
-        <a href="https://forms.google.com/your-form-link" target="_blank" class="btn-protest">Protest Form</a>
+        <a href="https://discord.gg/your-invite-link" target="_blank" class="btn-discord">Join Discord</a>
       </nav>
     </div>
   </header>
@@ -117,8 +108,6 @@
     <div id="tab-home" class="tab-view active">
       <div class="grid-layout">
         <div>
-          <img src="AESPCC-Long.png" alt="AESPCC Logo" style="width: 100%; max-width: 500px; margin-bottom: 30px;">
-          
           <div class="panel" style="margin-bottom: 20px;">
             <h3>Welcome to Season 1</h3>
             <p>The AESPCC brings premier single-make racing to the Oceanic region. Utilizing the Porsche 911 GT3 Cup (992.2) on iRacing, the championship delivers a highly competitive, open-setup environment divided into Pro, Pro-Am, and Am classifications.</p>
@@ -128,22 +117,8 @@
         <div>
           <div class="panel">
             <h3>League Bulletins</h3>
-            <div class="news-list" style="margin-top: 15px;">
-              <div class="news-item">
-                <img src="AESPCC-Pfp.jpg" alt="Update">
-                <div>
-                  <div class="news-date">Sep 16, 2026</div>
-                  <div class="text-highlight">Entry Fees Due</div>
-                </div>
-              </div>
-              <div class="news-item">
-                <img src="AESPCC-Pfp.jpg" alt="Update">
-                <div>
-                  <div class="news-date">Sep 10, 2026</div>
-                  <div class="text-highlight">Pre-Qualifying Opens</div>
-                </div>
-              </div>
-            </div>
+            <p style="font-size: 0.9rem; margin-bottom: 10px;"><strong style="color:#fff;">Sep 16:</strong> Entry Fees Due</p>
+            <p style="font-size: 0.9rem;"><strong style="color:#fff;">Sep 10:</strong> Pre-Qualifying Opens</p>
           </div>
         </div>
       </div>
@@ -160,12 +135,10 @@
               <th>Driver</th>
               <th>Class</th>
               <th>Net Pts</th>
-              <th>License</th>
-              <th>Status</th>
             </tr>
           </thead>
           <tbody id="driver-rows">
-            <tr><td colspan="6" style="text-align:center;">Loading data...</td></tr>
+            <tr><td colspan="4" style="text-align:center;">Loading data...</td></tr>
           </tbody>
         </table>
       </div>
@@ -228,10 +201,6 @@
 
       drivers.forEach((driver, idx) => {
         const tr = document.createElement('tr');
-        const statusHtml = driver.ban_active 
-          ? `<span class="status-dot dot-red"></span> Ban Active` 
-          : `<span class="status-dot dot-green"></span> Active`;
-
         tr.innerHTML = `
           <td class="text-highlight">${idx + 1}</td>
           <td>
@@ -240,8 +209,6 @@
           </td>
           <td>${driver.class}</td>
           <td class="text-highlight">${driver.net_points}</td>
-          <td>${driver.license_points || 0}</td>
-          <td style="font-size: 0.85rem;">${statusHtml}</td>
         `;
         tbody.appendChild(tr);
       });
