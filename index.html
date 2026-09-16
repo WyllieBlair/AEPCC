@@ -34,11 +34,13 @@
 
     /* Clean Navbar */
     header { background: var(--bg-panel); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; }
-    .nav-container { max-width: 1200px; margin: auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; height: 75px; }
-    .brand-logo { height: 40px; width: auto; }
+    .nav-container { max-width: 1200px; margin: auto; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; min-height: 90px; }
+    
+    /* Greatly increased logo size */
+    .brand-logo { height: 75px; width: auto; max-width: 400px; object-fit: contain; }
     
     nav { display: flex; gap: 20px; align-items: center; }
-    nav button { background: none; border: none; color: var(--text-muted); font-family: var(--font-ui); font-size: 0.95rem; font-weight: 600; cursor: pointer; padding: 24px 0; border-bottom: 2px solid transparent; transition: color 0.2s; }
+    nav button { background: none; border: none; color: var(--text-muted); font-family: var(--font-ui); font-size: 0.95rem; font-weight: 600; cursor: pointer; padding: 10px 0; border-bottom: 2px solid transparent; transition: color 0.2s; }
     nav button:hover, nav button.active { color: #fff; border-bottom-color: var(--brand-red); }
     
     .btn-discord { background: var(--brand-discord); color: #fff; padding: 8px 16px; border-radius: 4px; font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: opacity 0.2s; display: inline-flex; align-items: center; gap: 6px; }
