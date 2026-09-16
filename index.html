@@ -9,22 +9,18 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   
   <style>
-    /* Custom Font Import - Ensure you have your PP Monument files in the same folder */
     @font-face {
       font-family: 'PP Monument';
-      src: local('PP Monument'), url('PPMonument-Regular.woff2') format('woff2'), url('PPMonument-Regular.otf') format('opentype');
-      font-weight: normal;
-      font-style: normal;
+      src: local('PP Monument'), url('PPMonument-Regular.woff2') format('woff2');
+      font-weight: normal; font-style: normal;
     }
     @font-face {
       font-family: 'PP Monument';
-      src: local('PP Monument Black'), url('PPMonument-Black.woff2') format('woff2'), url('PPMonument-Black.otf') format('opentype');
-      font-weight: 800;
-      font-style: normal;
+      src: local('PP Monument Black'), url('PPMonument-Black.woff2') format('woff2');
+      font-weight: 800; font-style: normal;
     }
 
     :root {
-      /* Brand Colors matched to AESPCC Logos */
       --brand-blue: #001489;
       --brand-red: #da291c;
       --brand-gradient: linear-gradient(90deg, var(--brand-blue), var(--brand-red));
@@ -43,253 +39,76 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: var(--font-body);
-      background-color: var(--bg-dark);
-      color: var(--text-main);
-      line-height: 1.5;
-      overflow-x: hidden;
-    }
+    body { font-family: var(--font-body); background-color: var(--bg-dark); color: var(--text-main); line-height: 1.5; overflow-x: hidden; }
 
-    /* Top Strip / Header */
-    .top-bar {
-      background: #000;
-      border-bottom: 1px solid var(--border-subtle);
-      font-size: 0.78rem;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      padding: 8px 0;
-      color: var(--text-muted);
-    }
-    .top-bar-content {
-      max-width: 1200px;
-      margin: auto;
-      padding: 0 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    header {
-      background: rgba(18, 20, 26, 0.95);
-      backdrop-filter: blur(10px);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      border-bottom: 2px solid transparent;
-      border-image: var(--brand-gradient);
-      border-image-slice: 1;
-    }
-    .nav-container {
-      max-width: 1200px;
-      margin: auto;
-      padding: 0 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      height: 80px;
-    }
-    
-    /* Header Logo Sizing */
-    .brand-logo {
-      height: 60px;
-      width: auto;
-      display: block;
-      transition: transform 0.2s ease;
-    }
+    /* Header */
+    header { background: rgba(18, 20, 26, 0.95); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; border-bottom: 2px solid transparent; border-image: var(--brand-gradient); border-image-slice: 1; }
+    .nav-container { max-width: 1200px; margin: auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; height: 80px; }
+    .brand-logo { height: 60px; width: auto; transition: transform 0.2s ease; }
     .brand-logo:hover { transform: scale(1.02); }
 
-    /* Navigation Tabs */
+    /* Navigation */
     nav { display: flex; gap: 4px; align-items: center; }
-    nav button {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-family: var(--font-heading);
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      padding: 10px 16px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      border-bottom: 3px solid transparent;
-    }
-    nav button:hover, nav button.active {
-      color: #fff;
-      border-bottom-color: var(--brand-red);
-    }
-    .btn-protest {
-      background: var(--brand-gradient) !important;
-      color: #fff !important;
-      padding: 7px 18px !important;
-      border-radius: 3px;
-      font-family: var(--font-heading);
-      font-size: 0.85rem !important;
-      margin-left: 10px;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      text-transform: uppercase;
-    }
-    .btn-protest:hover { opacity: 0.9; }
+    nav button { background: none; border: none; color: var(--text-muted); font-family: var(--font-heading); font-size: 0.9rem; text-transform: uppercase; padding: 10px 16px; cursor: pointer; border-bottom: 3px solid transparent; }
+    nav button:hover, nav button.active { color: #fff; border-bottom-color: var(--brand-red); }
+    .btn-protest { background: var(--brand-gradient) !important; color: #fff !important; padding: 7px 18px !important; border-radius: 3px; font-family: var(--font-heading); font-size: 0.85rem !important; margin-left: 10px; text-decoration: none; text-transform: uppercase; }
 
-    /* Hero Section */
+    /* Hero */
     .hero {
-      position: relative;
-      height: 480px;
-      background: linear-gradient(180deg, rgba(10, 11, 14, 0.4) 0%, rgba(10, 11, 14, 0.95) 100%), 
-                  url('hero-car.jpg') center/cover no-repeat;
-      display: flex;
-      align-items: flex-end;
-      padding-bottom: 50px;
-      border-bottom: 1px solid var(--border-subtle);
+      position: relative; height: 480px; display: flex; align-items: flex-end; padding-bottom: 50px; border-bottom: 1px solid var(--border-subtle);
+      background: linear-gradient(180deg, rgba(10, 11, 14, 0.4) 0%, rgba(10, 11, 14, 0.95) 100%), url('image_adff3f.jpg') center/cover no-repeat;
     }
-    .hero-content {
-      max-width: 1200px;
-      margin: auto;
-      padding: 0 20px;
-      width: 100%;
-    }
-    .hero-sub {
-      font-family: var(--font-heading);
-      color: var(--brand-red);
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      font-size: 1.1rem;
-    }
-    .hero-title {
-      font-family: var(--font-heading);
-      font-size: 3.5rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      line-height: 1;
-      margin: 8px 0 16px;
-      color: #fff;
-    }
+    .hero-content { max-width: 1200px; margin: auto; padding: 0 20px; width: 100%; }
+    .hero-title { font-family: var(--font-heading); font-size: 3.5rem; font-weight: 800; text-transform: uppercase; line-height: 1; margin: 8px 0 16px; color: #fff; }
     .hero-tags { display: flex; gap: 12px; flex-wrap: wrap; }
-    .hero-tag {
-      background: rgba(0, 0, 0, 0.7);
-      border: 1px solid var(--border-bright);
-      padding: 6px 14px;
-      border-radius: 4px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: #d1d5db;
-    }
+    .hero-tag { background: rgba(0, 0, 0, 0.7); border: 1px solid var(--border-bright); padding: 6px 14px; border-radius: 4px; font-size: 0.85rem; font-weight: 500; }
 
-    /* Container & Section Layout */
+    /* Layout */
     .main-wrapper { max-width: 1200px; margin: auto; padding: 40px 20px; }
     .tab-view { display: none; }
     .tab-view.active { display: block; animation: tabFade 0.3s ease-in-out; }
     @keyframes tabFade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* Section Headers */
-    .section-header {
-      margin-bottom: 25px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      border-bottom: 1px solid var(--border-subtle);
-      padding-bottom: 12px;
-    }
-    .section-title {
-      font-family: var(--font-heading);
-      font-size: 2rem;
-      font-weight: 800;
-      text-transform: uppercase;
-    }
-    .section-desc { color: var(--text-muted); font-size: 0.95rem; }
-
+    /* Typography */
+    .section-header { margin-bottom: 25px; display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 1px solid var(--border-subtle); padding-bottom: 12px; }
+    .section-title { font-family: var(--font-heading); font-size: 2rem; text-transform: uppercase; }
+    
     /* Cards & Grids */
     .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
     .grid-2 { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
-    @media (max-width: 850px) { .grid-2 { grid-template-columns: 1fr; } }
+    .card { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 24px; position: relative; }
+    .card-accent-bar { position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--brand-gradient); border-radius: 6px 6px 0 0; }
+    .card-title { font-family: var(--font-heading); font-size: 1.2rem; text-transform: uppercase; margin-bottom: 12px; }
 
-    .card {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
-      border-radius: 6px;
-      padding: 24px;
-      position: relative;
-    }
-    .card-accent-bar {
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 4px;
-      background: var(--brand-gradient);
-      border-top-left-radius: 6px;
-      border-top-right-radius: 6px;
-    }
-    .card-title {
-      font-family: var(--font-heading);
-      font-size: 1.2rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-
-    /* News Image Layout */
-    .news-item { display: flex; gap: 15px; align-items: flex-start; margin-bottom: 20px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 15px; }
-    .news-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-    .news-thumb { width: 100px; height: 100px; object-fit: cover; border-radius: 4px; border: 1px solid var(--border-bright); }
-    .news-content h3 { font-family: var(--font-heading); font-size: 1rem; color: #fff; margin: 0 0 5px 0; }
-
-    /* Format Badge Matrix */
-    .format-card {
-      background: var(--bg-surface-elevated);
-      border-left: 4px solid var(--brand-blue);
-      padding: 16px;
-      margin-bottom: 14px;
-      border-radius: 0 4px 4px 0;
-    }
-    .format-card:nth-child(even) { border-left-color: var(--brand-red); }
-    .format-header { display: flex; justify-content: space-between; margin-bottom: 6px; }
-    .format-name { font-weight: 700; font-family: var(--font-heading); font-size: 0.9rem; }
-    
     /* Tables */
-    .table-container {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
-      border-radius: 6px;
-      overflow-x: auto;
-    }
+    .table-container { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 6px; overflow-x: auto; margin-bottom: 30px; }
     table { width: 100%; border-collapse: collapse; text-align: left; }
-    th {
-      background: #0d0f14;
-      color: var(--text-muted);
-      font-family: var(--font-heading);
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      padding: 14px 18px;
-      border-bottom: 1px solid var(--border-subtle);
-    }
+    th { background: #0d0f14; color: var(--text-muted); font-family: var(--font-heading); font-size: 0.85rem; text-transform: uppercase; padding: 14px 18px; border-bottom: 1px solid var(--border-subtle); }
     td { padding: 14px 18px; border-bottom: 1px solid var(--border-subtle); font-size: 0.9rem; }
     tr:hover td { background: rgba(255, 255, 255, 0.02); }
-    .pos-cell { font-weight: 800; font-family: var(--font-heading); font-size: 1.1rem; width: 40px; }
-    .driver-name { font-weight: 600; color: #fff; }
-    .driver-team { font-size: 0.78rem; color: var(--text-muted); }
+    .pos-cell { font-family: var(--font-heading); font-size: 1.1rem; width: 40px; }
+    
+    /* Badges */
+    .badge-class { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+    .class-pro { background: rgba(213, 0, 28, 0.15); color: #ff4d64; border: 1px solid rgba(213, 0, 28, 0.4); }
+    .class-pro-am { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+    .class-am { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); }
+    .badge-ban { background: #e11d48; color: #fff; padding: 2px 7px; border-radius: 3px; font-size: 0.7rem; font-weight: 700; }
+    .badge-ok { background: #10b981; color: #fff; padding: 2px 7px; border-radius: 3px; font-size: 0.7rem; }
 
     /* Media Gallery */
     .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
-    .gallery-card { border-radius: 6px; overflow: hidden; background: var(--bg-surface); border: 1px solid var(--border-subtle); }
-    .gallery-img { width: 100%; height: auto; display: block; border-bottom: 4px solid var(--brand-blue); }
+    .gallery-card { border-radius: 6px; overflow: hidden; background: var(--bg-surface); border: 1px solid var(--border-subtle); transition: transform 0.2s; }
+    .gallery-card:hover { transform: translateY(-4px); }
+    .gallery-img { width: 100%; height: 220px; object-fit: cover; border-bottom: 4px solid var(--brand-blue); }
+    .gallery-info { padding: 15px; }
   </style>
 </head>
 <body>
 
-  <!-- Top Strip -->
-  <div class="top-bar">
-    <div class="top-bar-content">
-      <span>Official Australian Oceanic iRacing League</span>
-      <span>Porsche 911 GT3 Cup (992.2) • Open Setup</span>
-    </div>
-  </div>
-
-  <!-- Header & Navigation -->
+  <!-- Header -->
   <header>
     <div class="nav-container">
-      <!-- Using the iRacing variant logo for the clean navbar -->
       <a href="#" onclick="switchTab('home')">
         <img src="iracinglogoDocument.png" alt="AESPCC Logo" class="brand-logo">
       </a>
@@ -299,21 +118,16 @@
         <button onclick="switchTab('results')">Results</button>
         <button onclick="switchTab('standings')">Standings</button>
         <button onclick="switchTab('media')">Media</button>
-        <a href="https://forms.google.com/your-protest-form" target="_blank" class="btn-protest">
-          Protest Form ↗
-        </a>
       </nav>
     </div>
   </header>
 
-  <!-- Hero Section -->
+  <!-- Hero -->
   <div class="hero">
     <div class="hero-content">
-      <div class="hero-sub">Premier Single-Make Esports</div>
       <h1 class="hero-title">Australian E-Sport<br>Porsche Cup Championship</h1>
       <div class="hero-tags">
         <div class="hero-tag">🏁 Season Starts Oct 1</div>
-        <div class="hero-tag">👥 60 Driver Cap</div>
         <div class="hero-tag">🏆 Pro / Pro-Am / Am</div>
       </div>
     </div>
@@ -325,140 +139,109 @@
     <div id="tab-home" class="tab-view active">
       <div class="grid-2">
         <div>
-          <!-- Feature Image / Long Logo Integration -->
           <div style="margin-bottom: 24px;">
-            <img src="AESPCC-Long.png" alt="AESPCC Full Logo" style="width: 100%; height: auto; border-radius: 6px;">
+            <img src="AESPCC-Long.png" alt="AESPCC Full Logo" style="width: 100%; height: auto; border-radius: 6px; background: #fff;">
           </div>
-
-          <div class="card" style="margin-bottom: 24px;">
-            <div class="card-accent-bar"></div>
-            <h2 class="card-title">Season Announcement & Class Structure</h2>
-            <p style="margin-bottom: 14px; color: #d1d5db;">
-              Welcome to the official portal for the AESPCC. Competing exclusively in the <strong>Porsche 911 GT3 Cup (992.2)</strong>, the championship features tiered driver divisions, dynamic race weekend configurations, live stewarding, and team championships.
-            </p>
-          </div>
-
-          <!-- News Widget using Profile Pic Logo -->
           <div class="card">
             <div class="card-accent-bar"></div>
-            <h2 class="card-title">Latest Race Control Bulletins</h2>
-            
-            <div class="news-item">
-              <img src="AESPCC-Pfp.jpg" alt="AESPCC Update" class="news-thumb">
-              <div class="news-content">
-                <span style="font-size: 0.75rem; color: var(--brand-red); font-weight: bold; text-transform: uppercase;">Sep 16 • Bulletin #02</span>
-                <h3>Entry Fee & Registration</h3>
-                <p style="font-size: 0.85rem; color: var(--text-muted);">Drivers must remit their $30 AUD season registration fee prior to September 26 to secure their car number and guaranteed grid allocation.</p>
+            <h2 class="card-title">Latest Updates</h2>
+            <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+              <img src="AESPCC-Pfp.jpg" alt="Update" style="width: 80px; height: 80px; border-radius: 4px;">
+              <div>
+                <strong style="color: var(--brand-red);">Bulletin #02</strong>
+                <p style="font-size: 0.9rem; color: var(--text-muted);">Entry fees are due September 26th.</p>
               </div>
             </div>
-            
-            <div class="news-item">
-              <img src="AESPCC-Pfp.jpg" alt="AESPCC Update" class="news-thumb">
-              <div class="news-content">
-                <span style="font-size: 0.75rem; color: var(--brand-blue); font-weight: bold; text-transform: uppercase;">Sep 12 • Bulletin #01</span>
-                <h3>Safety Car & Penalties</h3>
-                <p style="font-size: 0.85rem; color: var(--text-muted);">Full Course Yellow rules and steward review criteria updated. Incidents on Lap 1 remain under mandatory automated investigation.</p>
-              </div>
-            </div>
-
           </div>
         </div>
-
         <div>
           <div class="card">
             <div class="card-accent-bar"></div>
             <h2 class="card-title">Championship Spec</h2>
-            <div style="display: flex; flex-direction: column; gap: 12px; font-size: 0.9rem;">
-              <div style="display:flex; justify-content:space-between; border-bottom: 1px solid var(--border-subtle); padding-bottom: 8px;">
-                <span style="color:var(--text-muted);">Platform</span>
-                <strong>iRacing</strong>
-              </div>
-              <div style="display:flex; justify-content:space-between; border-bottom: 1px solid var(--border-subtle); padding-bottom: 8px;">
-                <span style="color:var(--text-muted);">Vehicle</span>
-                <strong>Porsche 992.2 Cup</strong>
-              </div>
-              <div style="display:flex; justify-content:space-between; border-bottom: 1px solid var(--border-subtle); padding-bottom: 8px;">
-                <span style="color:var(--text-muted);">License Gate</span>
-                <strong>Sportscar D or Above</strong>
-              </div>
-              <div style="display:flex; justify-content:space-between; padding-top: 4px;">
-                <span style="color:var(--text-muted);">Estimated Prize Pool</span>
-                <strong style="color:var(--gold-accent);">$500 AUD (Pro)</strong>
-              </div>
-            </div>
+            <p style="font-size: 0.9rem; color: var(--text-muted);"><strong>Vehicle:</strong> Porsche 992.2 Cup<br><strong>Setup:</strong> Open<br><strong>Teams:</strong> 3 Drivers (Top 2 Score)</p>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- TAB 2: FORMATS (Same structure, fonts auto-applied) -->
+    <!-- TAB 2: FORMATS -->
     <div id="tab-formats" class="tab-view">
       <div class="section-header">
-        <div>
-          <h2 class="section-title">Weekend Formats</h2>
-          <p class="section-desc">Four specialized round configurations across the season calendar.</p>
-        </div>
+        <h2 class="section-title">Weekend Formats</h2>
       </div>
       <div class="grid-3">
-        <div class="format-card">
-          <div class="format-header"><span class="format-name">Format 1: Sprint</span></div>
-          <p style="font-size: 0.88rem; color: var(--text-muted);">16-minute sprint followed by a 24-minute Feature race (inverted top 8).</p>
-        </div>
-        <div class="format-card">
-          <div class="format-header"><span class="format-name">Format 2: Regular</span></div>
-          <p style="font-size: 0.88rem; color: var(--text-muted);">Full 40-minute Feature race. Grid ordered by qualifying times.</p>
-        </div>
-        <div class="format-card">
-          <div class="format-header"><span class="format-name">Format 3: Endurance</span></div>
-          <p style="font-size: 0.88rem; color: var(--text-muted);">60-minute race. 65% Fuel cap with mandatory pit servicing.</p>
-        </div>
+        <div class="card"><h3 class="card-title">Format 1: Sprint</h3><p>16-min sprint, 24-min feature (inverted top 8).</p></div>
+        <div class="card"><h3 class="card-title">Format 2: Regular</h3><p>40-min feature. Grid by qualifying.</p></div>
+        <div class="card"><h3 class="card-title">Format 3: Endurance</h3><p>60-min race. 65% fuel cap + pit stop.</p></div>
       </div>
     </div>
 
-    <!-- TAB 3, 4, 5 (Results, Standings, Media) remain structurally identical, 
-         but will automatically inherit the new PP Monument font on all table headers 
-         and section titles thanks to the CSS updates! -->
-    
-    <div id="tab-standings" class="tab-view">
+    <!-- TAB 3: RESULTS -->
+    <div id="tab-results" class="tab-view">
       <div class="section-header">
-        <div>
-          <h2 class="section-title">Championship Standings</h2>
-        </div>
+         <h2 class="section-title">Latest Race Results</h2>
       </div>
+      <select id="round-select" style="padding: 10px; background: var(--bg-surface); color: white; border: 1px solid var(--border-subtle); border-radius: 4px; width: 100%; max-width: 300px; margin-bottom: 20px;">
+        <option>Round 1 - Waiting for event...</option>
+      </select>
       <div class="table-container">
         <table>
           <thead>
-            <tr>
-              <th class="pos-cell">Pos</th>
-              <th>Driver</th>
-              <th>Class</th>
-              <th>Net Points</th>
-            </tr>
+            <tr><th class="pos-cell">Pos</th><th>Driver</th><th>Class</th><th>Fastest Lap</th><th>Incidents</th></tr>
           </thead>
-          <tbody id="driver-rows">
-            <tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Loading live data...</td></tr>
+          <tbody id="results-rows">
+            <tr><td colspan="5" style="text-align:center; color:var(--text-muted);">Results will populate 24 hours post-race after stewarding.</td></tr>
           </tbody>
         </table>
       </div>
     </div>
 
-    <div id="tab-results" class="tab-view">
-       <div class="section-header">
-        <div><h2 class="section-title">Session Results</h2></div>
+    <!-- TAB 4: STANDINGS -->
+    <div id="tab-standings" class="tab-view">
+      <div class="section-header">
+        <h2 class="section-title">Driver Championship</h2>
       </div>
-      <div class="card" style="text-align: center; padding: 50px;"><p>Pending Round 1 Completion.</p></div>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr><th class="pos-cell">Pos</th><th>Driver</th><th>Team</th><th>Class</th><th>Net Points</th><th>License Pts</th><th>Status</th></tr>
+          </thead>
+          <tbody id="driver-rows"></tbody>
+        </table>
+      </div>
+
+      <div class="section-header" style="margin-top: 40px;">
+        <h2 class="section-title">Team Championship</h2>
+      </div>
+      <div class="table-container" style="max-width: 700px;">
+        <table>
+          <thead>
+            <tr><th class="pos-cell">Pos</th><th>Team Name</th><th>Total Points</th></tr>
+          </thead>
+          <tbody id="team-rows"></tbody>
+        </table>
+      </div>
     </div>
 
+    <!-- TAB 5: MEDIA -->
     <div id="tab-media" class="tab-view">
       <div class="section-header">
-        <div><h2 class="section-title">Media Gallery</h2></div>
+        <h2 class="section-title">Media Gallery</h2>
       </div>
       <div class="gallery-grid">
         <div class="gallery-card">
-          <img src="AESPCC-Long.png" alt="AESPCC Logo" class="gallery-img">
+          <img src="image_adff3f.jpg" alt="Track Action" class="gallery-img">
+          <div class="gallery-info">
+            <strong style="color:#fff;">Pre-Season Testing</strong>
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-top: 5px;">The #30 entry of Wyllie Blair navigating the apex during the final open practice session.</p>
+          </div>
         </div>
         <div class="gallery-card">
-          <img src="hero-car.jpg" alt="Track Action" class="gallery-img">
+          <img src="AESPCC-Long.png" alt="AESPCC Logo" class="gallery-img" style="object-fit: contain; background: #fff; padding: 20px;">
+          <div class="gallery-info">
+            <strong style="color:#fff;">Official Broadcast Assets</strong>
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-top: 5px;">AESPCC Long-form logo.</p>
+          </div>
         </div>
       </div>
     </div>
