@@ -2,148 +2,609 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Australian Porsche Cup Championship</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Australian Porsche Cup Championship | Official Esports Series</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
   <style>
     :root {
-      --bg-main: #0f1117;
-      --bg-card: #161b26;
-      --text-main: #e1e7ec;
-      --text-muted: #8892b0;
-      --accent: #d32f2f; /* Porsche-style Red */
-      --accent-hover: #b71c1c;
-      --border: #232733;
+      --porsche-red: #d5001c;
+      --porsche-red-hover: #b00017;
+      --bg-dark: #0a0b0e;
+      --bg-surface: #12141a;
+      --bg-surface-elevated: #1a1d26;
+      --border-subtle: #242938;
+      --border-bright: #363d52;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --gold-accent: #f59e0b;
     }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg-main); color: var(--text-main); margin: 0; }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    /* Top Strip / Header */
+    .top-bar {
+      background: #000;
+      border-bottom: 1px solid var(--border-subtle);
+      font-size: 0.78rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 8px 0;
+      color: var(--text-muted);
+    }
+    .top-bar-content {
+      max-width: 1200px;
+      margin: auto;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header {
+      background: rgba(18, 20, 26, 0.95);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 2px solid var(--porsche-red);
+    }
+    .nav-container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 75px;
+    }
+    .brand-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2.1rem;
+      font-weight: 800;
+      font-style: italic;
+      letter-spacing: -0.5px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #fff;
+    }
+    .brand-badge {
+      background: var(--porsche-red);
+      color: #fff;
+      font-size: 0.75rem;
+      font-style: normal;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 2px;
+      letter-spacing: 1px;
+    }
+
+    /* Navigation Tabs */
+    nav { display: flex; gap: 4px; align-items: center; }
+    nav button {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 10px 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border-bottom: 3px solid transparent;
+    }
+    nav button:hover, nav button.active {
+      color: #fff;
+      border-bottom-color: var(--porsche-red);
+    }
+    .btn-protest {
+      background: var(--porsche-red) !important;
+      color: #fff !important;
+      padding: 7px 18px !important;
+      border-radius: 3px;
+      font-size: 0.95rem !important;
+      margin-left: 10px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-protest:hover { background: var(--porsche-red-hover) !important; }
+
+    /* Hero Section */
+    .hero {
+      position: relative;
+      height: 480px;
+      background: linear-gradient(180deg, rgba(10, 11, 14, 0.4) 0%, rgba(10, 11, 14, 0.95) 100%), 
+                  url('hero-car.jpg') center/cover no-repeat;
+      display: flex;
+      align-items: flex-end;
+      padding-bottom: 50px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .hero-content {
+      max-width: 1200px;
+      margin: auto;
+      padding: 0 20px;
+      width: 100%;
+    }
+    .hero-sub {
+      font-family: 'Barlow Condensed', sans-serif;
+      color: var(--porsche-red);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 1.2rem;
+    }
+    .hero-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 3.8rem;
+      font-weight: 800;
+      font-style: italic;
+      text-transform: uppercase;
+      line-height: 0.95;
+      margin: 8px 0 16px;
+    }
+    .hero-tags {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .hero-tag {
+      background: rgba(0, 0, 0, 0.7);
+      border: 1px solid var(--border-bright);
+      padding: 6px 14px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #d1d5db;
+    }
+
+    /* Container & Section Layout */
+    .main-wrapper { max-width: 1200px; margin: auto; padding: 40px 20px; }
+    .tab-view { display: none; }
+    .tab-view.active { display: block; animation: tabFade 0.3s ease-in-out; }
+    @keyframes tabFade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Section Headers */
+    .section-header {
+      margin-bottom: 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 12px;
+    }
+    .section-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      font-style: italic;
+    }
+    .section-desc { color: var(--text-muted); font-size: 0.95rem; }
+
+    /* Cards & Grids */
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
+    .grid-2 { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
+    @media (max-width: 850px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    .card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      padding: 24px;
+      position: relative;
+    }
+    .card-accent-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--porsche-red);
+      border-top-left-radius: 6px;
+      border-top-right-radius: 6px;
+    }
+    .card-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    /* Format Badge Matrix (ARL Inspired) */
+    .format-card {
+      background: var(--bg-surface-elevated);
+      border-left: 4px solid var(--porsche-red);
+      padding: 16px;
+      margin-bottom: 14px;
+      border-radius: 0 4px 4px 0;
+    }
+    .format-header { display: flex; justify-content: space-between; margin-bottom: 6px; }
+    .format-name { font-weight: 700; font-size: 1.05rem; }
+    .format-tag {
+      background: #000;
+      padding: 2px 8px;
+      font-size: 0.75rem;
+      border-radius: 3px;
+      color: var(--gold-accent);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      text-transform: uppercase;
+    }
+
+    /* Standings Filters & Tables */
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .filter-btn {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .filter-btn.active, .filter-btn:hover {
+      background: var(--border-bright);
+      color: #fff;
+    }
+
+    .table-container {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      overflow-x: auto;
+    }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th {
+      background: #0d0f14;
+      color: var(--text-muted);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    td {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border-subtle);
+      font-size: 0.9rem;
+    }
+    tr:hover td { background: rgba(255, 255, 255, 0.02); }
+    .pos-cell { font-weight: 800; font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; width: 40px; }
+    .driver-name { font-weight: 600; color: #fff; }
+    .driver-team { font-size: 0.78rem; color: var(--text-muted); }
     
-    /* Header & Navigation */
-    header { background: var(--bg-card); border-bottom: 2px solid var(--accent); padding: 20px 0; }
-    .container { max-width: 1100px; margin: auto; padding: 0 20px; }
-    h1 { margin: 0 0 15px 0; font-size: 1.8rem; font-style: italic; letter-spacing: -0.5px; }
-    nav { display: flex; gap: 20px; }
-    nav a { color: var(--text-muted); text-decoration: none; font-weight: 600; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px; cursor: pointer; padding-bottom: 5px; }
-    nav a:hover, nav a.active { color: #fff; border-bottom: 2px solid var(--accent); }
-    nav a.external { color: #60a5fa; }
-    
-    /* Content Sections (Tabs) */
-    .section { display: none; padding: 40px 0; }
-    .section.active { display: block; animation: fadeIn 0.3s; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-    
-    /* Typography & Cards */
-    h2 { margin-top: 0; color: #fff; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-    .card { background: var(--bg-card); padding: 20px; border-radius: 8px; border: 1px solid var(--border); }
-    
-    /* Tables */
-    table { width: 100%; border-collapse: collapse; margin-top: 15px; background: var(--bg-card); border-radius: 8px; overflow: hidden; }
-    th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); }
-    th { background: #1f2637; color: #a5b4fc; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
-    .badge-ban { background: #e11d48; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
-    .badge-ok { background: #10b981; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; }
+    .badge-class {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .class-pro { background: rgba(213, 0, 28, 0.15); color: #ff4d64; border: 1px solid rgba(213, 0, 28, 0.4); }
+    .class-pro-am { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+    .class-am { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); }
+
+    .badge-ban { background: #e11d48; color: #fff; padding: 2px 7px; border-radius: 3px; font-size: 0.7rem; font-weight: 700; }
+    .badge-ok { background: #10b981; color: #fff; padding: 2px 7px; border-radius: 3px; font-size: 0.7rem; }
+
+    /* Media Gallery */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 20px;
+    }
+    .gallery-card {
+      border-radius: 6px;
+      overflow: hidden;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      transition: transform 0.2s ease;
+    }
+    .gallery-card:hover { transform: translateY(-4px); border-color: var(--border-bright); }
+    .gallery-img { width: 100%; height: 220px; object-fit: cover; display: block; }
+    .gallery-info { padding: 14px; }
   </style>
 </head>
 <body>
 
+  <!-- Top Strip -->
+  <div class="top-bar">
+    <div class="top-bar-content">
+      <span>Official Australian Oceanic iRacing League</span>
+      <span>Porsche 911 GT3 Cup (992.2) • Open Setup</span>
+    </div>
+  </div>
+
+  <!-- Header & Navigation -->
   <header>
-    <div class="container">
-      <h1>AUSTRALIAN PORSCHE CUP</h1>
-      <nav id="main-nav">
-        <a onclick="showSection('home')" class="active" id="nav-home">Home</a>
-        <a onclick="showSection('news')" id="nav-news">News</a>
-        <a onclick="showSection('results')" id="nav-results">Results</a>
-        <a onclick="showSection('standings')" id="nav-standings">Standings</a>
-        <a onclick="showSection('media')" id="nav-media">Media</a>
-        <a href="https://forms.google.com/your-form-link" target="_blank" class="external">Protest ↗</a>
+    <div class="nav-container">
+      <div class="brand-title">
+        APCC <span class="brand-badge">AUSTRALIA</span>
+      </div>
+      <nav id="nav-tabs">
+        <button class="active" onclick="switchTab('home')">Home</button>
+        <button onclick="switchTab('formats')">Formats & Rules</button>
+        <button onclick="switchTab('results')">Results</button>
+        <button onclick="switchTab('standings')">Standings</button>
+        <button onclick="switchTab('media')">Media</button>
+        <a href="https://forms.google.com/your-protest-form" target="_blank" class="btn-protest">
+          Protest Form ↗
+        </a>
       </nav>
     </div>
   </header>
 
-  <div class="container">
-    
-    <!-- HOME SECTION -->
-    <div id="home" class="section active">
-      <h2>Welcome to the APCC</h2>
-      <div class="grid">
-        <div class="card">
-          <h3>Next Race: Round 1</h3>
-          <p><strong>Track:</strong> TBD</p>
-          <p><strong>Date:</strong> October 1st, 2026</p>
-          <p><strong>Format:</strong> To be announced</p>
+  <!-- Hero Section -->
+  <div class="hero">
+    <div class="hero-content">
+      <div class="hero-sub">Premier Single-Make Esports</div>
+      <h1 class="hero-title">Australian Porsche<br>Cup Championship</h1>
+      <div class="hero-tags">
+        <div class="hero-tag">🏁 Season Starts Oct 1</div>
+        <div class="hero-tag">👥 60 Driver Cap</div>
+        <div class="hero-tag">🏆 Class Prizes (Pro / Pro-Am / Am)</div>
+        <div class="hero-tag">🛡️ Live Race Control</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-wrapper">
+
+    <!-- TAB 1: HOME -->
+    <div id="tab-home" class="tab-view active">
+      <div class="grid-2">
+        <div>
+          <div class="card" style="margin-bottom: 24px;">
+            <div class="card-accent-bar"></div>
+            <h2 class="card-title">Season Announcement & Class Structure</h2>
+            <p style="margin-bottom: 14px; color: #d1d5db;">
+              Welcome to the official portal for the Australian Porsche Cup Championship. Competing exclusively in the <strong>Porsche 911 GT3 Cup (992.2)</strong>, the championship features tiered driver divisions, dynamic race weekend configurations, live stewarding, and team championships.
+            </p>
+            <p style="color: #d1d5db;">
+              Driver evaluations are finalized during pre-qualifying week to seed the field into <strong>Pro</strong>, <strong>Pro-Am</strong>, and <strong>Am</strong> classes, ensuring competitive parity right through the grid.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-accent-bar"></div>
+            <h2 class="card-title">Latest Race Control Bulletins</h2>
+            <div style="border-left: 2px solid var(--border-bright); padding-left: 14px; margin-bottom: 16px;">
+              <div style="font-size: 0.8rem; color: var(--gold-accent); text-transform: uppercase; font-weight: 700;">Sep 16 • Bulletin #02</div>
+              <strong style="display:block; margin: 4px 0;">Entry Fee & Registration Deadline</strong>
+              <p style="font-size: 0.9rem; color: var(--text-muted);">
+                Drivers must remit their $30 AUD season registration fee prior to September 26 to secure their car number and guaranteed grid allocation.
+              </p>
+            </div>
+            <div style="border-left: 2px solid var(--border-bright); padding-left: 14px;">
+              <div style="font-size: 0.8rem; color: var(--porsche-red); text-transform: uppercase; font-weight: 700;">Sep 12 • Bulletin #01</div>
+              <strong style="display:block; margin: 4px 0;">Safety Car & Incident Points Protocols</strong>
+              <p style="font-size: 0.9rem; color: var(--text-muted);">
+                Full Course Yellow rules and steward review criteria updated. Incidents on Lap 1 remain under mandatory automated investigation.
+              </p>
+            </div>
+          </div>
         </div>
-        <div class="card">
-          <h3>Championship Status</h3>
-          <p>Pre-qualifying is currently underway to determine Pro, Pro-Am, and Am class assignments.</p>
+
+        <div>
+          <!-- Season Quick Facts (ARL style) -->
+          <div class="card">
+            <div class="card-accent-bar"></div>
+            <h2 class="card-title">Championship Spec</h2>
+            <div style="display: flex; flex-direction: column; gap: 12px; font-size: 0.9rem;">
+              <div style="display:flex; justify-content:space-between; border-bottom: 1px solid var(--border-subtle); padding-bottom: 8px;">
+                <span style="color:var(--text-muted);">Platform</span>
+                <strong>iRacing</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between; border-bottom: 1px solid var(--border-subtle); padding-bottom: 8px;">
+                <span style="color:var(--text-muted);">Vehicle</span>
+                <strong>Porsche 992.2 Cup</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between; border-bottom: 1px solid var(--border-subtle); padding-bottom: 8px;">
+                <span style="color:var(--text-muted);">License Gate</span>
+                <strong>Sportscar D or Above</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between; border-bottom: 1px solid var(--border-subtle); padding-bottom: 8px;">
+                <span style="color:var(--text-muted);">Broadcast / Time</span>
+                <strong>7:00 PM AEST Practice</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between; border-bottom: 1px solid var(--border-subtle); padding-bottom: 8px;">
+                <span style="color:var(--text-muted);">Teams</span>
+                <strong>3 Drivers (Top 2 Score)</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between; padding-top: 4px;">
+                <span style="color:var(--text-muted);">Estimated Prize Pool</span>
+                <strong style="color:var(--gold-accent);">$500 AUD (Pro)</strong>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- NEWS SECTION -->
-    <div id="news" class="section">
-      <h2>Latest Announcements</h2>
-      <div class="card" style="margin-bottom: 15px;">
-        <h3 style="margin-top:0; color:#60a5fa;">Version 1.1 Regulations Released</h3>
-        <p><small>September 16, 2026</small></p>
-        <p>The updated sporting regulations are now available in the Discord. Please review the updated safety car procedures and team points structure.</p>
+    <!-- TAB 2: FORMATS & RULES -->
+    <div id="tab-formats" class="tab-view">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Weekend Formats & Sporting Regulations</h2>
+          <p class="section-desc">Four specialized round configurations across the season calendar.</p>
+        </div>
       </div>
-      <div class="card">
-        <h3 style="margin-top:0; color:#60a5fa;">Registration Now Open</h3>
-        <p><small>September 10, 2026</small></p>
-        <p>Entries are capped at 60 drivers. The entry fee must be paid before September 26th to secure your spot on the grid.</p>
+
+      <div class="grid-3">
+        <div class="format-card">
+          <div class="format-header">
+            <span class="format-name">Format 1: Sprint</span>
+            <span class="format-tag">Inverted Grid</span>
+          </div>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 6px;">
+            16-minute qualifying sprint followed immediately by a 24-minute Feature race featuring an <strong>inverted top 8</strong>.
+          </p>
+        </div>
+
+        <div class="format-card">
+          <div class="format-header">
+            <span class="format-name">Format 2: Regular</span>
+            <span class="format-tag">Pure Pace</span>
+          </div>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 6px;">
+            Full 40-minute standalone Feature race. Grid ordered directly by qualifying times with no compulsory pit stop.
+          </p>
+        </div>
+
+        <div class="format-card">
+          <div class="format-header">
+            <span class="format-name">Format 3: Endurance</span>
+            <span class="format-tag">Compulsory Stop</span>
+          </div>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 6px;">
+            60-minute distance race. Fuel capacity strictly capped at 65% with mandatory pit servicing and randomized safety car windows.
+          </p>
+        </div>
+
+        <div class="format-card">
+          <div class="format-header">
+            <span class="format-name">Format 4: Super Sprint</span>
+            <span class="format-tag">Triple Header</span>
+          </div>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 6px;">
+            Two 20-minute heat sprints (Race 2 top-12 inverted) building directly into a 30-minute Grand Feature.
+          </p>
+        </div>
+
+        <div class="format-card">
+          <div class="format-header">
+            <span class="format-name">Drop Score Protocol</span>
+            <span class="format-tag">Rule 3.4</span>
+          </div>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 6px;">
+            Each driver drops their single lowest-scoring round at season end. Drop rounds do not reduce team championship scores.
+          </p>
+        </div>
+
+        <div class="format-card">
+          <div class="format-header">
+            <span class="format-name">License Penalties</span>
+            <span class="format-tag">Stewarding</span>
+          </div>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 6px;">
+            Drivers exceeding 6 license points incur an automated qualifying ban for the following event, resetting points down to 3.
+          </p>
+        </div>
       </div>
     </div>
 
-    <!-- RESULTS SECTION -->
-    <div id="results" class="section">
-      <h2>Race Results</h2>
-      <p style="color: var(--text-muted);">Select a round to view official classified results.</p>
-      <select id="round-select" style="padding: 10px; background: var(--bg-card); color: white; border: 1px solid var(--border); border-radius: 4px; width: 100%; max-width: 300px;">
-        <option>Round 1 - Waiting for event...</option>
-      </select>
-      <div class="card" style="margin-top: 20px; text-align: center; color: var(--text-muted);">
-        Results will be published here 24 hours after the race, following live stewarding and protests.
+    <!-- TAB 3: RESULTS -->
+    <div id="tab-results" class="tab-view">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Official Session Results</h2>
+          <p class="section-desc">Classified finishing records and fastest laps per round.</p>
+        </div>
+      </div>
+      <div class="card" style="text-align: center; padding: 50px 20px;">
+        <p style="color: var(--text-muted);">Official Round 1 classifications will go live following post-race steward determinations.</p>
       </div>
     </div>
 
-    <!-- STANDINGS SECTION -->
-    <div id="standings" class="section">
-      <h2>Driver Standings</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Pos</th>
-            <th>Driver</th>
-            <th>Class</th>
-            <th>Net Pts</th>
-            <th>License Pts</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody id="driver-board">
-          <tr><td colspan="6">Loading standings...</td></tr>
-        </tbody>
-      </table>
+    <!-- TAB 4: STANDINGS -->
+    <div id="tab-standings" class="tab-view">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Championship Standings</h2>
+          <p class="section-desc">Net point totals factoring 1 drop round and active license records.</p>
+        </div>
+      </div>
 
-      <h2 style="margin-top: 50px;">Team Standings</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Pos</th>
-            <th>Team</th>
-            <th>Total Points</th>
-          </tr>
-        </thead>
-        <tbody id="team-board">
-          <tr><td colspan="3">Loading standings...</td></tr>
-        </tbody>
-      </table>
+      <div class="filter-bar">
+        <button class="filter-btn active" onclick="filterClass('ALL')">All Classes</button>
+        <button class="filter-btn" onclick="filterClass('Pro')">Pro</button>
+        <button class="filter-btn" onclick="filterClass('Pro-Am')">Pro-Am</button>
+        <button class="filter-btn" onclick="filterClass('Am')">Am</button>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th class="pos-cell">Pos</th>
+              <th>Driver</th>
+              <th>Class</th>
+              <th>Net Points</th>
+              <th>Raw</th>
+              <th>Dropped</th>
+              <th>License Pts</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="driver-rows">
+            <tr><td colspan="8" style="text-align:center; color:var(--text-muted);">Loading live championship data...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-header" style="margin-top: 50px;">
+        <div>
+          <h2 class="section-title">Team Championship</h2>
+          <p class="section-desc">Cumulative points of the top 2 highest scoring drivers per round.</p>
+        </div>
+      </div>
+
+      <div class="table-container" style="max-width: 700px;">
+        <table>
+          <thead>
+            <tr>
+              <th class="pos-cell">Pos</th>
+              <th>Team Name</th>
+              <th>Total Championship Points</th>
+            </tr>
+          </thead>
+          <tbody id="team-rows">
+            <tr><td colspan="3" style="text-align:center; color:var(--text-muted);">Loading team standings...</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <!-- MEDIA SECTION -->
-    <div id="media" class="section">
-      <h2>Media & Broadcasts</h2>
-      <div class="grid">
-        <div class="card" style="text-align: center; padding: 40px 20px;">
-          <p style="color: var(--text-muted);">VODs and race highlights will appear here.</p>
+    <!-- TAB 5: MEDIA -->
+    <div id="tab-media" class="tab-view">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Official Media & Paddock Gallery</h2>
+          <p class="section-desc">On-track captures, livery spotlights, and broadcast archives.</p>
+        </div>
+      </div>
+
+      <div class="gallery-grid">
+        <div class="gallery-card">
+          <img src="PESCAPAC_Adelaide_Race_7_080126.png" alt="Porsche 992 GT3 Cup" class="gallery-img">
+          <div class="gallery-info">
+            <strong style="color:#fff; display:block;">Round 1 Pre-Season Testing</strong>
+            <span style="font-size:0.8rem; color:var(--text-muted);">Porsche 911 GT3 Cup (992.2)</span>
+          </div>
         </div>
       </div>
     </div>
