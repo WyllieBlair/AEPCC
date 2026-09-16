@@ -11,243 +11,278 @@
   <style>
     @font-face {
       font-family: 'PP Monument';
-      src: local('PP Monument'), url('PPMonument-Regular.woff2') format('woff2');
-      font-weight: normal; font-style: normal;
-    }
-    @font-face {
-      font-family: 'PP Monument';
       src: local('PP Monument Black'), url('PPMonument-Black.woff2') format('woff2');
       font-weight: 800; font-style: normal;
     }
 
     :root {
-      --brand-blue: #001489;
+      /* Simplified Color Palette */
       --brand-red: #da291c;
-      --brand-gradient: linear-gradient(90deg, var(--brand-blue), var(--brand-red));
-      
-      --bg-dark: #0a0b0e;
-      --bg-surface: #12141a;
-      --bg-surface-elevated: #1a1d26;
-      --border-subtle: #242938;
-      --border-bright: #363d52;
+      --bg-page: #0f1115;
+      --bg-panel: #181b21;
+      --bg-panel-hover: #1e222a;
+      --border-color: #2a2e39;
       --text-main: #f3f4f6;
       --text-muted: #9ca3af;
-      --gold-accent: #f59e0b;
-
-      --font-heading: 'PP Monument', 'Arial Black', sans-serif;
-      --font-body: 'Inter', -apple-system, sans-serif;
+      
+      --font-brand: 'PP Monument', sans-serif;
+      --font-ui: 'Inter', -apple-system, sans-serif;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: var(--font-body); background-color: var(--bg-dark); color: var(--text-main); line-height: 1.5; overflow-x: hidden; }
+    body { font-family: var(--font-ui); background-color: var(--bg-page); color: var(--text-main); line-height: 1.6; }
 
-    /* Header */
-    header { background: rgba(18, 20, 26, 0.95); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; border-bottom: 2px solid transparent; border-image: var(--brand-gradient); border-image-slice: 1; }
-    .nav-container { max-width: 1200px; margin: auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; height: 80px; }
-    .brand-logo { height: 60px; width: auto; transition: transform 0.2s ease; }
-    .brand-logo:hover { transform: scale(1.02); }
-
-    /* Navigation */
-    nav { display: flex; gap: 4px; align-items: center; }
-    nav button { background: none; border: none; color: var(--text-muted); font-family: var(--font-heading); font-size: 0.9rem; text-transform: uppercase; padding: 10px 16px; cursor: pointer; border-bottom: 3px solid transparent; }
+    /* Clean Navbar */
+    header { background: var(--bg-panel); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; }
+    .nav-container { max-width: 1200px; margin: auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; height: 70px; }
+    .brand-logo { height: 45px; width: auto; }
+    
+    nav { display: flex; gap: 20px; align-items: center; }
+    nav button { background: none; border: none; color: var(--text-muted); font-family: var(--font-ui); font-size: 0.95rem; font-weight: 600; cursor: pointer; padding: 24px 0; border-bottom: 2px solid transparent; transition: color 0.2s; }
     nav button:hover, nav button.active { color: #fff; border-bottom-color: var(--brand-red); }
-    .btn-protest { background: var(--brand-gradient) !important; color: #fff !important; padding: 7px 18px !important; border-radius: 3px; font-family: var(--font-heading); font-size: 0.85rem !important; margin-left: 10px; text-decoration: none; text-transform: uppercase; }
+    .btn-protest { background: var(--border-color); color: #fff; padding: 8px 16px; border-radius: 4px; font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: background 0.2s; }
+    .btn-protest:hover { background: var(--brand-red); }
 
-    /* Hero */
-    .hero {
-      position: relative; height: 480px; display: flex; align-items: flex-end; padding-bottom: 50px; border-bottom: 1px solid var(--border-subtle);
-      background: linear-gradient(180deg, rgba(10, 11, 14, 0.4) 0%, rgba(10, 11, 14, 0.95) 100%), url('PESCAPAC_Adelaide_Race_7_080126.png') center/cover no-repeat;
-    }
-    .hero-content { max-width: 1200px; margin: auto; padding: 0 20px; width: 100%; }
-    .hero-title { font-family: var(--font-heading); font-size: 3.5rem; font-weight: 800; text-transform: uppercase; line-height: 1; margin: 8px 0 16px; color: #fff; }
-    .hero-tags { display: flex; gap: 12px; flex-wrap: wrap; }
-    .hero-tag { background: rgba(0, 0, 0, 0.7); border: 1px solid var(--border-bright); padding: 6px 14px; border-radius: 4px; font-size: 0.85rem; font-weight: 500; }
+    /* Simple Hero Image */
+    .hero { width: 100%; height: 350px; background: url('image_adff3f.jpg') center/cover no-repeat; border-bottom: 1px solid var(--border-color); position: relative; }
+    .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, var(--bg-page), transparent); }
 
     /* Layout */
-    .main-wrapper { max-width: 1200px; margin: auto; padding: 40px 20px; }
-    .tab-view { display: none; }
-    .tab-view.active { display: block; animation: tabFade 0.3s ease-in-out; }
-    @keyframes tabFade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .container { max-width: 1200px; margin: auto; padding: 40px 20px; position: relative; z-index: 10; }
+    .tab-view { display: none; animation: fadeIn 0.3s ease; }
+    .tab-view.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    /* Typography */
-    .section-header { margin-bottom: 25px; display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 1px solid var(--border-subtle); padding-bottom: 12px; }
-    .section-title { font-family: var(--font-heading); font-size: 2rem; text-transform: uppercase; }
+    /* Clean Typography */
+    h1, h2, h3 { font-family: var(--font-brand); text-transform: uppercase; margin-bottom: 15px; color: #fff; }
+    h1 { font-size: 2.2rem; margin-top: -80px; margin-bottom: 40px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+    h2 { font-size: 1.4rem; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); margin-bottom: 25px; }
+    p { color: var(--text-muted); margin-bottom: 15px; }
+
+    /* Flat Cards */
+    .grid-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
+    @media (max-width: 850px) { .grid-layout { grid-template-columns: 1fr; } }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
     
-    /* Cards & Grids */
-    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
-    .grid-2 { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
-    .card { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 24px; position: relative; }
-    .card-accent-bar { position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--brand-gradient); border-radius: 6px 6px 0 0; }
-    .card-title { font-family: var(--font-heading); font-size: 1.2rem; text-transform: uppercase; margin-bottom: 12px; }
-
-    /* Tables */
-    .table-container { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 6px; overflow-x: auto; margin-bottom: 30px; }
+    .panel { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; padding: 30px; }
+    .panel h3 { font-size: 1.1rem; font-family: var(--font-ui); font-weight: 700; letter-spacing: -0.5px; }
+    
+    /* Clean Tables */
+    .table-wrapper { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; margin-bottom: 40px; }
     table { width: 100%; border-collapse: collapse; text-align: left; }
-    th { background: #0d0f14; color: var(--text-muted); font-family: var(--font-heading); font-size: 0.85rem; text-transform: uppercase; padding: 14px 18px; border-bottom: 1px solid var(--border-subtle); }
-    td { padding: 14px 18px; border-bottom: 1px solid var(--border-subtle); font-size: 0.9rem; }
-    tr:hover td { background: rgba(255, 255, 255, 0.02); }
-    .pos-cell { font-family: var(--font-heading); font-size: 1.1rem; width: 40px; }
+    th, td { padding: 15px 20px; border-bottom: 1px solid var(--border-color); font-size: 0.95rem; }
+    th { background: rgba(0,0,0,0.2); color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: var(--bg-panel-hover); }
     
-    /* Badges */
-    .badge-class { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
-    .class-pro { background: rgba(213, 0, 28, 0.15); color: #ff4d64; border: 1px solid rgba(213, 0, 28, 0.4); }
-    .class-pro-am { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
-    .class-am { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); }
-    .badge-ban { background: #e11d48; color: #fff; padding: 2px 7px; border-radius: 3px; font-size: 0.7rem; font-weight: 700; }
-    .badge-ok { background: #10b981; color: #fff; padding: 2px 7px; border-radius: 3px; font-size: 0.7rem; }
+    .text-highlight { color: #fff; font-weight: 600; }
+    .subtext { display: block; font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
+    
+    .status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; }
+    .dot-green { background: #10b981; }
+    .dot-red { background: #ef4444; }
 
-    /* Media Gallery */
-    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
-    .gallery-card { border-radius: 6px; overflow: hidden; background: var(--bg-surface); border: 1px solid var(--border-subtle); transition: transform 0.2s; }
-    .gallery-card:hover { transform: translateY(-4px); }
-    .gallery-img { width: 100%; height: 220px; object-fit: cover; border-bottom: 4px solid var(--brand-blue); }
-    .gallery-info { padding: 15px; }
+    /* News Items */
+    .news-list { display: flex; flex-direction: column; gap: 20px; }
+    .news-item { display: flex; gap: 15px; align-items: center; }
+    .news-item img { width: 60px; height: 60px; border-radius: 6px; object-fit: cover; }
+    .news-date { font-size: 0.75rem; color: var(--brand-red); font-weight: 600; text-transform: uppercase; }
   </style>
 </head>
 <body>
 
-  <!-- Header -->
+  <!-- Navigation -->
   <header>
     <div class="nav-container">
       <a href="#" onclick="switchTab('home')">
-        <img src="iracinglogoDocument.png" alt="AESPCC Logo" class="brand-logo">
+        <img src="iracinglogoDocument.png" alt="iRacing Logo" class="brand-logo">
       </a>
       <nav id="nav-tabs">
-        <button class="active" onclick="switchTab('home')">Home</button>
-        <button onclick="switchTab('formats')">Formats & Rules</button>
-        <button onclick="switchTab('results')">Results</button>
+        <button class="active" onclick="switchTab('home')">Overview</button>
+        <button onclick="switchTab('formats')">Regulations</button>
         <button onclick="switchTab('standings')">Standings</button>
-        <button onclick="switchTab('media')">Media</button>
+        <button onclick="switchTab('results')">Results</button>
+        <a href="https://forms.google.com/your-form-link" target="_blank" class="btn-protest">Protest Form</a>
       </nav>
     </div>
   </header>
 
-  <!-- Hero -->
+  <!-- Hero Image -->
   <div class="hero">
-    <div class="hero-content">
-      <h1 class="hero-title">Australian E-Sport<br>Porsche Cup Championship</h1>
-      <div class="hero-tags">
-        <div class="hero-tag">🏁 Season Starts Oct 1</div>
-        <div class="hero-tag">🏆 Pro / Pro-Am / Am</div>
-      </div>
-    </div>
+    <div class="hero-overlay"></div>
   </div>
 
-  <div class="main-wrapper">
+  <div class="container">
+    <h1 id="page-title">Australian E-Sport Porsche Cup</h1>
 
-    <!-- TAB 1: HOME -->
+    <!-- TAB: OVERVIEW (Home) -->
     <div id="tab-home" class="tab-view active">
-      <div class="grid-2">
+      <div class="grid-layout">
         <div>
-          <div style="margin-bottom: 24px;">
-            <img src="AESPCC-Long.png" alt="AESPCC Full Logo" style="width: 100%; height: auto; border-radius: 6px; background: #fff;">
+          <img src="AESPCC-Long.png" alt="AESPCC Logo" style="width: 100%; max-width: 500px; margin-bottom: 30px;">
+          
+          <div class="panel" style="margin-bottom: 20px;">
+            <h3>Welcome to Season 1</h3>
+            <p>The AESPCC brings premier single-make racing to the Oceanic region. Utilizing the Porsche 911 GT3 Cup (992.2) on iRacing, the championship delivers a highly competitive, open-setup environment divided into Pro, Pro-Am, and Am classifications.</p>
           </div>
-          <div class="card">
-            <div class="card-accent-bar"></div>
-            <h2 class="card-title">Latest Updates</h2>
-            <div style="display: flex; gap: 15px; margin-bottom: 15px;">
-              <img src="AESPCC-Pfp.jpg" alt="Update" style="width: 80px; height: 80px; border-radius: 4px;">
-              <div>
-                <strong style="color: var(--brand-red);">Bulletin #02</strong>
-                <p style="font-size: 0.9rem; color: var(--text-muted);">Entry fees are due September 26th.</p>
+        </div>
+
+        <div>
+          <div class="panel">
+            <h3>League Bulletins</h3>
+            <div class="news-list" style="margin-top: 15px;">
+              <div class="news-item">
+                <img src="AESPCC-Pfp.jpg" alt="Update">
+                <div>
+                  <div class="news-date">Sep 16, 2026</div>
+                  <div class="text-highlight">Entry Fees Due</div>
+                </div>
+              </div>
+              <div class="news-item">
+                <img src="AESPCC-Pfp.jpg" alt="Update">
+                <div>
+                  <div class="news-date">Sep 10, 2026</div>
+                  <div class="text-highlight">Pre-Qualifying Opens</div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-        <div>
-          <div class="card">
-            <div class="card-accent-bar"></div>
-            <h2 class="card-title">Championship Spec</h2>
-            <p style="font-size: 0.9rem; color: var(--text-muted);"><strong>Vehicle:</strong> Porsche 992.2 Cup<br><strong>Setup:</strong> Open<br><strong>Teams:</strong> 3 Drivers (Top 2 Score)</p>
-          </div>
+      </div>
+    </div>
+
+    <!-- TAB: REGULATIONS -->
+    <div id="tab-formats" class="tab-view">
+      <h2>Weekend Formats</h2>
+      <div class="grid-3">
+        <div class="panel">
+          <h3>Format 1: Sprint</h3>
+          <p>16-minute qualifying sprint race, followed by a 24-minute feature race utilizing an inverted top-8 grid.</p>
+        </div>
+        <div class="panel">
+          <h3>Format 2: Regular</h3>
+          <p>Standard 40-minute feature race. The grid is set strictly by qualifying times with no mandatory pit stops.</p>
+        </div>
+        <div class="panel">
+          <h3>Format 3: Endurance</h3>
+          <p>60-minute feature race. Fuel is restricted to 65% capacity, requiring a mandatory pit stop for all competitors.</p>
         </div>
       </div>
     </div>
 
-    <!-- TAB 2: FORMATS -->
-    <div id="tab-formats" class="tab-view">
-      <div class="section-header">
-        <h2 class="section-title">Weekend Formats</h2>
-      </div>
-      <div class="grid-3">
-        <div class="card"><h3 class="card-title">Format 1: Sprint</h3><p>16-min sprint, 24-min feature (inverted top 8).</p></div>
-        <div class="card"><h3 class="card-title">Format 2: Regular</h3><p>40-min feature. Grid by qualifying.</p></div>
-        <div class="card"><h3 class="card-title">Format 3: Endurance</h3><p>60-min race. 65% fuel cap + pit stop.</p></div>
-      </div>
-    </div>
-
-    <!-- TAB 3: RESULTS -->
-    <div id="tab-results" class="tab-view">
-      <div class="section-header">
-         <h2 class="section-title">Latest Race Results</h2>
-      </div>
-      <select id="round-select" style="padding: 10px; background: var(--bg-surface); color: white; border: 1px solid var(--border-subtle); border-radius: 4px; width: 100%; max-width: 300px; margin-bottom: 20px;">
-        <option>Round 1 - Waiting for event...</option>
-      </select>
-      <div class="table-container">
+    <!-- TAB: STANDINGS -->
+    <div id="tab-standings" class="tab-view">
+      <h2>Driver Championship</h2>
+      <div class="table-wrapper">
         <table>
           <thead>
-            <tr><th class="pos-cell">Pos</th><th>Driver</th><th>Class</th><th>Fastest Lap</th><th>Incidents</th></tr>
+            <tr>
+              <th style="width: 60px;">Pos</th>
+              <th>Driver</th>
+              <th>Class</th>
+              <th>Net Pts</th>
+              <th>License</th>
+              <th>Status</th>
+            </tr>
           </thead>
-          <tbody id="results-rows">
-            <tr><td colspan="5" style="text-align:center; color:var(--text-muted);">Results will populate 24 hours post-race after stewarding.</td></tr>
+          <tbody id="driver-rows">
+            <tr><td colspan="6" style="text-align:center;">Loading data...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Team Championship</h2>
+      <div class="table-wrapper" style="max-width: 600px;">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 60px;">Pos</th>
+              <th>Team</th>
+              <th>Total Pts</th>
+            </tr>
+          </thead>
+          <tbody id="team-rows">
+            <tr><td colspan="3" style="text-align:center;">Loading data...</td></tr>
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- TAB 4: STANDINGS -->
-    <div id="tab-standings" class="tab-view">
-      <div class="section-header">
-        <h2 class="section-title">Driver Championship</h2>
-      </div>
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr><th class="pos-cell">Pos</th><th>Driver</th><th>Team</th><th>Class</th><th>Net Points</th><th>License Pts</th><th>Status</th></tr>
-          </thead>
-          <tbody id="driver-rows"></tbody>
-        </table>
-      </div>
-
-      <div class="section-header" style="margin-top: 40px;">
-        <h2 class="section-title">Team Championship</h2>
-      </div>
-      <div class="table-container" style="max-width: 700px;">
-        <table>
-          <thead>
-            <tr><th class="pos-cell">Pos</th><th>Team Name</th><th>Total Points</th></tr>
-          </thead>
-          <tbody id="team-rows"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- TAB 5: MEDIA -->
-    <div id="tab-media" class="tab-view">
-      <div class="section-header">
-        <h2 class="section-title">Media Gallery</h2>
-      </div>
-      <div class="gallery-grid">
-        <div class="gallery-card">
-          <img src="PESCAPAC_Adelaide_Race_7_080126.png" alt="Track Action" class="gallery-img">
-          <div class="gallery-info">
-            <strong style="color:#fff;">Pre-Season Testing</strong>
-            <p style="font-size:0.85rem; color:var(--text-muted); margin-top: 5px;">The #30 entry of Wyllie Blair navigating the apex during the final open practice session.</p>
-          </div>
-        </div>
-        <div class="gallery-card">
-          <img src="AESPCC-Long.png" alt="AESPCC Logo" class="gallery-img" style="object-fit: contain; background: #fff; padding: 20px;">
-          <div class="gallery-info">
-            <strong style="color:#fff;">Official Broadcast Assets</strong>
-            <p style="font-size:0.85rem; color:var(--text-muted); margin-top: 5px;">AESPCC Long-form logo.</p>
-          </div>
-        </div>
+    <!-- TAB: RESULTS -->
+    <div id="tab-results" class="tab-view">
+      <h2>Race Results</h2>
+      <div class="panel" style="text-align: center; padding: 60px 20px;">
+        <p>Results will be published here 24 hours after the conclusion of the event, following steward reviews.</p>
       </div>
     </div>
 
   </div>
 
-  <script src="app.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", loadStandings);
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-view').forEach(view => view.classList.remove('active'));
+      document.querySelectorAll('#nav-tabs button').forEach(btn => btn.classList.remove('active'));
+      
+      const targetTab = document.getElementById(`tab-${tabId}`);
+      if (targetTab) targetTab.classList.add('active');
+      
+      const matchingBtn = Array.from(document.querySelectorAll('#nav-tabs button')).find(btn => btn.getAttribute('onclick')?.includes(tabId));
+      if (matchingBtn) matchingBtn.classList.add('active');
+    }
+
+    function loadStandings() {
+      fetch('standings.json')
+        .then(res => res.json())
+        .then(data => {
+          renderDrivers(data.drivers || []);
+          renderTeams(data.teams || []);
+        })
+        .catch(err => console.warn("Waiting on standings.json", err));
+    }
+
+    function renderDrivers(drivers) {
+      const tbody = document.getElementById('driver-rows');
+      if (!tbody || drivers.length === 0) return;
+      tbody.innerHTML = '';
+
+      drivers.forEach((driver, idx) => {
+        const tr = document.createElement('tr');
+        const statusHtml = driver.ban_active 
+          ? `<span class="status-dot dot-red"></span> Ban Active` 
+          : `<span class="status-dot dot-green"></span> Active`;
+
+        tr.innerHTML = `
+          <td class="text-highlight">${idx + 1}</td>
+          <td>
+            <span class="text-highlight">${driver.name}</span>
+            <span class="subtext">${driver.team || 'Independent'}</span>
+          </td>
+          <td>${driver.class}</td>
+          <td class="text-highlight">${driver.net_points}</td>
+          <td>${driver.license_points || 0}</td>
+          <td style="font-size: 0.85rem;">${statusHtml}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderTeams(teams) {
+      const tbody = document.getElementById('team-rows');
+      if (!tbody || teams.length === 0) return;
+      tbody.innerHTML = '';
+
+      teams.forEach((team, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="text-highlight">${idx + 1}</td>
+          <td class="text-highlight">${team.name}</td>
+          <td class="text-highlight">${team.points}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+  </script>
 </body>
 </html>
