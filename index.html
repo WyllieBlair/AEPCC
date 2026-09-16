@@ -44,7 +44,7 @@
     .btn-protest:hover { background: var(--brand-red); }
 
     /* Simple Hero Image */
-    .hero { width: 100%; height: 350px; background: url('image_adff3f.jpg') center/cover no-repeat; border-bottom: 1px solid var(--border-color); position: relative; }
+    .hero { width: 100%; height: 350px; background: url('PESCAPAC_Adelaide_Race_7_080126.png') center/cover no-repeat; border-bottom: 1px solid var(--border-color); position: relative; }
     .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, var(--bg-page), transparent); }
 
     /* Layout */
@@ -62,7 +62,6 @@
     /* Flat Cards */
     .grid-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
     @media (max-width: 850px) { .grid-layout { grid-template-columns: 1fr; } }
-    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
     
     .panel { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; padding: 30px; }
     .panel h3 { font-size: 1.1rem; font-family: var(--font-ui); font-weight: 700; letter-spacing: -0.5px; }
@@ -99,7 +98,6 @@
       </a>
       <nav id="nav-tabs">
         <button class="active" onclick="switchTab('home')">Overview</button>
-        <button onclick="switchTab('formats')">Regulations</button>
         <button onclick="switchTab('standings')">Standings</button>
         <button onclick="switchTab('results')">Results</button>
         <a href="https://forms.google.com/your-form-link" target="_blank" class="btn-protest">Protest Form</a>
@@ -147,25 +145,6 @@
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB: REGULATIONS -->
-    <div id="tab-formats" class="tab-view">
-      <h2>Weekend Formats</h2>
-      <div class="grid-3">
-        <div class="panel">
-          <h3>Format 1: Sprint</h3>
-          <p>16-minute qualifying sprint race, followed by a 24-minute feature race utilizing an inverted top-8 grid.</p>
-        </div>
-        <div class="panel">
-          <h3>Format 2: Regular</h3>
-          <p>Standard 40-minute feature race. The grid is set strictly by qualifying times with no mandatory pit stops.</p>
-        </div>
-        <div class="panel">
-          <h3>Format 3: Endurance</h3>
-          <p>60-minute feature race. Fuel is restricted to 65% capacity, requiring a mandatory pit stop for all competitors.</p>
         </div>
       </div>
     </div>
