@@ -17,7 +17,10 @@
 
     :root {
       --brand-red: #da291c;
+      --brand-blue: #001489;
       --brand-discord: #5865F2;
+      --brand-gradient: linear-gradient(90deg, var(--brand-blue), var(--brand-red));
+      
       --bg-page: #0f1115;
       --bg-panel: #181b21;
       --bg-panel-hover: #1e222a;
@@ -32,11 +35,19 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: var(--font-ui); background-color: var(--bg-page); color: var(--text-main); line-height: 1.6; }
 
-    /* Clean Navbar */
-    header { background: var(--bg-panel); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; }
+    /* Navbar with Gradient Border */
+    header { 
+      background: var(--bg-panel); 
+      position: sticky; 
+      top: 0; 
+      z-index: 100;
+      border-bottom: 3px solid transparent; 
+      border-image: var(--brand-gradient); 
+      border-image-slice: 1;
+    }
     .nav-container { max-width: 1200px; margin: auto; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; min-height: 90px; }
     
-    /* Greatly increased logo size */
+    /* Logo updated to Background.png */
     .brand-logo { height: 75px; width: auto; max-width: 400px; object-fit: contain; }
     
     nav { display: flex; gap: 20px; align-items: center; }
@@ -46,7 +57,7 @@
     .btn-discord { background: var(--brand-discord); color: #fff; padding: 8px 16px; border-radius: 4px; font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: opacity 0.2s; display: inline-flex; align-items: center; gap: 6px; }
     .btn-discord:hover { opacity: 0.9; }
 
-    /* Simple Hero Image */
+    /* Hero Image */
     .hero { width: 100%; height: 350px; background: url('PESCAPAC_Adelaide_Race_7_080126.png') center/cover no-repeat; border-bottom: 1px solid var(--border-color); position: relative; }
     .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, var(--bg-page), transparent); }
 
@@ -62,15 +73,32 @@
     h2 { font-size: 1.4rem; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); margin-bottom: 25px; }
     p { color: var(--text-muted); margin-bottom: 15px; }
 
-    /* Flat Cards */
+    /* Panels with Gradient Borders */
     .grid-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
     @media (max-width: 850px) { .grid-layout { grid-template-columns: 1fr; } }
     
-    .panel { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; padding: 30px; }
+    .panel { 
+      background: var(--bg-panel); 
+      border: 1px solid var(--border-color); 
+      border-radius: 8px; 
+      padding: 30px;
+      border-top: 3px solid transparent;
+      border-image: var(--brand-gradient);
+      border-image-slice: 1;
+    }
     .panel h3 { font-size: 1.1rem; font-family: var(--font-ui); font-weight: 700; letter-spacing: -0.5px; }
     
-    /* Clean Tables */
-    .table-wrapper { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; margin-bottom: 40px; }
+    /* Tables with Gradient Borders */
+    .table-wrapper { 
+      background: var(--bg-panel); 
+      border: 1px solid var(--border-color); 
+      border-radius: 8px; 
+      overflow: hidden; 
+      margin-bottom: 40px;
+      border-top: 3px solid transparent;
+      border-image: var(--brand-gradient);
+      border-image-slice: 1;
+    }
     table { width: 100%; border-collapse: collapse; text-align: left; }
     th, td { padding: 15px 20px; border-bottom: 1px solid var(--border-color); font-size: 0.95rem; }
     th { background: rgba(0,0,0,0.2); color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px; }
@@ -87,7 +115,7 @@
   <header>
     <div class="nav-container">
       <a href="#" onclick="switchTab('home')">
-        <img src="AESPCC-Long.png" alt="AESPCC Logo" class="brand-logo">
+        <img src="Background.png" alt="AESPCC Logo" class="brand-logo">
       </a>
       <nav id="nav-tabs">
         <button class="active" onclick="switchTab('home')">Overview</button>
