@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   
   <style>
-@font-face {
+    @font-face {
       font-family: 'PP Monument';
       src: url('fonts/PPMonumentNormal-Black.woff2') format('woff2');
       font-weight: 800; 
@@ -50,10 +50,10 @@
     .brand-logo { height: 75px; width: auto; max-width: 400px; object-fit: contain; }
     
     nav { display: flex; gap: 20px; align-items: center; }
-    nav button { background: none; border: none; color: var(--text-muted); font-family: var(--font-ui); font-size: 0.95rem; font-weight: 600; cursor: pointer; padding: 10px 0; border-bottom: 2px solid transparent; transition: color 0.2s; }
+    nav button { background: none; border: none; color: var(--text-muted); font-family: var(--font-brand); font-size: 0.9rem; letter-spacing: 0.5px; text-transform: uppercase; cursor: pointer; padding: 10px 0; border-bottom: 2px solid transparent; transition: color 0.2s; }
     nav button:hover, nav button.active { color: #fff; border-bottom-color: var(--brand-red); }
     
-    .btn-discord { background: var(--brand-discord); color: #fff; padding: 8px 16px; border-radius: 4px; font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: opacity 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-discord { background: var(--brand-discord); color: #fff; padding: 8px 16px; border-radius: 4px; font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: opacity 0.2s; display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-ui); }
     .btn-discord:hover { opacity: 0.9; }
 
     /* Hero */
@@ -67,7 +67,7 @@
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
     /* Typography */
-    h1, h2, h3 { font-family: var(--font-brand); text-transform: uppercase; margin-bottom: 15px; color: #fff; }
+    h1, h2, h3 { font-family: var(--font-brand); text-transform: uppercase; margin-bottom: 15px; color: #fff; letter-spacing: 0.5px; }
     h1 { font-size: 2.2rem; margin-top: -100px; margin-bottom: 40px; text-shadow: 0 4px 20px rgba(0,0,0,0.8); position: relative; z-index: 20; }
     h2 { font-size: 1.6rem; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); margin-bottom: 25px; }
     p { color: var(--text-muted); margin-bottom: 15px; font-size: 0.95rem; font-family: var(--font-ui); }
@@ -82,7 +82,7 @@
     .img-bg-2 { background: url('Porkatthehock67-44.png') center right/cover no-repeat; }
     .img-card-overlay { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(15, 17, 21, 0.95) 30%, rgba(15, 17, 21, 0.2) 100%); z-index: 1; }
     .img-card-content { position: relative; z-index: 2; padding: 40px 30px; max-width: 80%; }
-    .img-card-content h3 { font-size: 1.3rem; margin-bottom: 20px; font-family: var(--font-ui); }
+    .img-card-content h3 { font-size: 1.3rem; margin-bottom: 20px; font-family: var(--font-brand); }
 
     /* Info Lists */
     .info-list { list-style: none; padding: 0; }
@@ -92,7 +92,7 @@
     .info-list a { color: #fff; text-decoration: none; border-bottom: 1px solid var(--brand-red); transition: opacity 0.2s; }
     .info-list a:hover { opacity: 0.8; }
 
-    /* Calendar Schedule Cards - 2 Columns with Blended Photos and Standardized Font */
+    /* Calendar Schedule Cards */
     .schedule-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px; }
     @media (max-width: 900px) { .schedule-grid { grid-template-columns: 1fr; } }
     
@@ -103,7 +103,6 @@
       overflow: hidden; 
       border-top: 3px solid var(--border-color);
       transition: border-image 0.3s ease, border-color 0.3s ease;
-      font-family: var(--font-ui);
     }
     .round-card:hover { 
       border-top: 3px solid transparent;
@@ -135,11 +134,11 @@
     .photo-long-beach { background-image: url('tracks/longbeach.jpg'); }
     .photo-road-atlanta { background-image: url('tracks/roadatlanta.jpg'); }
     
-    .round-header { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.8); border: 1px solid var(--border-color); padding: 4px 10px; border-radius: 4px; font-family: var(--font-ui); font-size: 0.85rem; font-weight: 600; color: #fff; z-index: 2; }
-    .round-date { position: absolute; top: 15px; right: 15px; color: var(--brand-red); font-weight: 700; font-size: 0.85rem; background: rgba(0,0,0,0.8); padding: 4px 10px; border-radius: 4px; z-index: 2; font-family: var(--font-ui); }
+    .round-header { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.8); border: 1px solid var(--border-color); padding: 4px 10px; border-radius: 4px; font-family: var(--font-brand); font-size: 0.8rem; letter-spacing: 0.5px; color: #fff; z-index: 2; }
+    .round-date { position: absolute; top: 15px; right: 15px; color: var(--brand-red); font-weight: 700; font-size: 0.85rem; background: rgba(0,0,0,0.8); padding: 4px 10px; border-radius: 4px; z-index: 2; font-family: var(--font-brand); }
     
     .round-details { padding: 25px; margin-top: -20px; position: relative; z-index: 3; }
-    .round-details h3 { font-family: var(--font-ui); font-size: 1.25rem; font-weight: 700; margin-bottom: 5px; text-transform: none; color: #fff; }
+    .round-details h3 { font-family: var(--font-brand); font-size: 1.3rem; margin-bottom: 5px; text-transform: uppercase; color: #fff; letter-spacing: 0.5px; }
     
     .round-meta { display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); font-family: var(--font-ui); }
     .round-meta span strong { color: #fff; font-weight: 500; }
@@ -150,7 +149,7 @@
     .table-wrapper { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; margin-bottom: 40px; border-top: 3px solid transparent; border-image: var(--brand-gradient); border-image-slice: 1; }
     table { width: 100%; border-collapse: collapse; text-align: left; }
     th, td { padding: 15px 20px; border-bottom: 1px solid var(--border-color); font-size: 0.95rem; }
-    th { background: rgba(0,0,0,0.2); color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px; }
+    th { background: rgba(0,0,0,0.2); color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-family: var(--font-brand); font-size: 0.8rem; letter-spacing: 0.5px; }
     tr:last-child td { border-bottom: none; }
     tr:hover td { background: var(--bg-panel-hover); }
     
