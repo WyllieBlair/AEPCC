@@ -666,7 +666,7 @@
         });
     }
 
-    function filterDivision(division, event) {
+function filterDivision(division, event) {
       document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
       if (event && event.target) {
         event.target.classList.add('active');
@@ -678,12 +678,7 @@
       const divLower = division.toLowerCase();
       const filtered = globalDrivers.filter(d => {
         const driverClass = (d.class || '').toLowerCase();
-        if (divLower === 'pro') {
-          return driverClass === 'pro';
-        } else {
-          // Am category captures 'am', 'pro-am', or any secondary class
-          return driverClass !== 'pro';
-        }
+        return driverClass === divLower;
       });
 
       renderDrivers(filtered);
