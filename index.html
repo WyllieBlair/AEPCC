@@ -92,7 +92,7 @@
     .info-list a { color: #fff; text-decoration: none; border-bottom: 1px solid var(--brand-red); transition: opacity 0.2s; }
     .info-list a:hover { opacity: 0.8; }
 
-    /* Calendar Schedule Cards */
+    /* Calendar Schedule Cards - 2 Columns with Blended Photos */
     .schedule-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px; }
     @media (max-width: 900px) { .schedule-grid { grid-template-columns: 1fr; } }
     
@@ -135,11 +135,46 @@
     .photo-road-atlanta { background-image: url('tracks/roadatlanta.jpg'); }
     
     .round-header { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.8); border: 1px solid var(--border-color); padding: 4px 10px; border-radius: 4px; font-family: var(--font-brand); font-size: 0.8rem; letter-spacing: 0.5px; color: #fff; z-index: 2; }
-    .round-date { position: absolute; top: 15px; right: 15px; color: var(--brand-red); font-weight: 700; font-size: 0.85rem; background: rgba(0,0,0,0.8); padding: 4px 10px; border-radius: 4px; z-index: 2; font-family: var(--font-brand); }
+    
+    /* Dynamic Round Date / Results Link Styling */
+    .round-date { 
+      position: absolute; 
+      top: 15px; 
+      right: 15px; 
+      color: var(--brand-red); 
+      font-weight: 700; 
+      font-size: 0.85rem; 
+      background: rgba(0,0,0,0.8); 
+      padding: 4px 10px; 
+      border-radius: 4px; 
+      z-index: 2; 
+      font-family: var(--font-brand); 
+    }
+    .round-results-link {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: var(--brand-red);
+      color: #fff !important;
+      font-weight: 700;
+      font-size: 0.8rem;
+      padding: 5px 12px;
+      border-radius: 4px;
+      text-decoration: none;
+      z-index: 2;
+      font-family: var(--font-ui);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: opacity 0.2s;
+    }
+    .round-results-link:hover { opacity: 0.85; }
     
     .round-details { padding: 25px; margin-top: -20px; position: relative; z-index: 3; }
-    .round-details h3 { font-family: var(--font-brand); font-size: 1.3rem; margin-bottom: 5px; text-transform: uppercase; color: #fff; letter-spacing: 0.5px; }
+    .round-details h3 { font-family: var(--font-brand); font-size: 1.3rem; margin-bottom: 2px; text-transform: uppercase; color: #fff; letter-spacing: 0.5px; }
     
+    /* Track Location Subtitle Styling */
+    .track-location { font-size: 0.8rem; color: var(--text-muted); font-family: var(--font-ui); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+
     .round-meta { display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); font-family: var(--font-ui); }
     .round-meta span strong { color: #fff; font-weight: 500; }
     
@@ -238,10 +273,11 @@
           <div class="track-photo photo-sebring">
             <div class="track-photo-overlay"></div>
             <div class="round-header">Round 1</div>
-            <div class="round-date">OCT 1</div>
+            <div class="round-date-badge" data-date="2026-10-01">OCT 1</div>
           </div>
           <div class="round-details">
             <h3>Sebring</h3>
+            <div class="track-location">Florida, USA</div>
             <div class="round-meta">
               <span>Format: <strong>Regular</strong></span>
             </div>
@@ -254,10 +290,11 @@
           <div class="track-photo photo-bathurst">
             <div class="track-photo-overlay"></div>
             <div class="round-header">Round 2</div>
-            <div class="round-date">OCT 8</div>
+            <div class="round-date-badge" data-date="2026-10-08">OCT 8</div>
           </div>
           <div class="round-details">
             <h3>Bathurst</h3>
+            <div class="track-location">New South Wales, Australia</div>
             <div class="round-meta">
               <span>Format: <strong>Endurance</strong></span>
             </div>
@@ -270,10 +307,11 @@
           <div class="track-photo photo-road-america">
             <div class="track-photo-overlay"></div>
             <div class="round-header">Round 3</div>
-            <div class="round-date">OCT 15</div>
+            <div class="round-date-badge" data-date="2026-10-15">OCT 15</div>
           </div>
           <div class="round-details">
             <h3>Road America</h3>
+            <div class="track-location">Wisconsin, USA</div>
             <div class="round-meta">
               <span>Format: <strong>Sprint</strong></span>
             </div>
@@ -286,10 +324,11 @@
           <div class="track-photo photo-cota">
             <div class="track-photo-overlay"></div>
             <div class="round-header">Round 4</div>
-            <div class="round-date">OCT 22</div>
+            <div class="round-date-badge" data-date="2026-10-22">OCT 22</div>
           </div>
           <div class="round-details">
             <h3>COTA</h3>
+            <div class="track-location">Texas, USA</div>
             <div class="round-meta">
               <span>Format: <strong>Sprint</strong></span>
             </div>
@@ -302,10 +341,11 @@
           <div class="track-photo photo-hungaroring">
             <div class="track-photo-overlay"></div>
             <div class="round-header">Round 5</div>
-            <div class="round-date">OCT 29</div>
+            <div class="round-date-badge" data-date="2026-10-29">OCT 29</div>
           </div>
           <div class="round-details">
             <h3>Hungaroring</h3>
+            <div class="track-location">Mogyoród, Hungary</div>
             <div class="round-meta">
               <span>Format: <strong>Regular</strong></span>
             </div>
@@ -318,10 +358,11 @@
           <div class="track-photo photo-algarve">
             <div class="track-photo-overlay"></div>
             <div class="round-header">Round 6</div>
-            <div class="round-date">NOV 5</div>
+            <div class="round-date-badge" data-date="2026-11-05">NOV 5</div>
           </div>
           <div class="round-details">
             <h3>Algarve</h3>
+            <div class="track-location">Portimão, Portugal</div>
             <div class="round-meta">
               <span>Format: <strong>Sprint</strong></span>
             </div>
@@ -334,10 +375,11 @@
           <div class="track-photo photo-long-beach">
             <div class="track-photo-overlay"></div>
             <div class="round-header">Round 7</div>
-            <div class="round-date">NOV 12</div>
+            <div class="round-date-badge" data-date="2026-11-12">NOV 12</div>
           </div>
           <div class="round-details">
             <h3>Long Beach</h3>
+            <div class="track-location">California, USA</div>
             <div class="round-meta">
               <span>Format: <strong>Regular</strong></span>
             </div>
@@ -350,10 +392,11 @@
           <div class="track-photo photo-road-atlanta">
             <div class="track-photo-overlay"></div>
             <div class="round-header">Round 8 Finale</div>
-            <div class="round-date">NOV 19</div>
+            <div class="round-date-badge" data-date="2026-11-19">NOV 19</div>
           </div>
           <div class="round-details">
             <h3>Road Atlanta</h3>
+            <div class="track-location">Georgia, USA</div>
             <div class="round-meta">
               <span>Format: <strong>Super Sprint</strong></span>
             </div>
@@ -411,7 +454,10 @@
   </div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", loadStandings);
+    document.addEventListener("DOMContentLoaded", () => {
+      loadStandings();
+      updateScheduleBadges();
+    });
 
     function switchTab(tabId) {
       document.querySelectorAll('.tab-view').forEach(view => view.classList.remove('active'));
@@ -422,6 +468,25 @@
       
       const matchingBtn = Array.from(document.querySelectorAll('#nav-tabs button')).find(btn => btn.getAttribute('onclick')?.includes(tabId));
       if (matchingBtn) matchingBtn.classList.add('active');
+    }
+
+    /* Automatically swap date badges to "View Results" if the round date has passed */
+    function updateScheduleBadges() {
+      const today = new Date();
+      document.querySelectorAll('.round-date-badge').forEach(badge => {
+        const raceDateStr = badge.getAttribute('data-date');
+        const raceDate = new Date(raceDateStr);
+        
+        // If race date has passed (comparing dates at midnight)
+        if (today >= raceDate) {
+          badge.outerHTML = `<a href="#" onclick="switchTab('results')" class="round-results-link">View Results</a>`;
+        } else {
+          // Keep as text date formatted nicely
+          const options = { month: 'short', day: 'numeric' };
+          // If you want it capitalized like OCT 1:
+          badge.textContent = raceDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }).toUpperCase();
+        }
+      });
     }
 
     function loadStandings() {
