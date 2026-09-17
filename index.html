@@ -25,7 +25,7 @@
       --bg-page: #0f1115;
       --bg-panel: #181b21;
       --bg-panel-hover: #1e222a;
-      --border-color: #2a2e39;
+      --border-color: #3b4252; /* Increased border visibility */
       --text-main: #f3f4f6;
       --text-muted: #9ca3af;
       
@@ -92,13 +92,13 @@
     .info-list a { color: #fff; text-decoration: none; border-bottom: 1px solid var(--brand-red); transition: opacity 0.2s; }
     .info-list a:hover { opacity: 0.8; }
 
-    /* Calendar Schedule Cards - Enhanced Glass & Photo Visibility */
+    /* Calendar Schedule Cards - Stronger Borders & Lowered High-Opacity Glass */
     .schedule-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px; }
     @media (max-width: 900px) { .schedule-grid { grid-template-columns: 1fr; } }
     
     .round-card { 
       background: var(--bg-panel); 
-      border: 1px solid var(--border-color); 
+      border: 1.5px solid var(--border-color); 
       border-radius: 8px; 
       overflow: hidden; 
       border-top: 3px solid var(--border-color);
@@ -111,7 +111,7 @@
     }
     
     .track-photo { 
-      height: 350px; 
+      height: 380px; 
       background-color: #12141a; 
       background-size: cover; 
       background-position: center; 
@@ -120,7 +120,7 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 20px;
+      padding: 15px;
     }
     
     .photo-sebring { background-image: url('tracks/sebring.jpg'); }
@@ -142,10 +142,10 @@
     }
 
     .round-header { 
-      background: rgba(15, 17, 21, 0.6); 
+      background: rgba(15, 17, 21, 0.75); 
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.15); 
+      border: 1px solid rgba(255, 255, 255, 0.2); 
       padding: 5px 12px; 
       border-radius: 6px; 
       font-family: var(--font-brand); 
@@ -158,10 +158,10 @@
       color: #fff; 
       font-weight: 700; 
       font-size: 0.85rem; 
-      background: rgba(218, 41, 28, 0.85); 
+      background: rgba(218, 41, 28, 0.9); 
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       padding: 5px 12px; 
       border-radius: 6px; 
       z-index: 2; 
@@ -169,7 +169,7 @@
     }
 
     .round-results-link {
-      background: rgba(218, 41, 28, 0.9);
+      background: rgba(218, 41, 28, 0.95);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       color: #fff !important;
@@ -185,16 +185,17 @@
     }
     .round-results-link:hover { opacity: 0.9; }
     
-    /* Lighter, Lowered Glass Panel */
+    /* Lowered, High-Opacity Glass Panel tucked to bottom */
     .track-glass-panel {
-      background: rgba(15, 17, 21, 0.55);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(15, 17, 21, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       border-radius: 8px;
       padding: 16px 20px;
       z-index: 2;
-      margin-top: auto; /* Pushes glass box cleanly to the bottom */
+      margin-top: auto;
+      margin-bottom: 2px;
     }
 
     .track-glass-panel h3 { 
@@ -208,7 +209,7 @@
     
     .track-location { 
       font-size: 0.75rem; 
-      color: #d1d5db; 
+      color: #e5e7eb; 
       font-family: var(--font-ui); 
       text-transform: uppercase; 
       letter-spacing: 1px; 
@@ -228,7 +229,7 @@
     }
     .round-meta span strong { color: #fff; font-weight: 500; }
     
-    .track-glass-panel p { font-size: 0.85rem; margin-bottom: 0; color: #e5e7eb; font-family: var(--font-ui); }
+    .track-glass-panel p { font-size: 0.85rem; margin-bottom: 0; color: #f3f4f6; font-family: var(--font-ui); }
 
     /* Division Filter Buttons */
     .filter-container { display: flex; gap: 10px; margin-bottom: 20px; }
