@@ -56,8 +56,14 @@
     .btn-discord { background: var(--brand-discord); color: #fff; padding: 8px 16px; border-radius: 4px; font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: opacity 0.2s; display: inline-flex; align-items: center; gap: 6px; }
     .btn-discord:hover { opacity: 0.9; }
 
-    /* Hero Image */
-    .hero { width: 100%; height: 350px; background: url('PESCAPAC_Adelaide_Race_7_080126.png') center/cover no-repeat; border-bottom: 1px solid var(--border-color); position: relative; }
+    /* Hero Image - Increased height to 500px so it doesn't cut off the car */
+    .hero { 
+      width: 100%; 
+      height: 500px; 
+      background: url('PESCAPAC_Adelaide_Race_7_080126.jpg') center center/cover no-repeat; 
+      border-bottom: 1px solid var(--border-color); 
+      position: relative; 
+    }
     .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, var(--bg-page), transparent); }
 
     /* Layout */
