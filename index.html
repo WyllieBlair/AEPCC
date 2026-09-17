@@ -346,7 +346,6 @@
 
   <!-- Hero Slideshow with Integrated Title -->
   <div class="hero" id="hero-slider">
-    <!-- Slides generated dynamically by script -->
     <div class="hero-overlay"></div>
     <div class="hero-content">
       <h1>Australian E-Sport Porsche Cup</h1>
@@ -593,7 +592,6 @@
     let globalDrivers = [];
     let globalTeams = [];
 
-    // List of hero images in your photos/ folder that will auto-scroll
     const heroImages = [
       'PESCAPAC_Adelaide_Race_7_080126.png',
       'Porkatthebring2.png',
@@ -610,7 +608,6 @@
       const heroContainer = document.getElementById('hero-slider');
       if (!heroContainer) return;
 
-      // Create slide elements
       heroImages.forEach((imgSrc, index) => {
         const slide = document.createElement('div');
         slide.className = `hero-slide ${index === 0 ? 'active' : ''}`;
@@ -618,7 +615,6 @@
         heroContainer.insertBefore(slide, heroContainer.firstChild);
       });
 
-      // Start slideshow interval (change every 5 seconds)
       let currentSlide = 0;
       const slides = heroContainer.querySelectorAll('.hero-slide');
       if (slides.length > 1) {
@@ -656,7 +652,8 @@
     }
 
     function loadStandings() {
-      fetch('standings.json')
+      // Pulling standings from a 'data' folder
+      fetch('data/standings.json')
         .then(res => res.json())
         .then(data => {
           globalDrivers = data.drivers || [];
@@ -664,7 +661,7 @@
           filterDivision('Pro');
           renderTeams(globalTeams);
         })
-        .catch(err => console.warn("Waiting on standings.json", err));
+        .catch(err => console.warn("Waiting on data/standings.json", err));
     }
 
     function filterDivision(division, event) {
