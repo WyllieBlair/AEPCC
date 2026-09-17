@@ -362,7 +362,7 @@
         <h2>AESPCC Season 1</h2>
         <p>Welcome to the inaugural season of the Australian E-Sport Porsche Cup Championship (AESPCC)! Launching this October, we are bringing premier single-make racing to the Oceanic region, exclusively featuring the Porsche 911 GT3 Cup (992.2) on iRacing.</p>
         <p>Our season calendar closely follows the official iRacing Porsche Cup series schedule, allowing drivers to seamlessly practice and compete. Prepare to battle across diverse track layouts and four distinct weekend formats—ranging from rapid 16-minute super sprints with inverted grids to grueling 60-minute endurance features requiring compulsory pit stops.</p>
-        <p>To ensure close, competitive racing across the 60-car grid, the field is divided into three skill-based divisions (Pro, Pro-Am, and Am) determined by a mandatory pre-qualifying week. Class champions will be awarded trophies, supplemented by a scaling cash prize pool based on total season entries.</p>
+        <p>To ensure close, competitive racing across the 60-car grid, the field is divided into two skill-based divisions (Pro and Am) determined by a mandatory pre-qualifying week. Class champions will be awarded trophies, supplemented by a scaling cash prize pool based on total season entries.</p>
         <p>Entry is open to any driver holding an active iRacing Class D Sports Car license. To secure your spot on the grid, simply join our Discord community, complete your registration, and pay the entry fee.</p>
       </div>
 
@@ -375,7 +375,7 @@
             <ul class="info-list">
               <li>Car: <strong>Porsche 911 GT3 Cup (992.2)</strong></li>
               <li>Setup: <strong>Open Setup</strong></li>
-              <li>Divisions: <strong>Pro, Pro-Am, Am</strong></li>
+              <li>Divisions: <strong>Pro, Am</strong></li>
               <li>Prize Pool: <strong>Trophies + Scaling Cash Pool (Based on entries)</strong></li>
               <li>Registration: <strong><a href="#">Open Now</a></strong></li>
             </ul>
@@ -417,7 +417,7 @@
             <div class="round-meta">
               <span>Format: <strong>Regular</strong></span>
             </div>
-            <p>40m single race (~20 laps)</p>
+            <p>40 Minutes</p>
           </div>
         </div>
 
@@ -433,7 +433,7 @@
             <div class="round-meta">
               <span>Format: <strong>Endurance</strong></span>
             </div>
-            <p>60m Endurance race (fuel cap 65%)</p>
+            <p>60 Minutes</p>
           </div>
         </div>
 
@@ -449,7 +449,7 @@
             <div class="round-meta">
               <span>Format: <strong>Sprint</strong></span>
             </div>
-            <p>16m Sprint &rarr; 24m Feature (Invert 8)</p>
+            <p>40 Minutes</p>
           </div>
         </div>
 
@@ -465,7 +465,7 @@
             <div class="round-meta">
               <span>Format: <strong>Sprint</strong></span>
             </div>
-            <p>16m Sprint &rarr; 24m Feature (Invert 8)</p>
+            <p>40 Minutes</p>
           </div>
         </div>
 
@@ -481,7 +481,7 @@
             <div class="round-meta">
               <span>Format: <strong>Regular</strong></span>
             </div>
-            <p>40m single race</p>
+            <p>40 Minutes</p>
           </div>
         </div>
 
@@ -497,7 +497,7 @@
             <div class="round-meta">
               <span>Format: <strong>Sprint</strong></span>
             </div>
-            <p>16m Sprint &rarr; 24m Feature (Invert 8)</p>
+            <p>40 Minutes</p>
           </div>
         </div>
 
@@ -513,7 +513,7 @@
             <div class="round-meta">
               <span>Format: <strong>Regular</strong></span>
             </div>
-            <p>40m single race</p>
+            <p>40 Minutes</p>
           </div>
         </div>
 
@@ -529,7 +529,7 @@
             <div class="round-meta">
               <span>Format: <strong>Super Sprint</strong></span>
             </div>
-            <p>20m Race 1 &rarr; 20m Race 2 &rarr; 30m Feature</p>
+            <p>70 Minutes</p>
           </div>
         </div>
 
@@ -587,7 +587,8 @@
     </div>
 
   </div>
-<script>
+
+  <script>
     let globalDrivers = [];
     let globalTeams = [];
 
@@ -666,7 +667,7 @@
         });
     }
 
-function filterDivision(division, event) {
+    function filterDivision(division, event) {
       document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
       if (event && event.target) {
         event.target.classList.add('active');
