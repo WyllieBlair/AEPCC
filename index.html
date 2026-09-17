@@ -587,8 +587,7 @@
     </div>
 
   </div>
-
-  <script>
+<script>
     let globalDrivers = [];
     let globalTeams = [];
 
@@ -652,7 +651,6 @@
     }
 
     function loadStandings() {
-      // Pulling standings from a 'data' folder
       fetch('data/standings.json')
         .then(res => res.json())
         .then(data => {
@@ -661,7 +659,11 @@
           filterDivision('Pro');
           renderTeams(globalTeams);
         })
-        .catch(err => console.warn("Waiting on data/standings.json", err));
+        .catch(err => {
+          console.warn("Waiting on data/standings.json", err);
+          document.getElementById('driver-rows').innerHTML = `<tr><td colspan="4" style="text-align:center;">Failed to load driver standings.</td></tr>`;
+          renderTeams([]); // Triggers the empty state handler for teams
+        });
     }
 
     function filterDivision(division, event) {
@@ -704,9 +706,14 @@
 
     function renderTeams(teams) {
       const tbody = document.getElementById('team-rows');
-      if (!tbody || teams.length === 0) return;
-      tbody.innerHTML = '';
+      if (!tbody) return;
 
+      if (!teams || teams.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">No team standings available.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = '';
       teams.forEach((team, idx) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
