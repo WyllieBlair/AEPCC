@@ -310,15 +310,31 @@
     .track-glass-panel p { font-size: 0.85rem; margin-bottom: 0; color: #f3f4f6; font-family: var(--font-brand); font-weight: 400; }
 
     /* Division Filter Buttons */
-    .filter-container { display: flex; gap: 10px; margin-bottom: 20px; }
+    .filter-container { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; }
     .filter-btn { background: var(--bg-panel); border: 1.5px solid var(--border-color); color: var(--text-muted); padding: 8px 16px; border-radius: 6px; font-family: var(--font-brand); font-weight: 800; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; text-transform: uppercase; }
     .filter-btn:hover, .filter-btn.active { background: var(--brand-red); border-color: var(--brand-red); color: #fff; }
 
-    /* Tables */
-    .table-wrapper { background: var(--bg-panel); border: 1.5px solid var(--border-color); border-radius: 12px; overflow: hidden; margin-bottom: 40px; border-top: 3px solid transparent; border-image: var(--brand-gradient); border-image-slice: 1; }
-    table { width: 100%; border-collapse: collapse; text-align: left; }
-    th, td { padding: 15px 20px; border-bottom: 1.5px solid var(--border-color); font-size: 0.95rem; font-family: var(--font-brand); font-weight: 400; }
-    th { background: rgba(0,0,0,0.2); color: var(--text-muted); font-weight: 800; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px; }
+    /* Centered Standings Tables */
+    .standings-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .standings-container h2 {
+      text-align: center;
+    }
+    .table-wrapper { 
+      background: var(--bg-panel); 
+      border: 1.5px solid var(--border-color); 
+      border-radius: 12px; 
+      overflow: hidden; 
+      margin-bottom: 40px; 
+      border-top: 3px solid transparent; 
+      border-image: var(--brand-gradient); 
+      border-image-slice: 1; 
+    }
+    table { width: 100%; border-collapse: collapse; text-align: center; }
+    th, td { padding: 15px 20px; border-bottom: 1.5px solid var(--border-color); font-size: 0.95rem; font-family: var(--font-brand); font-weight: 400; text-align: center; }
+    th { background: rgba(0,0,0,0.2); color: var(--text-muted); font-weight: 800; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px; text-align: center; }
     tr:last-child td { border-bottom: none; }
     tr:hover td { background: var(--bg-panel-hover); }
     
@@ -377,7 +393,7 @@
               <li>Setup: <strong>Open Setup</strong></li>
               <li>Divisions: <strong>Pro, Am</strong></li>
               <li>Prize Pool: <strong>Trophies + Scaling Cash Pool (Based on entries)</strong></li>
-              <li>Register here:<strong><a href="https://discord.gg/r7UtWHDEXh" target="_blank">AEPCC Discord</a></strong></li
+              <li>Register here:<strong><a href="https://discord.gg/r7UtWHDEXh" target="_blank">AEPCC Discord</a></strong></li>
             </ul>
           </div>
         </div>
@@ -536,45 +552,47 @@
       </div>
     </div>
 
-    <!-- TAB: STANDINGS -->
+    <!-- TAB: STANDINGS (Centered) -->
     <div id="tab-standings" class="tab-view">
-      <h2>Driver Championship</h2>
-      
-      <div class="filter-container">
-        <button class="filter-btn active" onclick="filterDivision('Pro', event)">Pro</button>
-        <button class="filter-btn" onclick="filterDivision('Am', event)">Am</button>
-      </div>
+      <div class="standings-container">
+        <h2>Driver Championship</h2>
+        
+        <div class="filter-container">
+          <button class="filter-btn active" onclick="filterDivision('Pro', event)">Pro</button>
+          <button class="filter-btn" onclick="filterDivision('Am', event)">Am</button>
+        </div>
 
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th style="width: 60px;">Pos</th>
-              <th>Driver</th>
-              <th>Class</th>
-              <th>Net Pts</th>
-            </tr>
-          </thead>
-          <tbody id="driver-rows">
-            <tr><td colspan="4" style="text-align:center;">Loading data...</td></tr>
-          </tbody>
-        </table>
-      </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 80px;">Pos</th>
+                <th>Driver</th>
+                <th>Class</th>
+                <th>Net Pts</th>
+              </tr>
+            </thead>
+            <tbody id="driver-rows">
+              <tr><td colspan="4" style="text-align:center;">Loading data...</td></tr>
+            </tbody>
+          </table>
+        </div>
 
-      <h2>Team Championship</h2>
-      <div class="table-wrapper" style="max-width: 600px;">
-        <table>
-          <thead>
-            <tr>
-              <th style="width: 60px;">Pos</th>
-              <th>Team</th>
-              <th>Total Pts</th>
-            </tr>
-          </thead>
-          <tbody id="team-rows">
-            <tr><td colspan="3" style="text-align:center;">Loading data...</td></tr>
-          </tbody>
-        </table>
+        <h2>Team Championship</h2>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 80px;">Pos</th>
+                <th>Team</th>
+                <th>Total Pts</th>
+              </tr>
+            </thead>
+            <tbody id="team-rows">
+              <tr><td colspan="3" style="text-align:center;">Loading data...</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
