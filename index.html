@@ -91,12 +91,23 @@
     .info-list a { color: #fff; text-decoration: none; border-bottom: 1px solid var(--brand-red); transition: opacity 0.2s; }
     .info-list a:hover { opacity: 0.8; }
 
-    /* Calendar Schedule Cards - Strictly 2 Columns */
+    /* Calendar Schedule Cards - 2 Columns with Gradient Border on Hover */
     .schedule-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px; }
     @media (max-width: 900px) { .schedule-grid { grid-template-columns: 1fr; } }
     
-    .round-card { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; transition: transform 0.2s; }
-    .round-card:hover { transform: translateY(-4px); border-color: var(--brand-red); }
+    .round-card { 
+      background: var(--bg-panel); 
+      border: 1px solid var(--border-color); 
+      border-radius: 8px; 
+      overflow: hidden; 
+      border-top: 3px solid var(--border-color);
+      transition: border-image 0.3s ease, border-color 0.3s ease;
+    }
+    .round-card:hover { 
+      border-top: 3px solid transparent;
+      border-image: var(--brand-gradient);
+      border-image-slice: 1;
+    }
     
     .track-photo { height: 200px; background-color: #12141a; background-size: cover; background-position: center; background-repeat: no-repeat; border-bottom: 1px solid var(--border-color); position: relative; }
     
@@ -109,13 +120,12 @@
     .photo-long-beach { background-image: url('tracks/longbeach.jpg'); }
     .photo-road-atlanta { background-image: url('tracks/roadatlanta.jpg'); }
     
-    .round-header { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.8); border: 1px solid var(--border-color); padding: 4px 10px; border-radius: 4px; font-family: var(--font-brand); font-size: 0.85rem; letter-spacing: 0.5px; }
+    .round-header { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.8); border: 1px solid var(--border-color); padding: 4px 10px; border-radius: 4px; font-family: var(--font-ui); font-size: 0.85rem; font-weight: 600; color: #fff; }
     .round-date { position: absolute; top: 15px; right: 15px; color: var(--brand-red); font-weight: 700; font-size: 0.85rem; background: rgba(0,0,0,0.8); padding: 4px 10px; border-radius: 4px; }
     
     .round-details { padding: 25px; }
-    .round-details h3 { font-family: var(--font-ui); font-size: 1.3rem; margin-bottom: 5px; text-transform: none; }
+    .round-details h3 { font-family: var(--font-ui); font-size: 1.25rem; font-weight: 700; margin-bottom: 5px; text-transform: none; color: #fff; }
     
-    /* Clean Subtitle Styling instead of AI badges */
     .round-meta { display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
     .round-meta span strong { color: #fff; font-weight: 500; }
     
@@ -203,7 +213,7 @@
       </div>
     </div>
     
-    <!-- TAB: SCHEDULE (2-Column Grid Layout) -->
+    <!-- TAB: SCHEDULE -->
     <div id="tab-schedule" class="tab-view">
       <h2>Season 1 Calendar</h2>
       
@@ -315,15 +325,15 @@
         </div>
 
         <!-- Round 8 -->
-        <div class="round-card" style="border: 1px solid #c084fc;">
+        <div class="round-card">
           <div class="track-photo photo-road-atlanta">
-            <div class="round-header" style="color: #c084fc;">Round 8 Finale</div>
+            <div class="round-header">Round 8 Finale</div>
             <div class="round-date">NOV 19</div>
           </div>
           <div class="round-details">
             <h3>Road Atlanta</h3>
             <div class="round-meta">
-              <span>Format: <strong style="color: #c084fc;">Super Sprint</strong></span>
+              <span>Format: <strong>Super Sprint</strong></span>
             </div>
             <p>20m Race 1 &rarr; 20m Race 2 &rarr; 30m Feature</p>
           </div>
