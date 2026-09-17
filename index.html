@@ -92,7 +92,7 @@
     .info-list a { color: #fff; text-decoration: none; border-bottom: 1px solid var(--brand-red); transition: opacity 0.2s; }
     .info-list a:hover { opacity: 0.8; }
 
-    /* Calendar Schedule Cards - 2 Columns */
+    /* Calendar Schedule Cards - Glass Overlay on Photos */
     .schedule-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px; }
     @media (max-width: 900px) { .schedule-grid { grid-template-columns: 1fr; } }
     
@@ -110,20 +110,17 @@
       border-image-slice: 1;
     }
     
-    /* Smoother photo-to-text morphing blend */
     .track-photo { 
-      height: 220px; 
-      background-color: #181b21; 
+      height: 320px; 
+      background-color: #12141a; 
       background-size: cover; 
       background-position: center; 
       background-repeat: no-repeat; 
       position: relative; 
-    }
-    
-    .track-photo-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to bottom, rgba(24, 27, 33, 0.1) 30%, var(--bg-panel) 95%);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 20px;
     }
     
     .photo-sebring { background-image: url('tracks/sebring.jpg'); }
@@ -135,11 +132,16 @@
     .photo-long-beach { background-image: url('tracks/longbeach.jpg'); }
     .photo-road-atlanta { background-image: url('tracks/roadatlanta.jpg'); }
     
-    /* Glassmorphism Header Badges */
+    /* Top Row inside Photo (Round Badge & Date/Results) */
+    .photo-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      z-index: 2;
+    }
+
     .round-header { 
-      position: absolute; 
-      top: 15px; 
-      left: 15px; 
       background: rgba(15, 17, 21, 0.65); 
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
@@ -150,13 +152,9 @@
       font-size: 0.8rem; 
       letter-spacing: 0.5px; 
       color: #fff; 
-      z-index: 2; 
     }
     
     .round-date-badge { 
-      position: absolute; 
-      top: 15px; 
-      right: 15px; 
       color: var(--brand-red); 
       font-weight: 700; 
       font-size: 0.85rem; 
@@ -166,14 +164,10 @@
       border: 1px solid rgba(255, 255, 255, 0.1);
       padding: 5px 12px; 
       border-radius: 6px; 
-      z-index: 2; 
       font-family: var(--font-brand); 
     }
 
     .round-results-link {
-      position: absolute;
-      top: 15px;
-      right: 15px;
       background: rgba(218, 41, 28, 0.85);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
@@ -183,7 +177,6 @@
       padding: 6px 14px;
       border-radius: 6px;
       text-decoration: none;
-      z-index: 2;
       font-family: var(--font-ui);
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -191,15 +184,49 @@
     }
     .round-results-link:hover { opacity: 0.9; }
     
-    .round-details { padding: 20px 25px 25px 25px; margin-top: -15px; position: relative; z-index: 3; }
-    .round-details h3 { font-family: var(--font-brand); font-size: 1.3rem; margin-bottom: 2px; text-transform: uppercase; color: #fff; letter-spacing: 0.5px; }
-    
-    .track-location { font-size: 0.8rem; color: var(--text-muted); font-family: var(--font-ui); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+    /* Glassmorphism Text Overlay Box at Bottom of Photo */
+    .track-glass-panel {
+      background: rgba(15, 17, 21, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 18px 20px;
+      z-index: 2;
+    }
 
-    .round-meta { display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); font-family: var(--font-ui); }
+    .track-glass-panel h3 { 
+      font-family: var(--font-brand); 
+      font-size: 1.35rem; 
+      margin-bottom: 2px; 
+      text-transform: uppercase; 
+      color: #fff; 
+      letter-spacing: 0.5px; 
+    }
+    
+    .track-location { 
+      font-size: 0.75rem; 
+      color: var(--text-muted); 
+      font-family: var(--font-ui); 
+      text-transform: uppercase; 
+      letter-spacing: 1px; 
+      margin-bottom: 10px; 
+    }
+
+    .round-meta { 
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between; 
+      font-size: 0.85rem; 
+      color: var(--text-muted); 
+      margin-bottom: 8px; 
+      padding-bottom: 8px; 
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1); 
+      font-family: var(--font-ui); 
+    }
     .round-meta span strong { color: #fff; font-weight: 500; }
     
-    .round-details p { font-size: 0.9rem; margin-bottom: 0; color: var(--text-muted); font-family: var(--font-ui); }
+    .track-glass-panel p { font-size: 0.85rem; margin-bottom: 0; color: var(--text-muted); font-family: var(--font-ui); }
 
     /* Division Filter Buttons */
     .filter-container { display: flex; gap: 10px; margin-bottom: 20px; }
@@ -297,136 +324,144 @@
         <!-- Round 1 -->
         <div class="round-card">
           <div class="track-photo photo-sebring">
-            <div class="track-photo-overlay"></div>
-            <div class="round-header">Round 1</div>
-            <div class="round-date-badge" data-date="2026-10-01">OCT 1</div>
-          </div>
-          <div class="round-details">
-            <h3>Sebring</h3>
-            <div class="track-location">Florida, USA</div>
-            <div class="round-meta">
-              <span>Format: <strong>Regular</strong></span>
+            <div class="photo-top-row">
+              <div class="round-header">Round 1</div>
+              <div class="round-date-badge" data-date="2026-10-01">OCT 1</div>
             </div>
-            <p>40m single race (~20 laps)</p>
+            <div class="track-glass-panel">
+              <h3>Sebring</h3>
+              <div class="track-location">Florida, USA</div>
+              <div class="round-meta">
+                <span>Format: <strong>Regular</strong></span>
+              </div>
+              <p>40m single race (~20 laps)</p>
+            </div>
           </div>
         </div>
 
         <!-- Round 2 -->
         <div class="round-card">
           <div class="track-photo photo-bathurst">
-            <div class="track-photo-overlay"></div>
-            <div class="round-header">Round 2</div>
-            <div class="round-date-badge" data-date="2026-10-08">OCT 8</div>
-          </div>
-          <div class="round-details">
-            <h3>Bathurst</h3>
-            <div class="track-location">New South Wales, Australia</div>
-            <div class="round-meta">
-              <span>Format: <strong>Endurance</strong></span>
+            <div class="photo-top-row">
+              <div class="round-header">Round 2</div>
+              <div class="round-date-badge" data-date="2026-10-08">OCT 8</div>
             </div>
-            <p>60m Endurance race (fuel cap 65%)</p>
+            <div class="track-glass-panel">
+              <h3>Bathurst</h3>
+              <div class="track-location">New South Wales, Australia</div>
+              <div class="round-meta">
+                <span>Format: <strong>Endurance</strong></span>
+              </div>
+              <p>60m Endurance race (fuel cap 65%)</p>
+            </div>
           </div>
         </div>
 
         <!-- Round 3 -->
         <div class="round-card">
           <div class="track-photo photo-road-america">
-            <div class="track-photo-overlay"></div>
-            <div class="round-header">Round 3</div>
-            <div class="round-date-badge" data-date="2026-10-15">OCT 15</div>
-          </div>
-          <div class="round-details">
-            <h3>Road America</h3>
-            <div class="track-location">Wisconsin, USA</div>
-            <div class="round-meta">
-              <span>Format: <strong>Sprint</strong></span>
+            <div class="photo-top-row">
+              <div class="round-header">Round 3</div>
+              <div class="round-date-badge" data-date="2026-10-15">OCT 15</div>
             </div>
-            <p>16m Sprint &rarr; 24m Feature (Invert 8)</p>
+            <div class="track-glass-panel">
+              <h3>Road America</h3>
+              <div class="track-location">Wisconsin, USA</div>
+              <div class="round-meta">
+                <span>Format: <strong>Sprint</strong></span>
+              </div>
+              <p>16m Sprint &rarr; 24m Feature (Invert 8)</p>
+            </div>
           </div>
         </div>
 
         <!-- Round 4 -->
         <div class="round-card">
           <div class="track-photo photo-cota">
-            <div class="track-photo-overlay"></div>
-            <div class="round-header">Round 4</div>
-            <div class="round-date-badge" data-date="2026-10-22">OCT 22</div>
-          </div>
-          <div class="round-details">
-            <h3>COTA</h3>
-            <div class="track-location">Texas, USA</div>
-            <div class="round-meta">
-              <span>Format: <strong>Sprint</strong></span>
+            <div class="photo-top-row">
+              <div class="round-header">Round 4</div>
+              <div class="round-date-badge" data-date="2026-10-22">OCT 22</div>
             </div>
-            <p>16m Sprint &rarr; 24m Feature (Invert 8)</p>
+            <div class="track-glass-panel">
+              <h3>COTA</h3>
+              <div class="track-location">Texas, USA</div>
+              <div class="round-meta">
+                <span>Format: <strong>Sprint</strong></span>
+              </div>
+              <p>16m Sprint &rarr; 24m Feature (Invert 8)</p>
+            </div>
           </div>
         </div>
 
         <!-- Round 5 -->
         <div class="round-card">
           <div class="track-photo photo-hungaroring">
-            <div class="track-photo-overlay"></div>
-            <div class="round-header">Round 5</div>
-            <div class="round-date-badge" data-date="2026-10-29">OCT 29</div>
-          </div>
-          <div class="round-details">
-            <h3>Hungaroring</h3>
-            <div class="track-location">Mogyoród, Hungary</div>
-            <div class="round-meta">
-              <span>Format: <strong>Regular</strong></span>
+            <div class="photo-top-row">
+              <div class="round-header">Round 5</div>
+              <div class="round-date-badge" data-date="2026-10-29">OCT 29</div>
             </div>
-            <p>40m single race</p>
+            <div class="track-glass-panel">
+              <h3>Hungaroring</h3>
+              <div class="track-location">Mogyoród, Hungary</div>
+              <div class="round-meta">
+                <span>Format: <strong>Regular</strong></span>
+              </div>
+              <p>40m single race</p>
+            </div>
           </div>
         </div>
 
         <!-- Round 6 -->
         <div class="round-card">
           <div class="track-photo photo-algarve">
-            <div class="track-photo-overlay"></div>
-            <div class="round-header">Round 6</div>
-            <div class="round-date-badge" data-date="2026-11-05">NOV 5</div>
-          </div>
-          <div class="round-details">
-            <h3>Algarve</h3>
-            <div class="track-location">Portimão, Portugal</div>
-            <div class="round-meta">
-              <span>Format: <strong>Sprint</strong></span>
+            <div class="photo-top-row">
+              <div class="round-header">Round 6</div>
+              <div class="round-date-badge" data-date="2026-11-05">NOV 5</div>
             </div>
-            <p>16m Sprint &rarr; 24m Feature (Invert 8)</p>
+            <div class="track-glass-panel">
+              <h3>Algarve</h3>
+              <div class="track-location">Portimão, Portugal</div>
+              <div class="round-meta">
+                <span>Format: <strong>Sprint</strong></span>
+              </div>
+              <p>16m Sprint &rarr; 24m Feature (Invert 8)</p>
+            </div>
           </div>
         </div>
 
         <!-- Round 7 -->
         <div class="round-card">
           <div class="track-photo photo-long-beach">
-            <div class="track-photo-overlay"></div>
-            <div class="round-header">Round 7</div>
-            <div class="round-date-badge" data-date="2026-11-12">NOV 12</div>
-          </div>
-          <div class="round-details">
-            <h3>Long Beach</h3>
-            <div class="track-location">California, USA</div>
-            <div class="round-meta">
-              <span>Format: <strong>Regular</strong></span>
+            <div class="photo-top-row">
+              <div class="round-header">Round 7</div>
+              <div class="round-date-badge" data-date="2026-11-12">NOV 12</div>
             </div>
-            <p>40m single race</p>
+            <div class="track-glass-panel">
+              <h3>Long Beach</h3>
+              <div class="track-location">California, USA</div>
+              <div class="round-meta">
+                <span>Format: <strong>Regular</strong></span>
+              </div>
+              <p>40m single race</p>
+            </div>
           </div>
         </div>
 
         <!-- Round 8 -->
         <div class="round-card">
           <div class="track-photo photo-road-atlanta">
-            <div class="track-photo-overlay"></div>
-            <div class="round-header">Round 8 Finale</div>
-            <div class="round-date-badge" data-date="2026-11-19">NOV 19</div>
-          </div>
-          <div class="round-details">
-            <h3>Road Atlanta</h3>
-            <div class="track-location">Georgia, USA</div>
-            <div class="round-meta">
-              <span>Format: <strong>Super Sprint</strong></span>
+            <div class="photo-top-row">
+              <div class="round-header">Round 8 Finale</div>
+              <div class="round-date-badge" data-date="2026-11-19">NOV 19</div>
             </div>
-            <p>20m Race 1 &rarr; 20m Race 2 &rarr; 30m Feature</p>
+            <div class="track-glass-panel">
+              <h3>Road Atlanta</h3>
+              <div class="track-location">Georgia, USA</div>
+              <div class="round-meta">
+                <span>Format: <strong>Super Sprint</strong></span>
+              </div>
+              <p>20m Race 1 &rarr; 20m Race 2 &rarr; 30m Feature</p>
+            </div>
           </div>
         </div>
 
@@ -526,7 +561,6 @@
         .then(data => {
           globalDrivers = data.drivers || [];
           globalTeams = data.teams || [];
-          // Default view shows Pro division
           filterDivision('Pro');
           renderTeams(globalTeams);
         })
@@ -538,7 +572,6 @@
       if (event && event.target) {
         event.target.classList.add('active');
       } else {
-        // Default highlight on Pro button if called programmatically
         const defaultBtn = document.querySelector('.filter-btn');
         if (defaultBtn) defaultBtn.classList.add('active');
       }
