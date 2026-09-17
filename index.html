@@ -109,19 +109,17 @@
     .photo-long-beach { background-image: url('tracks/longbeach.jpg'); }
     .photo-road-atlanta { background-image: url('tracks/roadatlanta.jpg'); }
     
-    .round-header { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.8); border: 1px solid var(--border-color); padding: 4px 10px; border-radius: 4px; font-family: var(--font-brand); font-size: 0.85rem; }
+    .round-header { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.8); border: 1px solid var(--border-color); padding: 4px 10px; border-radius: 4px; font-family: var(--font-brand); font-size: 0.85rem; letter-spacing: 0.5px; }
     .round-date { position: absolute; top: 15px; right: 15px; color: var(--brand-red); font-weight: 700; font-size: 0.85rem; background: rgba(0,0,0,0.8); padding: 4px 10px; border-radius: 4px; }
     
     .round-details { padding: 25px; }
-    .round-details h3 { font-family: var(--font-ui); font-size: 1.3rem; margin-bottom: 8px; text-transform: none; }
+    .round-details h3 { font-family: var(--font-ui); font-size: 1.3rem; margin-bottom: 5px; text-transform: none; }
+    
+    /* Clean Subtitle Styling instead of AI badges */
+    .round-meta { display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
+    .round-meta span strong { color: #fff; font-weight: 500; }
+    
     .round-details p { font-size: 0.9rem; margin-bottom: 0; color: var(--text-muted); }
-
-    /* Format Badges */
-    .badge { padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; display: inline-block; }
-    .badge-sprint { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
-    .badge-regular { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
-    .badge-endurance { background: rgba(218, 41, 28, 0.15); color: #f87171; border: 1px solid rgba(218, 41, 28, 0.3); }
-    .badge-supersprint { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
 
     /* Tables */
     .table-wrapper { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; margin-bottom: 40px; border-top: 3px solid transparent; border-image: var(--brand-gradient); border-image-slice: 1; }
@@ -214,12 +212,14 @@
         <!-- Round 1 -->
         <div class="round-card">
           <div class="track-photo photo-sebring">
-            <div class="round-header">R1</div>
+            <div class="round-header">Round 1</div>
             <div class="round-date">OCT 1</div>
           </div>
           <div class="round-details">
             <h3>Sebring</h3>
-            <div style="margin-bottom: 12px;"><span class="badge badge-regular">Regular</span></div>
+            <div class="round-meta">
+              <span>Format: <strong>Regular</strong></span>
+            </div>
             <p>40m single race (~20 laps)</p>
           </div>
         </div>
@@ -227,12 +227,14 @@
         <!-- Round 2 -->
         <div class="round-card">
           <div class="track-photo photo-bathurst">
-            <div class="round-header">R2</div>
+            <div class="round-header">Round 2</div>
             <div class="round-date">OCT 8</div>
           </div>
           <div class="round-details">
             <h3>Bathurst</h3>
-            <div style="margin-bottom: 12px;"><span class="badge badge-endurance">Endurance</span></div>
+            <div class="round-meta">
+              <span>Format: <strong>Endurance</strong></span>
+            </div>
             <p>60m Endurance race (fuel cap 65%)</p>
           </div>
         </div>
@@ -240,12 +242,14 @@
         <!-- Round 3 -->
         <div class="round-card">
           <div class="track-photo photo-road-america">
-            <div class="round-header">R3</div>
+            <div class="round-header">Round 3</div>
             <div class="round-date">OCT 15</div>
           </div>
           <div class="round-details">
             <h3>Road America</h3>
-            <div style="margin-bottom: 12px;"><span class="badge badge-sprint">Sprint</span></div>
+            <div class="round-meta">
+              <span>Format: <strong>Sprint</strong></span>
+            </div>
             <p>16m Sprint &rarr; 24m Feature (Invert 8)</p>
           </div>
         </div>
@@ -253,12 +257,14 @@
         <!-- Round 4 -->
         <div class="round-card">
           <div class="track-photo photo-cota">
-            <div class="round-header">R4</div>
+            <div class="round-header">Round 4</div>
             <div class="round-date">OCT 22</div>
           </div>
           <div class="round-details">
             <h3>COTA</h3>
-            <div style="margin-bottom: 12px;"><span class="badge badge-sprint">Sprint</span></div>
+            <div class="round-meta">
+              <span>Format: <strong>Sprint</strong></span>
+            </div>
             <p>16m Sprint &rarr; 24m Feature (Invert 8)</p>
           </div>
         </div>
@@ -266,12 +272,14 @@
         <!-- Round 5 -->
         <div class="round-card">
           <div class="track-photo photo-hungaroring">
-            <div class="round-header">R5</div>
+            <div class="round-header">Round 5</div>
             <div class="round-date">OCT 29</div>
           </div>
           <div class="round-details">
             <h3>Hungaroring</h3>
-            <div style="margin-bottom: 12px;"><span class="badge badge-regular">Regular</span></div>
+            <div class="round-meta">
+              <span>Format: <strong>Regular</strong></span>
+            </div>
             <p>40m single race</p>
           </div>
         </div>
@@ -279,12 +287,14 @@
         <!-- Round 6 -->
         <div class="round-card">
           <div class="track-photo photo-algarve">
-            <div class="round-header">R6</div>
+            <div class="round-header">Round 6</div>
             <div class="round-date">NOV 5</div>
           </div>
           <div class="round-details">
             <h3>Algarve</h3>
-            <div style="margin-bottom: 12px;"><span class="badge badge-sprint">Sprint</span></div>
+            <div class="round-meta">
+              <span>Format: <strong>Sprint</strong></span>
+            </div>
             <p>16m Sprint &rarr; 24m Feature (Invert 8)</p>
           </div>
         </div>
@@ -292,12 +302,14 @@
         <!-- Round 7 -->
         <div class="round-card">
           <div class="track-photo photo-long-beach">
-            <div class="round-header">R7</div>
+            <div class="round-header">Round 7</div>
             <div class="round-date">NOV 12</div>
           </div>
           <div class="round-details">
             <h3>Long Beach</h3>
-            <div style="margin-bottom: 12px;"><span class="badge badge-regular">Regular</span></div>
+            <div class="round-meta">
+              <span>Format: <strong>Regular</strong></span>
+            </div>
             <p>40m single race</p>
           </div>
         </div>
@@ -305,12 +317,14 @@
         <!-- Round 8 -->
         <div class="round-card" style="border: 1px solid #c084fc;">
           <div class="track-photo photo-road-atlanta">
-            <div class="round-header" style="color: #c084fc;">R8 FINALE</div>
+            <div class="round-header" style="color: #c084fc;">Round 8 Finale</div>
             <div class="round-date">NOV 19</div>
           </div>
           <div class="round-details">
             <h3>Road Atlanta</h3>
-            <div style="margin-bottom: 12px;"><span class="badge badge-supersprint">Super Sprint</span></div>
+            <div class="round-meta">
+              <span>Format: <strong style="color: #c084fc;">Super Sprint</strong></span>
+            </div>
             <p>20m Race 1 &rarr; 20m Race 2 &rarr; 30m Feature</p>
           </div>
         </div>
