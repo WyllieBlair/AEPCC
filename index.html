@@ -91,26 +91,21 @@
     .info-list a { color: #fff; text-decoration: none; border-bottom: 1px solid var(--brand-red); transition: opacity 0.2s; }
     .info-list a:hover { opacity: 0.8; }
 
-    /* -------------------------------------------
-       Calendar Schedule Cards & Track Maps 
-       ------------------------------------------- */
-    /* Updated to a 2-column layout (2 cards side-by-side) */
-    .schedule-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px; }
-    @media (max-width: 850px) { .schedule-grid { grid-template-columns: 1fr; } }
-    
+    /* Calendar Schedule Cards */
+    .schedule-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; margin-bottom: 40px; }
     .round-card { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; transition: transform 0.2s; }
     .round-card:hover { transform: translateY(-4px); border-color: var(--brand-red); }
     
-    .track-map { height: 180px; background-color: #12141a; background-size: 60%; background-position: center; background-repeat: no-repeat; border-bottom: 1px solid var(--border-color); position: relative; }
-    .map-placeholder { display: flex; align-items: center; justify-content: center; height: 100%; color: var(--border-color); font-size: 0.9rem; font-style: italic; }
+    .track-map { height: 160px; background-color: #12141a; background-size: 70%; background-position: center; background-repeat: no-repeat; border-bottom: 1px solid var(--border-color); position: relative; }
+    .map-placeholder { display: flex; align-items: center; justify-content: center; height: 100%; color: var(--border-color); font-size: 0.8rem; font-style: italic; }
     
-    .round-header { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.8); border: 1px solid var(--border-color); padding: 4px 10px; border-radius: 4px; font-family: var(--font-brand); font-size: 0.85rem; }
-    .round-date { position: absolute; top: 15px; right: 15px; color: var(--brand-red); font-weight: 700; font-size: 0.85rem; background: rgba(0,0,0,0.8); padding: 4px 10px; border-radius: 4px; }
+    .round-header { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.8); border: 1px solid var(--border-color); padding: 4px 10px; border-radius: 4px; font-family: var(--font-brand); font-size: 0.8rem; }
+    .round-date { position: absolute; top: 10px; right: 10px; color: var(--brand-red); font-weight: 700; font-size: 0.8rem; background: rgba(0,0,0,0.8); padding: 4px 8px; border-radius: 4px; }
     
-    .round-details { padding: 25px; }
-    .round-details h3 { font-family: var(--font-ui); font-size: 1.3rem; margin-bottom: 8px; text-transform: none; }
-    .round-details p { font-size: 0.9rem; margin-bottom: 0; color: var(--text-muted); }
-    
+    .round-details { padding: 20px; }
+    .round-details h3 { font-family: var(--font-ui); font-size: 1.2rem; margin-bottom: 5px; text-transform: none; }
+    .round-details p { font-size: 0.85rem; margin-bottom: 0; }
+
     /* Format Badges */
     .badge { padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; display: inline-block; }
     .badge-sprint { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
@@ -200,7 +195,7 @@
       </div>
     </div>
     
-    <!-- TAB: SCHEDULE (Card Layout with Track Maps - 2 Columns) -->
+    <!-- TAB: SCHEDULE -->
     <div id="tab-schedule" class="tab-view">
       <h2>Season 1 Calendar</h2>
       
@@ -215,7 +210,7 @@
           </div>
           <div class="round-details">
             <h3>Sebring</h3>
-            <div style="margin-bottom: 12px;"><span class="badge badge-regular">Format 2: Regular</span></div>
+            <div style="margin-bottom: 12px;"><span class="badge badge-regular">Regular</span></div>
             <p>40m single race (~20 laps)</p>
           </div>
         </div>
@@ -229,7 +224,7 @@
           </div>
           <div class="round-details">
             <h3>Bathurst</h3>
-            <div style="margin-bottom: 12px;"><span class="badge badge-endurance">Format 3: Endurance</span></div>
+            <div style="margin-bottom: 12px;"><span class="badge badge-endurance">Endurance</span></div>
             <p>60m Endurance race (fuel cap 65%)</p>
           </div>
         </div>
@@ -243,7 +238,7 @@
           </div>
           <div class="round-details">
             <h3>Road America</h3>
-            <div style="margin-bottom: 12px;"><span class="badge badge-sprint">Format 1: Sprint</span></div>
+            <div style="margin-bottom: 12px;"><span class="badge badge-sprint">Sprint</span></div>
             <p>16m Sprint &rarr; 24m Feature (Invert 8)</p>
           </div>
         </div>
@@ -257,7 +252,7 @@
           </div>
           <div class="round-details">
             <h3>COTA</h3>
-            <div style="margin-bottom: 12px;"><span class="badge badge-sprint">Format 1: Sprint</span></div>
+            <div style="margin-bottom: 12px;"><span class="badge badge-sprint">Sprint</span></div>
             <p>16m Sprint &rarr; 24m Feature (Invert 8)</p>
           </div>
         </div>
@@ -271,7 +266,7 @@
           </div>
           <div class="round-details">
             <h3>Hungaroring</h3>
-            <div style="margin-bottom: 12px;"><span class="badge badge-regular">Format 2: Regular</span></div>
+            <div style="margin-bottom: 12px;"><span class="badge badge-regular">Regular</span></div>
             <p>40m single race</p>
           </div>
         </div>
@@ -285,7 +280,7 @@
           </div>
           <div class="round-details">
             <h3>Algarve</h3>
-            <div style="margin-bottom: 12px;"><span class="badge badge-sprint">Format 1: Sprint</span></div>
+            <div style="margin-bottom: 12px;"><span class="badge badge-sprint">Sprint</span></div>
             <p>16m Sprint &rarr; 24m Feature (Invert 8)</p>
           </div>
         </div>
@@ -299,7 +294,7 @@
           </div>
           <div class="round-details">
             <h3>Long Beach</h3>
-            <div style="margin-bottom: 12px;"><span class="badge badge-regular">Format 2: Regular</span></div>
+            <div style="margin-bottom: 12px;"><span class="badge badge-regular">Regular</span></div>
             <p>40m single race</p>
           </div>
         </div>
@@ -313,7 +308,7 @@
           </div>
           <div class="round-details">
             <h3>Road Atlanta</h3>
-            <div style="margin-bottom: 12px;"><span class="badge badge-supersprint">Format 4: Super Sprint</span></div>
+            <div style="margin-bottom: 12px;"><span class="badge badge-supersprint">Super Sprint</span></div>
             <p>20m Race 1 &rarr; 20m Race 2 &rarr; 30m Feature</p>
           </div>
         </div>
