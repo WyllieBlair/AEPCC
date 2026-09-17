@@ -35,7 +35,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: var(--font-ui); background-color: var(--bg-page); color: var(--text-main); line-height: 1.6; }
 
-    /* Navbar with Gradient Border */
+    /* Navbar */
     header { 
       background: var(--bg-panel); 
       position: sticky; 
@@ -46,7 +46,6 @@
       border-image-slice: 1;
     }
     .nav-container { max-width: 1200px; margin: auto; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; min-height: 90px; }
-    
     .brand-logo { height: 75px; width: auto; max-width: 400px; object-fit: contain; }
     
     nav { display: flex; gap: 20px; align-items: center; }
@@ -56,7 +55,7 @@
     .btn-discord { background: var(--brand-discord); color: #fff; padding: 8px 16px; border-radius: 4px; font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: opacity 0.2s; display: inline-flex; align-items: center; gap: 6px; }
     .btn-discord:hover { opacity: 0.9; }
 
-    /* Hero Image */
+    /* Hero */
     .hero { width: 100%; height: 500px; background: url('PESCAPAC_Adelaide_Race_7_080126.png') center center/cover no-repeat; position: relative; }
     .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 30%, rgba(15, 17, 21, 0.8) 75%, var(--bg-page) 100%); }
 
@@ -66,53 +65,22 @@
     .tab-view.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    /* Clean Typography */
+    /* Typography */
     h1, h2, h3 { font-family: var(--font-brand); text-transform: uppercase; margin-bottom: 15px; color: #fff; }
     h1 { font-size: 2.2rem; margin-top: -100px; margin-bottom: 40px; text-shadow: 0 4px 20px rgba(0,0,0,0.8); position: relative; z-index: 20; }
     h2 { font-size: 1.6rem; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); margin-bottom: 25px; }
     p { color: var(--text-muted); margin-bottom: 15px; font-size: 0.95rem; }
 
-    /* Standard Panels */
-    .panel { 
-      background: var(--bg-panel); 
-      border: 1px solid var(--border-color); 
-      border-radius: 8px; 
-      padding: 30px;
-      border-top: 3px solid transparent;
-      border-image: var(--brand-gradient);
-      border-image-slice: 1;
-    }
-    
-    /* Image Feature Cards */
+    /* Panels & Features */
+    .panel { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; padding: 30px; border-top: 3px solid transparent; border-image: var(--brand-gradient); border-image-slice: 1; }
     .grid-feature { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px; margin-bottom: 40px; }
     @media (max-width: 900px) { .grid-feature { grid-template-columns: 1fr; } }
     
-    .img-card {
-      position: relative;
-      border-radius: 8px;
-      overflow: hidden;
-      border: 1px solid var(--border-color);
-      border-top: 3px solid transparent;
-      border-image: var(--brand-gradient);
-      border-image-slice: 1;
-      background-color: var(--bg-panel);
-      min-height: 280px;
-    }
+    .img-card { position: relative; border-radius: 8px; overflow: hidden; border: 1px solid var(--border-color); border-top: 3px solid transparent; border-image: var(--brand-gradient); border-image-slice: 1; background-color: var(--bg-panel); min-height: 280px; }
     .img-bg-1 { background: url('Porkatthebring2.png') center right/cover no-repeat; }
     .img-bg-2 { background: url('Porkatthehock67-44.png') center right/cover no-repeat; }
-    
-    .img-card-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(90deg, rgba(15, 17, 21, 0.95) 30%, rgba(15, 17, 21, 0.2) 100%);
-      z-index: 1;
-    }
-    .img-card-content {
-      position: relative;
-      z-index: 2;
-      padding: 40px 30px;
-      max-width: 80%;
-    }
+    .img-card-overlay { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(15, 17, 21, 0.95) 30%, rgba(15, 17, 21, 0.2) 100%); z-index: 1; }
+    .img-card-content { position: relative; z-index: 2; padding: 40px 30px; max-width: 80%; }
     .img-card-content h3 { font-size: 1.3rem; margin-bottom: 20px; }
 
     /* Info Lists */
@@ -123,17 +91,35 @@
     .info-list a { color: #fff; text-decoration: none; border-bottom: 1px solid var(--brand-red); transition: opacity 0.2s; }
     .info-list a:hover { opacity: 0.8; }
 
+    /* -------------------------------------------
+       Calendar Schedule Cards & Track Maps 
+       ------------------------------------------- */
+    /* Updated to a 2-column layout (2 cards side-by-side) */
+    .schedule-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px; }
+    @media (max-width: 850px) { .schedule-grid { grid-template-columns: 1fr; } }
+    
+    .round-card { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; transition: transform 0.2s; }
+    .round-card:hover { transform: translateY(-4px); border-color: var(--brand-red); }
+    
+    .track-map { height: 180px; background-color: #12141a; background-size: 60%; background-position: center; background-repeat: no-repeat; border-bottom: 1px solid var(--border-color); position: relative; }
+    .map-placeholder { display: flex; align-items: center; justify-content: center; height: 100%; color: var(--border-color); font-size: 0.9rem; font-style: italic; }
+    
+    .round-header { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.8); border: 1px solid var(--border-color); padding: 4px 10px; border-radius: 4px; font-family: var(--font-brand); font-size: 0.85rem; }
+    .round-date { position: absolute; top: 15px; right: 15px; color: var(--brand-red); font-weight: 700; font-size: 0.85rem; background: rgba(0,0,0,0.8); padding: 4px 10px; border-radius: 4px; }
+    
+    .round-details { padding: 25px; }
+    .round-details h3 { font-family: var(--font-ui); font-size: 1.3rem; margin-bottom: 8px; text-transform: none; }
+    .round-details p { font-size: 0.9rem; margin-bottom: 0; color: var(--text-muted); }
+    
+    /* Format Badges */
+    .badge { padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; display: inline-block; }
+    .badge-sprint { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+    .badge-regular { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-endurance { background: rgba(218, 41, 28, 0.15); color: #f87171; border: 1px solid rgba(218, 41, 28, 0.3); }
+    .badge-supersprint { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
+
     /* Tables */
-    .table-wrapper { 
-      background: var(--bg-panel); 
-      border: 1px solid var(--border-color); 
-      border-radius: 8px; 
-      overflow: hidden; 
-      margin-bottom: 40px;
-      border-top: 3px solid transparent;
-      border-image: var(--brand-gradient);
-      border-image-slice: 1;
-    }
+    .table-wrapper { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; margin-bottom: 40px; border-top: 3px solid transparent; border-image: var(--brand-gradient); border-image-slice: 1; }
     table { width: 100%; border-collapse: collapse; text-align: left; }
     th, td { padding: 15px 20px; border-bottom: 1px solid var(--border-color); font-size: 0.95rem; }
     th { background: rgba(0,0,0,0.2); color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px; }
@@ -142,13 +128,6 @@
     
     .text-highlight { color: #fff; font-weight: 600; }
     .subtext { display: block; font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
-    
-    /* Format Badges for Schedule */
-    .badge { padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
-    .badge-sprint { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
-    .badge-regular { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
-    .badge-endurance { background: rgba(218, 41, 28, 0.15); color: #f87171; border: 1px solid rgba(218, 41, 28, 0.3); }
-    .badge-supersprint { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
   </style>
 </head>
 <body>
@@ -180,7 +159,6 @@
     <!-- TAB: OVERVIEW (Home) -->
     <div id="tab-home" class="tab-view active">
       
-      <!-- Introductory Text -->
       <div style="max-width: 900px; margin-bottom: 20px;">
         <h2 style="border: none; margin-bottom: 10px; padding: 0;">AESPCC Season 1</h2>
         <p>Welcome to the inaugural season of the Australian E-Sport Porsche Cup Championship (AESPCC)! Launching this October, we are bringing premier single-make racing to the Oceanic region, exclusively featuring the Porsche 911 GT3 Cup (992.2) on iRacing.</p>
@@ -189,10 +167,8 @@
         <p>Entry is open to any driver holding an active iRacing Class D Sports Car license. To secure your spot on the grid, simply join our Discord community, complete your registration, and pay the entry fee.</p>
       </div>
 
-      <!-- Feature Image Cards -->
       <div class="grid-feature">
         
-        <!-- Feature Card 1 -->
         <div class="img-card img-bg-1">
           <div class="img-card-overlay"></div>
           <div class="img-card-content">
@@ -207,7 +183,6 @@
           </div>
         </div>
 
-        <!-- Feature Card 2 -->
         <div class="img-card img-bg-2">
           <div class="img-card-overlay"></div>
           <div class="img-card-content">
@@ -225,70 +200,124 @@
       </div>
     </div>
     
-    <!-- TAB: SCHEDULE -->
+    <!-- TAB: SCHEDULE (Card Layout with Track Maps - 2 Columns) -->
     <div id="tab-schedule" class="tab-view">
       <h2>Season 1 Calendar</h2>
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th style="width: 80px;">Round</th>
-              <th>Date</th>
-              <th>Track</th>
-              <th>Format</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="text-highlight">R1</td>
-              <td>Oct 1, 2026</td>
-              <td class="text-highlight">Sebring</td>
-              <td><span class="badge badge-regular">Format 2: Regular (40m)</span></td>
-            </tr>
-            <tr>
-              <td class="text-highlight">R2</td>
-              <td>Oct 8, 2026</td>
-              <td class="text-highlight">Bathurst</td>
-              <td><span class="badge badge-endurance">Format 3: Endurance (60m)</span></td>
-            </tr>
-            <tr>
-              <td class="text-highlight">R3</td>
-              <td>Oct 15, 2026</td>
-              <td class="text-highlight">Road America</td>
-              <td><span class="badge badge-sprint">Format 1: Sprint (16m + 24m)</span></td>
-            </tr>
-            <tr>
-              <td class="text-highlight">R4</td>
-              <td>Oct 22, 2026</td>
-              <td class="text-highlight">COTA</td>
-              <td><span class="badge badge-sprint">Format 1: Sprint (16m + 24m)</span></td>
-            </tr>
-            <tr>
-              <td class="text-highlight">R5</td>
-              <td>Oct 29, 2026</td>
-              <td class="text-highlight">Hungaroring</td>
-              <td><span class="badge badge-regular">Format 2: Regular (40m)</span></td>
-            </tr>
-            <tr>
-              <td class="text-highlight">R6</td>
-              <td>Nov 5, 2026</td>
-              <td class="text-highlight">Algarve</td>
-              <td><span class="badge badge-sprint">Format 1: Sprint (16m + 24m)</span></td>
-            </tr>
-            <tr>
-              <td class="text-highlight">R7</td>
-              <td>Nov 12, 2026</td>
-              <td class="text-highlight">Long Beach</td>
-              <td><span class="badge badge-regular">Format 2: Regular (40m)</span></td>
-            </tr>
-            <tr>
-              <td class="text-highlight">R8</td>
-              <td>Nov 19, 2026</td>
-              <td class="text-highlight">Road Atlanta</td>
-              <td><span class="badge badge-supersprint">Format 4: Super Sprint (20m + 20m + 30m)</span></td>
-            </tr>
-          </tbody>
-        </table>
+      
+      <div class="schedule-grid">
+        
+        <!-- Round 1 -->
+        <div class="round-card">
+          <div class="track-map map-sebring">
+            <span class="map-placeholder">Track Map Missing</span>
+            <div class="round-header">R1</div>
+            <div class="round-date">OCT 1</div>
+          </div>
+          <div class="round-details">
+            <h3>Sebring</h3>
+            <div style="margin-bottom: 12px;"><span class="badge badge-regular">Format 2: Regular</span></div>
+            <p>40m single race (~20 laps)</p>
+          </div>
+        </div>
+
+        <!-- Round 2 -->
+        <div class="round-card">
+          <div class="track-map map-bathurst">
+            <span class="map-placeholder">Track Map Missing</span>
+            <div class="round-header">R2</div>
+            <div class="round-date">OCT 8</div>
+          </div>
+          <div class="round-details">
+            <h3>Bathurst</h3>
+            <div style="margin-bottom: 12px;"><span class="badge badge-endurance">Format 3: Endurance</span></div>
+            <p>60m Endurance race (fuel cap 65%)</p>
+          </div>
+        </div>
+
+        <!-- Round 3 -->
+        <div class="round-card">
+          <div class="track-map map-road-america">
+            <span class="map-placeholder">Track Map Missing</span>
+            <div class="round-header">R3</div>
+            <div class="round-date">OCT 15</div>
+          </div>
+          <div class="round-details">
+            <h3>Road America</h3>
+            <div style="margin-bottom: 12px;"><span class="badge badge-sprint">Format 1: Sprint</span></div>
+            <p>16m Sprint &rarr; 24m Feature (Invert 8)</p>
+          </div>
+        </div>
+
+        <!-- Round 4 -->
+        <div class="round-card">
+          <div class="track-map map-cota">
+            <span class="map-placeholder">Track Map Missing</span>
+            <div class="round-header">R4</div>
+            <div class="round-date">OCT 22</div>
+          </div>
+          <div class="round-details">
+            <h3>COTA</h3>
+            <div style="margin-bottom: 12px;"><span class="badge badge-sprint">Format 1: Sprint</span></div>
+            <p>16m Sprint &rarr; 24m Feature (Invert 8)</p>
+          </div>
+        </div>
+
+        <!-- Round 5 -->
+        <div class="round-card">
+          <div class="track-map map-hungaroring">
+            <span class="map-placeholder">Track Map Missing</span>
+            <div class="round-header">R5</div>
+            <div class="round-date">OCT 29</div>
+          </div>
+          <div class="round-details">
+            <h3>Hungaroring</h3>
+            <div style="margin-bottom: 12px;"><span class="badge badge-regular">Format 2: Regular</span></div>
+            <p>40m single race</p>
+          </div>
+        </div>
+
+        <!-- Round 6 -->
+        <div class="round-card">
+          <div class="track-map map-algarve">
+            <span class="map-placeholder">Track Map Missing</span>
+            <div class="round-header">R6</div>
+            <div class="round-date">NOV 5</div>
+          </div>
+          <div class="round-details">
+            <h3>Algarve</h3>
+            <div style="margin-bottom: 12px;"><span class="badge badge-sprint">Format 1: Sprint</span></div>
+            <p>16m Sprint &rarr; 24m Feature (Invert 8)</p>
+          </div>
+        </div>
+
+        <!-- Round 7 -->
+        <div class="round-card">
+          <div class="track-map map-long-beach">
+            <span class="map-placeholder">Track Map Missing</span>
+            <div class="round-header">R7</div>
+            <div class="round-date">NOV 12</div>
+          </div>
+          <div class="round-details">
+            <h3>Long Beach</h3>
+            <div style="margin-bottom: 12px;"><span class="badge badge-regular">Format 2: Regular</span></div>
+            <p>40m single race</p>
+          </div>
+        </div>
+
+        <!-- Round 8 -->
+        <div class="round-card" style="border: 1px solid #c084fc;">
+          <div class="track-map map-road-atlanta">
+            <span class="map-placeholder">Track Map Missing</span>
+            <div class="round-header" style="color: #c084fc;">R8 FINALE</div>
+            <div class="round-date">NOV 19</div>
+          </div>
+          <div class="round-details">
+            <h3>Road Atlanta</h3>
+            <div style="margin-bottom: 12px;"><span class="badge badge-supersprint">Format 4: Super Sprint</span></div>
+            <p>20m Race 1 &rarr; 20m Race 2 &rarr; 30m Feature</p>
+          </div>
+        </div>
+
       </div>
     </div>
 
