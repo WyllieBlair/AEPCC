@@ -661,8 +661,8 @@
         })
         .catch(err => {
           console.warn("Waiting on data/standings.json", err);
-          document.getElementById('driver-rows').innerHTML = `<tr><td colspan="4" style="text-align:center;">Failed to load driver standings.</td></tr>`;
-          renderTeams([]); // Triggers the empty state handler for teams
+          renderDrivers([]);
+          renderTeams([]); 
         });
     }
 
@@ -675,7 +675,17 @@
         if (defaultBtn) defaultBtn.classList.add('active');
       }
 
-      const filtered = globalDrivers.filter(d => d.class && d.class.toLowerCase() === division.toLowerCase());
+      const divLower = division.toLowerCase();
+      const filtered = globalDrivers.filter(d => {
+        const driverClass = (d.class || '').toLowerCase();
+        if (divLower === 'pro') {
+          return driverClass === 'pro';
+        } else {
+          // Am category captures 'am', 'pro-am', or any secondary class
+          return driverClass !== 'pro';
+        }
+      });
+
       renderDrivers(filtered);
     }
 
@@ -683,7 +693,7 @@
       const tbody = document.getElementById('driver-rows');
       if (!tbody) return;
       
-      if (drivers.length === 0) {
+      if (!drivers || drivers.length === 0) {
         tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No drivers found in this division.</td></tr>`;
         return;
       }
@@ -694,11 +704,11 @@
         tr.innerHTML = `
           <td class="text-highlight">${idx + 1}</td>
           <td>
-            <span class="text-highlight">${driver.name}</span>
+            <span class="text-highlight">${driver.name || 'Unknown Driver'}</span>
             <span class="subtext">${driver.team || 'Independent'}</span>
           </td>
-          <td>${driver.class}</td>
-          <td class="text-highlight">${driver.net_points}</td>
+          <td>${driver.class || 'Pro'}</td>
+          <td class="text-highlight">${driver.net_points !== undefined ? driver.net_points : 0}</td>
         `;
         tbody.appendChild(tr);
       });
@@ -708,18 +718,20 @@
       const tbody = document.getElementById('team-rows');
       if (!tbody) return;
 
-      if (!teams || teams.length === 0) {
+      const validTeams = (teams || []).filter(t => t && t.name);
+
+      if (validTeams.length === 0) {
         tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">No team standings available.</td></tr>`;
         return;
       }
 
       tbody.innerHTML = '';
-      teams.forEach((team, idx) => {
+      validTeams.forEach((team, idx) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td class="text-highlight">${idx + 1}</td>
           <td class="text-highlight">${team.name}</td>
-          <td class="text-highlight">${team.points}</td>
+          <td class="text-highlight">${team.points !== undefined ? team.points : 0}</td>
         `;
         tbody.appendChild(tr);
       });
