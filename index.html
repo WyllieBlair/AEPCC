@@ -95,7 +95,7 @@
     .info-list a { color: #fff; text-decoration: none; border-bottom: 1px solid var(--brand-red); transition: opacity 0.2s; }
     .info-list a:hover { opacity: 0.8; }
 
-    /* Calendar Schedule Cards - Smoothly Rounded Corners */
+    /* Calendar Schedule Cards - Fully Rounded & Cleanly Clipped */
     .schedule-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px; }
     @media (max-width: 900px) { .schedule-grid { grid-template-columns: 1fr; } }
     
@@ -105,20 +105,19 @@
       background-position: center; 
       background-repeat: no-repeat;
       border: 1.5px solid var(--border-color); 
-      border-radius: 12px; /* Smooth rounded corners */
-      overflow: hidden; /* Clips background perfectly */
+      border-radius: 12px; 
+      overflow: hidden; 
       height: 380px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       padding: 15px;
       position: relative;
-      transition: border-image 0.3s ease, border-color 0.3s ease;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
     .round-card:hover { 
-      border: 1.5px solid transparent;
-      border-image: var(--brand-gradient);
-      border-image-slice: 1;
+      border-color: var(--brand-red);
+      box-shadow: 0 0 20px rgba(218, 41, 28, 0.25);
     }
     
     .photo-sebring { background-image: url('tracks/sebring.jpg'); }
