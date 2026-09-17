@@ -59,9 +59,57 @@
     .btn-discord { background: var(--brand-discord); color: #fff; padding: 8px 16px; border-radius: 4px; font-size: 0.85rem; font-weight: 800; text-decoration: none; transition: opacity 0.2s; display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-brand); text-transform: uppercase; }
     .btn-discord:hover { opacity: 0.9; }
 
-    /* Hero */
-    .hero { width: 100%; height: 500px; background: url('PESCAPAC_Adelaide_Race_7_080126.png') center center/cover no-repeat; position: relative; }
-    .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 30%, rgba(15, 17, 21, 0.8) 75%, var(--bg-page) 100%); }
+    /* Hero Slideshow */
+    .hero { 
+      width: 100%; 
+      height: 600px; 
+      position: relative; 
+      overflow: hidden; 
+      background-color: #0f1115;
+    }
+    .hero-slide {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+    .hero-slide.active {
+      opacity: 1;
+    }
+    .hero-overlay { 
+      position: absolute; 
+      inset: 0; 
+      background: linear-gradient(to bottom, rgba(15, 17, 21, 0.4) 10%, rgba(15, 17, 21, 0.85) 85%, var(--bg-page) 100%); 
+      z-index: 2;
+    }
+    .hero-content {
+      position: absolute;
+      bottom: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 1200px;
+      padding: 0 20px;
+      z-index: 3;
+      text-align: center;
+    }
+    .hero-content h1 {
+      font-size: 3rem;
+      text-transform: uppercase;
+      color: #fff;
+      text-shadow: 0 4px 25px rgba(0,0,0,0.9);
+      margin-bottom: 10px;
+      letter-spacing: 1px;
+    }
+    .hero-content p {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.9);
+    }
 
     /* Layout */
     .container { max-width: 1200px; margin: auto; padding: 40px 20px; position: relative; z-index: 10; }
@@ -70,8 +118,7 @@
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
     /* Typography */
-    h1, h2, h3 { font-family: var(--font-brand); font-weight: 800; text-transform: uppercase; margin-bottom: 15px; color: #fff; letter-spacing: 0.5px; }
-    h1 { font-size: 2.2rem; margin-top: -100px; margin-bottom: 40px; text-shadow: 0 4px 20px rgba(0,0,0,0.8); position: relative; z-index: 20; }
+    h2, h3 { font-family: var(--font-brand); font-weight: 800; text-transform: uppercase; margin-bottom: 15px; color: #fff; letter-spacing: 0.5px; }
     h2 { font-size: 1.6rem; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); margin-bottom: 25px; }
     p { color: var(--text-muted); margin-bottom: 15px; font-size: 0.95rem; font-family: var(--font-brand); font-weight: 400; }
 
@@ -81,7 +128,6 @@
     .grid-feature { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px; margin-bottom: 40px; }
     @media (max-width: 900px) { .grid-feature { grid-template-columns: 1fr; } }
     
-    /* Restored Half-Glass Homepage Feature Cards */
     .img-card { 
       position: relative; 
       border-radius: 12px; 
@@ -298,19 +344,23 @@
     </div>
   </header>
 
-  <!-- Hero Image -->
-  <div class="hero">
+  <!-- Hero Slideshow with Integrated Title -->
+  <div class="hero" id="hero-slider">
+    <!-- Slides generated dynamically by script -->
     <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1>Australian E-Sport Porsche Cup</h1>
+      <p>Official Championship Portal</p>
+    </div>
   </div>
 
   <div class="container">
-    <h1 id="page-title">Australian E-Sport Porsche Cup</h1>
 
     <!-- TAB: OVERVIEW (Home) -->
     <div id="tab-home" class="tab-view active">
       
-      <div style="max-width: 900px; margin-bottom: 20px;">
-        <h2 style="border: none; margin-bottom: 10px; padding: 0;">AESPCC Season 1</h2>
+      <div style="max-width: 900px; margin-bottom: 30px;">
+        <h2>AESPCC Season 1</h2>
         <p>Welcome to the inaugural season of the Australian E-Sport Porsche Cup Championship (AESPCC)! Launching this October, we are bringing premier single-make racing to the Oceanic region, exclusively featuring the Porsche 911 GT3 Cup (992.2) on iRacing.</p>
         <p>Our season calendar closely follows the official iRacing Porsche Cup series schedule, allowing drivers to seamlessly practice and compete. Prepare to battle across diverse track layouts and four distinct weekend formats—ranging from rapid 16-minute super sprints with inverted grids to grueling 60-minute endurance features requiring compulsory pit stops.</p>
         <p>To ensure close, competitive racing across the 60-car grid, the field is divided into three skill-based divisions (Pro, Pro-Am, and Am) determined by a mandatory pre-qualifying week. Class champions will be awarded trophies, supplemented by a scaling cash prize pool based on total season entries.</p>
@@ -543,10 +593,42 @@
     let globalDrivers = [];
     let globalTeams = [];
 
+    // List of hero images in your photos/ folder that will auto-scroll
+    const heroImages = [
+      'PESCAPAC_Adelaide_Race_7_080126.png',
+      'Porkatthebring2.png',
+      'Porkatthehock67-44.png'
+    ];
+
     document.addEventListener("DOMContentLoaded", () => {
+      initHeroSlider();
       loadStandings();
       updateScheduleBadges();
     });
+
+    function initHeroSlider() {
+      const heroContainer = document.getElementById('hero-slider');
+      if (!heroContainer) return;
+
+      // Create slide elements
+      heroImages.forEach((imgSrc, index) => {
+        const slide = document.createElement('div');
+        slide.className = `hero-slide ${index === 0 ? 'active' : ''}`;
+        slide.style.backgroundImage = `url('${imgSrc}')`;
+        heroContainer.insertBefore(slide, heroContainer.firstChild);
+      });
+
+      // Start slideshow interval (change every 5 seconds)
+      let currentSlide = 0;
+      const slides = heroContainer.querySelectorAll('.hero-slide');
+      if (slides.length > 1) {
+        setInterval(() => {
+          slides[currentSlide].classList.remove('active');
+          currentSlide = (currentSlide + 1) % slides.length;
+          slides[currentSlide].classList.add('active');
+        }, 5000);
+      }
+    }
 
     function switchTab(tabId) {
       document.querySelectorAll('.tab-view').forEach(view => view.classList.remove('active'));
