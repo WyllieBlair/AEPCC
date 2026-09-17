@@ -47,6 +47,35 @@
       background-color: var(--bg-page); 
       color: var(--text-main); 
       line-height: 1.6; 
+      position: relative;
+      min-height: 100vh;
+      z-index: 0;
+      overflow-x: hidden;
+    }
+
+    /* Subtle E-Sports Ambient Lighting */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -20%;
+      left: -10%;
+      width: 60%;
+      height: 70%;
+      background: radial-gradient(circle, rgba(0, 20, 137, 0.15) 0%, transparent 60%);
+      z-index: -1;
+      pointer-events: none;
+    }
+    
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -20%;
+      right: -10%;
+      width: 60%;
+      height: 70%;
+      background: radial-gradient(circle, rgba(218, 41, 28, 0.12) 0%, transparent 60%);
+      z-index: -1;
+      pointer-events: none;
     }
 
     /* Navbar */
@@ -79,14 +108,12 @@
       gap: 20px; 
       align-items: center; 
       overflow-x: auto;
-      -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-      scrollbar-width: none; /* Hide scrollbar Firefox */
-      -ms-overflow-style: none; /* Hide scrollbar IE/Edge */
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
     }
     
-    nav::-webkit-scrollbar {
-      display: none; /* Hide scrollbar Chrome/Safari */
-    }
+    nav::-webkit-scrollbar { display: none; }
 
     nav button { background: none; border: none; color: var(--text-muted); font-family: var(--font-brand); font-weight: 800; font-size: 0.9rem; letter-spacing: 0.5px; text-transform: uppercase; cursor: pointer; padding: 10px 0; border-bottom: 2px solid transparent; transition: color 0.2s; white-space: nowrap; }
     nav button:hover, nav button.active { color: #fff; border-bottom-color: var(--brand-red); }
@@ -96,16 +123,8 @@
 
     /* Mobile Nav Breakpoint */
     @media (max-width: 768px) {
-      .nav-container {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
-        padding: 15px;
-      }
-      nav {
-        width: 100%;
-        padding-bottom: 5px;
-      }
+      .nav-container { flex-direction: column; align-items: flex-start; gap: 15px; padding: 15px; }
+      nav { width: 100%; padding-bottom: 5px; }
     }
 
     /* Hero Slideshow */
@@ -124,9 +143,7 @@
       opacity: 0;
       transition: opacity 1s ease-in-out;
     }
-    .hero-slide.active {
-      opacity: 1;
-    }
+    .hero-slide.active { opacity: 1; }
     .hero-overlay { 
       position: absolute; 
       inset: 0; 
@@ -173,7 +190,7 @@
 
     /* Typography */
     h2, h3 { font-family: var(--font-brand); font-weight: 800; text-transform: uppercase; margin-bottom: 15px; color: #fff; letter-spacing: 0.5px; }
-    h2 { font-size: 1.6rem; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); margin-bottom: 25px; }
+    h2 { font-size: 1.6rem; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 25px; }
     p { color: var(--text-muted); margin-bottom: 15px; font-size: 0.95rem; font-family: var(--font-brand); font-weight: 400; }
 
     /* Panels & Features */
@@ -186,6 +203,7 @@
       border-top: 3px solid transparent; 
       border-image: var(--brand-gradient); 
       border-image-slice: 1; 
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
     }
     
     .grid-feature { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px; margin-bottom: 40px; }
@@ -199,6 +217,7 @@
       background-color: var(--bg-panel); 
       min-height: 280px; 
       transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
     }
     .img-card:hover { 
       border-color: var(--brand-red);
@@ -253,6 +272,7 @@
       padding: 15px;
       position: relative;
       transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
     
     .round-card-bg {
@@ -269,12 +289,10 @@
     
     .round-card:hover { 
       border-color: var(--brand-red);
-      box-shadow: 0 0 20px rgba(218, 41, 28, 0.25);
+      box-shadow: 0 0 25px rgba(218, 41, 28, 0.35);
     }
     
-    .round-card:hover .round-card-bg {
-      transform: scale(1.06);
-    }
+    .round-card:hover .round-card-bg { transform: scale(1.06); }
     
     .photo-sebring { background-image: url('tracks/sebring.jpg'); }
     .photo-bathurst { background-image: url('tracks/bathurst.jpg'); }
@@ -285,14 +303,7 @@
     .photo-long-beach { background-image: url('tracks/longbeach.jpg'); }
     .photo-road-atlanta { background-image: url('tracks/roadatlanta.jpg'); }
     
-    .card-top-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
-      position: relative; /* Needed for z-index */
-      z-index: 2;
-    }
+    .card-top-row { display: flex; justify-content: space-between; align-items: center; width: 100%; position: relative; z-index: 2; }
 
     .round-header { 
       background: rgba(15, 17, 21, 0.85); 
@@ -346,47 +357,17 @@
       border: 1.5px solid rgba(255, 255, 255, 0.2);
       border-radius: 8px;
       padding: 12px 16px;
-      position: relative; /* Needed for z-index */
+      position: relative; 
       z-index: 2;
       margin-top: auto;
       margin-bottom: 2px;
       align-self: flex-start;
     }
 
-    .track-glass-panel h3 { 
-      font-family: var(--font-brand); 
-      font-weight: 800;
-      font-size: 1.35rem; 
-      margin-bottom: 2px; 
-      text-transform: uppercase; 
-      color: rgba(255, 255, 255, 0.65); 
-      letter-spacing: 0.5px; 
-    }
-    
-    .track-location { 
-      font-size: 0.75rem; 
-      color: rgba(229, 231, 235, 0.6); 
-      font-family: var(--font-brand); 
-      font-weight: 400;
-      text-transform: uppercase; 
-      letter-spacing: 1px; 
-      margin-bottom: 10px; 
-    }
-
-    .round-meta { 
-      display: flex; 
-      align-items: center; 
-      justify-content: space-between; 
-      font-size: 0.85rem; 
-      color: rgba(156, 163, 175, 0.6); 
-      margin-bottom: 8px; 
-      padding-bottom: 8px; 
-      border-bottom: 1.5px solid rgba(255, 255, 255, 0.08); 
-      font-family: var(--font-brand); 
-      font-weight: 400;
-    }
+    .track-glass-panel h3 { font-family: var(--font-brand); font-weight: 800; font-size: 1.35rem; margin-bottom: 2px; text-transform: uppercase; color: rgba(255, 255, 255, 0.65); letter-spacing: 0.5px; }
+    .track-location { font-size: 0.75rem; color: rgba(229, 231, 235, 0.6); font-family: var(--font-brand); font-weight: 400; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+    .round-meta { display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; color: rgba(156, 163, 175, 0.6); margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1.5px solid rgba(255, 255, 255, 0.08); font-family: var(--font-brand); font-weight: 400; }
     .round-meta span strong { color: rgba(255, 255, 255, 0.65); font-weight: 800; }
-    
     .track-glass-panel p { font-size: 0.85rem; margin-bottom: 0; color: rgba(243, 244, 246, 0.6); font-family: var(--font-brand); font-weight: 400; }
 
     /* Division Filter Buttons */
@@ -395,13 +376,9 @@
     .filter-btn:hover, .filter-btn.active { background: var(--brand-red); border-color: var(--brand-red); color: #fff; }
 
     /* Centered Standings Tables */
-    .standings-container {
-      max-width: 900px;
-      margin: 0 auto;
-    }
-    .standings-container h2 {
-      text-align: center;
-    }
+    .standings-container { max-width: 900px; margin: 0 auto; }
+    .standings-container h2 { text-align: center; }
+    
     .table-wrapper { 
       background-color: var(--bg-panel); 
       background-image: var(--texture-carbon);
@@ -412,15 +389,121 @@
       border-top: 3px solid transparent; 
       border-image: var(--brand-gradient); 
       border-image-slice: 1; 
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
     }
     table { width: 100%; border-collapse: collapse; text-align: left; }
-    th, td { padding: 15px 20px; border-bottom: 1.5px solid var(--border-color); font-size: 0.95rem; font-family: var(--font-brand); font-weight: 400; text-align: center; }
-    th { background: rgba(0,0,0,0.2); color: var(--text-muted); font-weight: 800; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px; text-align: center; }
+    th, td { padding: 15px 20px; border-bottom: 1.5px solid rgba(255,255,255,0.05); font-size: 0.95rem; font-family: var(--font-brand); font-weight: 400; text-align: center; }
+    th { background: rgba(0,0,0,0.3); color: var(--text-muted); font-weight: 800; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px; text-align: center; }
     tr:last-child td { border-bottom: none; }
-    tr:hover td { background-color: var(--bg-panel-hover); }
+    tr:hover td { background-color: rgba(255,255,255,0.02); }
     
     .text-highlight { color: #fff; font-weight: 800; }
     .subtext { display: block; font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; font-weight: 400; }
+
+    /* FOOTER CSS */
+    .site-footer {
+      margin-top: 80px;
+      border-top: 3px solid transparent;
+      border-image: var(--brand-gradient);
+      border-image-slice: 1;
+      background-color: var(--bg-panel);
+      background-image: var(--texture-carbon);
+      padding: 50px 20px 30px;
+      box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
+    }
+    
+    .footer-container {
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+    
+    .footer-sponsors {
+      text-align: center;
+    }
+    
+    .footer-sponsors h4 {
+      color: #fff;
+      font-family: var(--font-brand);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 1rem;
+      margin-bottom: 25px;
+    }
+    
+    .sponsor-grid {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .sponsor-placeholder {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1.5px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      width: 200px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.8rem;
+      font-family: var(--font-brand);
+      font-weight: 800;
+      text-transform: uppercase;
+      transition: all 0.2s ease;
+    }
+    
+    .sponsor-placeholder:hover {
+      border-color: rgba(255, 255, 255, 0.4);
+      color: #fff;
+      background: rgba(255, 255, 255, 0.06);
+    }
+    
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1.5px solid rgba(255, 255, 255, 0.05);
+      padding-top: 25px;
+    }
+    
+    .footer-bottom p {
+      margin-bottom: 0;
+      font-size: 0.85rem;
+    }
+    
+    .footer-links {
+      display: flex;
+      gap: 20px;
+    }
+    
+    .footer-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-family: var(--font-brand);
+      font-weight: 800;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: color 0.2s;
+    }
+    
+    .footer-links a:hover {
+      color: var(--brand-red);
+    }
+    
+    @media (max-width: 768px) {
+      .footer-bottom {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+      }
+    }
   </style>
 </head>
 <body>
@@ -695,6 +778,35 @@
 
   </div>
 
+  <!-- Footer Section -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      
+      <!-- Sponsors Grid -->
+      <div class="footer-sponsors">
+        <h4>Official Partners</h4>
+        <div class="sponsor-grid">
+          <!-- Populating with common top-tier sim hardware/software ecosystem partners -->
+          <div class="sponsor-placeholder">Fanatec</div>
+          <div class="sponsor-placeholder">Next Level Racing</div>
+          <div class="sponsor-placeholder">Virtual Racing School</div>
+          <div class="sponsor-placeholder">Digital Race Engineer</div>
+        </div>
+      </div>
+      
+      <!-- Copyright & Links -->
+      <div class="footer-bottom">
+        <p>&copy; 2026 Australian E-Sport Porsche Cup Championship. All rights reserved.</p>
+        <div class="footer-links">
+          <a href="#">Official Rulebook</a>
+          <a href="#">Twitch</a>
+          <a href="#">YouTube</a>
+        </div>
+      </div>
+      
+    </div>
+  </footer>
+
   <script>
     let globalDrivers = [];
     let globalTeams = [];
@@ -742,6 +854,11 @@
       
       const matchingBtn = Array.from(document.querySelectorAll('#nav-tabs button')).find(btn => btn.getAttribute('onclick')?.includes(tabId));
       if (matchingBtn) matchingBtn.classList.add('active');
+      
+      // Scroll back to top of container when switching tabs on mobile
+      if(window.innerWidth <= 768) {
+        document.querySelector('.container').scrollIntoView({ behavior: 'smooth' });
+      }
     }
 
     function updateScheduleBadges() {
