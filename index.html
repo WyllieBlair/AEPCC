@@ -216,8 +216,9 @@
       z-index: 2;
     }
 
+    /* Updated Top Row Elements - More Opaque */
     .round-header { 
-      background: rgba(15, 17, 21, 0.35); 
+      background: rgba(15, 17, 21, 0.85); 
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       border: 1.5px solid rgba(255, 255, 255, 0.2); 
@@ -227,14 +228,14 @@
       font-weight: 800;
       font-size: 0.8rem; 
       letter-spacing: 0.5px; 
-      color: rgba(255, 255, 255, 0.6); 
+      color: #ffffff; 
     }
     
     .round-date-badge { 
-      color: rgba(255, 255, 255, 0.6); 
+      color: #ffffff; 
       font-weight: 800; 
       font-size: 0.85rem; 
-      background: rgba(218, 41, 28, 0.45); 
+      background: rgba(218, 41, 28, 0.95); 
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       border: 1.5px solid rgba(255, 255, 255, 0.2);
@@ -245,10 +246,10 @@
     }
 
     .round-results-link {
-      background: rgba(218, 41, 28, 0.45);
+      background: rgba(218, 41, 28, 0.95);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
-      color: rgba(255, 255, 255, 0.6) !important;
+      color: #ffffff !important;
       font-weight: 800;
       font-size: 0.8rem;
       padding: 6px 14px;
@@ -259,7 +260,7 @@
       letter-spacing: 0.5px;
       transition: opacity 0.2s;
     }
-    .round-results-link:hover { opacity: 0.9; }
+    .round-results-link:hover { opacity: 0.85; }
     
     .track-glass-panel {
       background: rgba(15, 17, 21, 0.4);
@@ -271,7 +272,7 @@
       z-index: 2;
       margin-top: auto;
       margin-bottom: 2px;
-      align-self: flex-start; /* This forces the panel to wrap its width to the content */
+      align-self: flex-start;
     }
 
     .track-glass-panel h3 { 
