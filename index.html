@@ -445,7 +445,9 @@
       background: rgba(255, 255, 255, 0.03);
       border: 1.5px dashed rgba(255, 255, 255, 0.15);
       border-radius: 8px;
-      width: 200px;
+      min-width: 200px;
+      width: auto;
+      padding: 0 30px;
       height: 70px;
       display: flex;
       align-items: center;
@@ -456,6 +458,7 @@
       font-weight: 800;
       text-transform: uppercase;
       transition: all 0.2s ease;
+      cursor: pointer;
     }
     
     .sponsor-placeholder:hover {
@@ -786,11 +789,8 @@
       <div class="footer-sponsors">
         <h4>Official Partners</h4>
         <div class="sponsor-grid">
-          <!-- Populating with common top-tier sim hardware/software ecosystem partners -->
-          <div class="sponsor-placeholder">Fanatec</div>
-          <div class="sponsor-placeholder">Next Level Racing</div>
-          <div class="sponsor-placeholder">Virtual Racing School</div>
-          <div class="sponsor-placeholder">Digital Race Engineer</div>
+          <!-- Populating with adaptable "Looking for Sponsors" panel -->
+          <div class="sponsor-placeholder">Looking For Sponsors</div>
         </div>
       </div>
       
@@ -798,9 +798,7 @@
       <div class="footer-bottom">
         <p>&copy; 2026 Australian E-Sport Porsche Cup Championship. All rights reserved.</p>
         <div class="footer-links">
-          <a href="#">Official Rulebook</a>
-          <a href="#">Twitch</a>
-          <a href="#">YouTube</a>
+          <a href="https://discord.gg/r7UtWHDEXh" target="_blank">Discord</a>
         </div>
       </div>
       
