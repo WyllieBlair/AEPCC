@@ -1,0 +1,28 @@
+{
+  "drivers": [
+    {
+      "name": "John Doe",
+      "class": "Pro",
+      "net_points": 120,
+      "license_points": 2,
+      "ban_active": false
+    },
+    {
+      "name": "Jane Smith",
+      "class": "Pro-Am",
+      "net_points": 95,
+      "license_points": 7,
+      "ban_active": true
+    }
+  ],
+  "teams": [
+    {
+      "name": "Apex Racing",
+      "points": 215
+    },
+    {
+      "name": "Slipstream Autosport",
+      "points": 180
+    }
+  ]
+}
