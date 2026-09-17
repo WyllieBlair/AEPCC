@@ -91,7 +91,7 @@
     .info-list a { color: #fff; text-decoration: none; border-bottom: 1px solid var(--brand-red); transition: opacity 0.2s; }
     .info-list a:hover { opacity: 0.8; }
 
-    /* Calendar Schedule Cards - 2 Columns with Gradient Border on Hover */
+    /* Calendar Schedule Cards - 2 Columns with Blended Photos */
     .schedule-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px; }
     @media (max-width: 900px) { .schedule-grid { grid-template-columns: 1fr; } }
     
@@ -109,7 +109,21 @@
       border-image-slice: 1;
     }
     
-    .track-photo { height: 200px; background-color: #12141a; background-size: cover; background-position: center; background-repeat: no-repeat; border-bottom: 1px solid var(--border-color); position: relative; }
+    /* Increased height for larger photos and added vertical gradient blend */
+    .track-photo { 
+      height: 240px; 
+      background-color: #12141a; 
+      background-size: cover; 
+      background-position: center; 
+      background-repeat: no-repeat; 
+      position: relative; 
+    }
+    
+    .track-photo-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(24, 27, 33, 0) 40%, var(--bg-panel) 100%);
+    }
     
     .photo-sebring { background-image: url('tracks/sebring.jpg'); }
     .photo-bathurst { background-image: url('tracks/bathurst.jpg'); }
@@ -120,10 +134,10 @@
     .photo-long-beach { background-image: url('tracks/longbeach.jpg'); }
     .photo-road-atlanta { background-image: url('tracks/roadatlanta.jpg'); }
     
-    .round-header { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.8); border: 1px solid var(--border-color); padding: 4px 10px; border-radius: 4px; font-family: var(--font-ui); font-size: 0.85rem; font-weight: 600; color: #fff; }
-    .round-date { position: absolute; top: 15px; right: 15px; color: var(--brand-red); font-weight: 700; font-size: 0.85rem; background: rgba(0,0,0,0.8); padding: 4px 10px; border-radius: 4px; }
+    .round-header { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.8); border: 1px solid var(--border-color); padding: 4px 10px; border-radius: 4px; font-family: var(--font-ui); font-size: 0.85rem; font-weight: 600; color: #fff; z-index: 2; }
+    .round-date { position: absolute; top: 15px; right: 15px; color: var(--brand-red); font-weight: 700; font-size: 0.85rem; background: rgba(0,0,0,0.8); padding: 4px 10px; border-radius: 4px; z-index: 2; }
     
-    .round-details { padding: 25px; }
+    .round-details { padding: 25px; margin-top: -20px; position: relative; z-index: 3; }
     .round-details h3 { font-family: var(--font-ui); font-size: 1.25rem; font-weight: 700; margin-bottom: 5px; text-transform: none; color: #fff; }
     
     .round-meta { display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
@@ -222,6 +236,7 @@
         <!-- Round 1 -->
         <div class="round-card">
           <div class="track-photo photo-sebring">
+            <div class="track-photo-overlay"></div>
             <div class="round-header">Round 1</div>
             <div class="round-date">OCT 1</div>
           </div>
@@ -237,6 +252,7 @@
         <!-- Round 2 -->
         <div class="round-card">
           <div class="track-photo photo-bathurst">
+            <div class="track-photo-overlay"></div>
             <div class="round-header">Round 2</div>
             <div class="round-date">OCT 8</div>
           </div>
@@ -252,6 +268,7 @@
         <!-- Round 3 -->
         <div class="round-card">
           <div class="track-photo photo-road-america">
+            <div class="track-photo-overlay"></div>
             <div class="round-header">Round 3</div>
             <div class="round-date">OCT 15</div>
           </div>
@@ -267,6 +284,7 @@
         <!-- Round 4 -->
         <div class="round-card">
           <div class="track-photo photo-cota">
+            <div class="track-photo-overlay"></div>
             <div class="round-header">Round 4</div>
             <div class="round-date">OCT 22</div>
           </div>
@@ -282,6 +300,7 @@
         <!-- Round 5 -->
         <div class="round-card">
           <div class="track-photo photo-hungaroring">
+            <div class="track-photo-overlay"></div>
             <div class="round-header">Round 5</div>
             <div class="round-date">OCT 29</div>
           </div>
@@ -297,6 +316,7 @@
         <!-- Round 6 -->
         <div class="round-card">
           <div class="track-photo photo-algarve">
+            <div class="track-photo-overlay"></div>
             <div class="round-header">Round 6</div>
             <div class="round-date">NOV 5</div>
           </div>
@@ -312,6 +332,7 @@
         <!-- Round 7 -->
         <div class="round-card">
           <div class="track-photo photo-long-beach">
+            <div class="track-photo-overlay"></div>
             <div class="round-header">Round 7</div>
             <div class="round-date">NOV 12</div>
           </div>
@@ -327,6 +348,7 @@
         <!-- Round 8 -->
         <div class="round-card">
           <div class="track-photo photo-road-atlanta">
+            <div class="track-photo-overlay"></div>
             <div class="round-header">Round 8 Finale</div>
             <div class="round-date">NOV 19</div>
           </div>
