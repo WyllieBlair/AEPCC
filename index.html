@@ -91,13 +91,14 @@
     .info-list a { color: #fff; text-decoration: none; border-bottom: 1px solid var(--brand-red); transition: opacity 0.2s; }
     .info-list a:hover { opacity: 0.8; }
 
-    /* Calendar Schedule Cards */
-    .schedule-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; margin-bottom: 40px; }
+    /* Calendar Schedule Cards - Strictly 2 Columns */
+    .schedule-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px; }
+    @media (max-width: 900px) { .schedule-grid { grid-template-columns: 1fr; } }
+    
     .round-card { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; transition: transform 0.2s; }
     .round-card:hover { transform: translateY(-4px); border-color: var(--brand-red); }
     
-    /* Mapped exactly to your filenames in the 'tracks' folder */
-    .track-photo { height: 180px; background-color: #12141a; background-size: cover; background-position: center; background-repeat: no-repeat; border-bottom: 1px solid var(--border-color); position: relative; }
+    .track-photo { height: 200px; background-color: #12141a; background-size: cover; background-position: center; background-repeat: no-repeat; border-bottom: 1px solid var(--border-color); position: relative; }
     
     .photo-sebring { background-image: url('tracks/sebring.jpg'); }
     .photo-bathurst { background-image: url('tracks/bathurst.jpg'); }
@@ -108,12 +109,12 @@
     .photo-long-beach { background-image: url('tracks/longbeach.jpg'); }
     .photo-road-atlanta { background-image: url('tracks/roadatlanta.jpg'); }
     
-    .round-header { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.8); border: 1px solid var(--border-color); padding: 4px 10px; border-radius: 4px; font-family: var(--font-brand); font-size: 0.8rem; }
-    .round-date { position: absolute; top: 10px; right: 10px; color: var(--brand-red); font-weight: 700; font-size: 0.8rem; background: rgba(0,0,0,0.8); padding: 4px 8px; border-radius: 4px; }
+    .round-header { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.8); border: 1px solid var(--border-color); padding: 4px 10px; border-radius: 4px; font-family: var(--font-brand); font-size: 0.85rem; }
+    .round-date { position: absolute; top: 15px; right: 15px; color: var(--brand-red); font-weight: 700; font-size: 0.85rem; background: rgba(0,0,0,0.8); padding: 4px 10px; border-radius: 4px; }
     
-    .round-details { padding: 20px; }
-    .round-details h3 { font-family: var(--font-ui); font-size: 1.2rem; margin-bottom: 5px; text-transform: none; }
-    .round-details p { font-size: 0.85rem; margin-bottom: 0; }
+    .round-details { padding: 25px; }
+    .round-details h3 { font-family: var(--font-ui); font-size: 1.3rem; margin-bottom: 8px; text-transform: none; }
+    .round-details p { font-size: 0.9rem; margin-bottom: 0; color: var(--text-muted); }
 
     /* Format Badges */
     .badge { padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; display: inline-block; }
@@ -204,7 +205,7 @@
       </div>
     </div>
     
-    <!-- TAB: SCHEDULE -->
+    <!-- TAB: SCHEDULE (2-Column Grid Layout) -->
     <div id="tab-schedule" class="tab-view">
       <h2>Season 1 Calendar</h2>
       
