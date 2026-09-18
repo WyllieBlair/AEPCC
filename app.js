@@ -1,15 +1,12 @@
 let globalDrivers = [];
 let globalTeams = [];
 
-// 1. We removed the const heroImages array from here.
-
 document.addEventListener("DOMContentLoaded", () => {
-  initDynamicSlider(); // 2. Updated to call the new dynamic function
+  initDynamicSlider();
   loadStandings();
   updateScheduleBadges();
 });
 
-// 3. Replaced initHeroSlider() with the new async function
 async function initDynamicSlider() {
   const heroContainer = document.getElementById('hero-slider');
   if (!heroContainer) return;
@@ -17,37 +14,34 @@ async function initDynamicSlider() {
   try {
     const response = await fetch('https://api.github.com/repos/WyllieBlair/AEPCC/contents/photos');
     const files = await response.json();
-
+    
+    // Fix #3: Use download_url to get the actual raw image
     const images = files
       .filter(file => file.name.match(/\.(png|jpe?g|webp)$/i))
-      .map(file => file.path); 
+      .map(file => file.download_url); 
 
     if (images.length === 0) {
       console.warn("No images found in the photos folder.");
       return;
     }
 
-    // Set the initial image
-    heroContainer.innerHTML = ''; // Clear out any existing slides
+    // Fix #2: Clear only the old slides so you don't delete your <h1> title
+    heroContainer.querySelectorAll('.hero-slide').forEach(slide => slide.remove());
+
     images.forEach((imgSrc, index) => {
       const slide = document.createElement('div');
       slide.className = `hero-slide ${index === 0 ? 'active' : ''}`;
       slide.style.backgroundImage = `url('${imgSrc}')`;
+      
+      // Insert the background slides behind the title text
       heroContainer.insertBefore(slide, heroContainer.firstChild);
     });
+    
+    // Note: If you had setInterval code to make the images cycle automatically,
+    // you'll need to keep that here (it is cut off from my view).
 
-    // Cycle through slides
-    let currentSlide = 0;
-    const slides = heroContainer.querySelectorAll('.hero-slide');
-    if (slides.length > 1) {
-      setInterval(() => {
-        slides[currentSlide].classList.remove('active');
-        currentSlide = (currentSlide + 1) % slides.length;
-        slides[currentSlide].classList.add('active');
-      }, 5000);
-    }
   } catch (error) {
-    console.error("Failed to load images from GitHub API:", error);
+    console.error("Error loading slider images:", error);
   }
 }
 
