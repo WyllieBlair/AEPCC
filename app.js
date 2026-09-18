@@ -51,7 +51,7 @@ async function initDynamicSlider() {
   }
 }
 
-function switchTab(tabId) {
+
 // ... The rest of your code stays exactly the same from here down
 function switchTab(tabId) {
   document.querySelectorAll('.tab-view').forEach(view => view.classList.remove('active'));
