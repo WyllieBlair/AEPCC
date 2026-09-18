@@ -1,40 +1,58 @@
 let globalDrivers = [];
 let globalTeams = [];
 
-const heroImages = [
-  'PESCAPAC_Adelaide_Race_7_080126.png',
-  'Porkatthebring2.png',
-  'Porkatthehock67-44.png'
-];
+// 1. We removed the const heroImages array from here.
 
 document.addEventListener("DOMContentLoaded", () => {
-  initHeroSlider();
+  initDynamicSlider(); // 2. Updated to call the new dynamic function
   loadStandings();
   updateScheduleBadges();
 });
 
-function initHeroSlider() {
+// 3. Replaced initHeroSlider() with the new async function
+async function initDynamicSlider() {
   const heroContainer = document.getElementById('hero-slider');
   if (!heroContainer) return;
 
-  heroImages.forEach((imgSrc, index) => {
-    const slide = document.createElement('div');
-    slide.className = `hero-slide ${index === 0 ? 'active' : ''}`;
-    slide.style.backgroundImage = `url('${imgSrc}')`;
-    heroContainer.insertBefore(slide, heroContainer.firstChild);
-  });
+  try {
+    const response = await fetch('https://api.github.com/repos/WyllieBlair/AEPCC/contents/photos');
+    const files = await response.json();
 
-  let currentSlide = 0;
-  const slides = heroContainer.querySelectorAll('.hero-slide');
-  if (slides.length > 1) {
-    setInterval(() => {
-      slides[currentSlide].classList.remove('active');
-      currentSlide = (currentSlide + 1) % slides.length;
-      slides[currentSlide].classList.add('active');
-    }, 5000);
+    const images = files
+      .filter(file => file.name.match(/\.(png|jpe?g|webp)$/i))
+      .map(file => file.path); 
+
+    if (images.length === 0) {
+      console.warn("No images found in the photos folder.");
+      return;
+    }
+
+    // Set the initial image
+    heroContainer.innerHTML = ''; // Clear out any existing slides
+    images.forEach((imgSrc, index) => {
+      const slide = document.createElement('div');
+      slide.className = `hero-slide ${index === 0 ? 'active' : ''}`;
+      slide.style.backgroundImage = `url('${imgSrc}')`;
+      heroContainer.insertBefore(slide, heroContainer.firstChild);
+    });
+
+    // Cycle through slides
+    let currentSlide = 0;
+    const slides = heroContainer.querySelectorAll('.hero-slide');
+    if (slides.length > 1) {
+      setInterval(() => {
+        slides[currentSlide].classList.remove('active');
+        currentSlide = (currentSlide + 1) % slides.length;
+        slides[currentSlide].classList.add('active');
+      }, 5000);
+    }
+  } catch (error) {
+    console.error("Failed to load images from GitHub API:", error);
   }
 }
 
+function switchTab(tabId) {
+// ... The rest of your code stays exactly the same from here down
 function switchTab(tabId) {
   document.querySelectorAll('.tab-view').forEach(view => view.classList.remove('active'));
   document.querySelectorAll('#nav-tabs button').forEach(btn => btn.classList.remove('active'));
