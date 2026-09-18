@@ -1,135 +1,147 @@
-// Global State
-let allDrivers = [];
+let globalDrivers = [];
+let globalTeams = [];
+
+const heroImages = [
+  'PESCAPAC_Adelaide_Race_7_080126.png',
+  'Porkatthebring2.png',
+  'Porkatthehock67-44.png'
+];
 
 document.addEventListener("DOMContentLoaded", () => {
+  initHeroSlider();
   loadStandings();
+  updateScheduleBadges();
 });
 
-// Tab Switching
-function switchTab(tabId) {
-  // Hide all views
-  document.querySelectorAll('.tab-view').forEach(view => {
-    view.classList.remove('active');
+function initHeroSlider() {
+  const heroContainer = document.getElementById('hero-slider');
+  if (!heroContainer) return;
+
+  heroImages.forEach((imgSrc, index) => {
+    const slide = document.createElement('div');
+    slide.className = `hero-slide ${index === 0 ? 'active' : ''}`;
+    slide.style.backgroundImage = `url('${imgSrc}')`;
+    heroContainer.insertBefore(slide, heroContainer.firstChild);
   });
 
-  // Deactivate all buttons
-  document.querySelectorAll('#nav-tabs button').forEach(btn => {
-    btn.classList.remove('active');
-  });
-
-  // Activate selected
-  const targetTab = document.getElementById(`tab-${tabId}`);
-  if (targetTab) {
-    targetTab.classList.add('active');
-  }
-
-  // Highlight active button
-  const matchingBtn = Array.from(document.querySelectorAll('#nav-tabs button')).find(
-    btn => btn.getAttribute('onclick')?.includes(tabId)
-  );
-  if (matchingBtn) {
-    matchingBtn.classList.add('active');
+  let currentSlide = 0;
+  const slides = heroContainer.querySelectorAll('.hero-slide');
+  if (slides.length > 1) {
+    setInterval(() => {
+      slides[currentSlide].classList.remove('active');
+      currentSlide = (currentSlide + 1) % slides.length;
+      slides[currentSlide].classList.add('active');
+    }, 5000);
   }
 }
 
-// Fetch Standings JSON
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-view').forEach(view => view.classList.remove('active'));
+  document.querySelectorAll('#nav-tabs button').forEach(btn => btn.classList.remove('active'));
+  
+  const targetTab = document.getElementById(`tab-${tabId}`);
+  if (targetTab) targetTab.classList.add('active');
+  
+  const matchingBtn = Array.from(document.querySelectorAll('#nav-tabs button')).find(btn => btn.getAttribute('onclick')?.includes(tabId));
+  if (matchingBtn) matchingBtn.classList.add('active');
+  
+  if(window.innerWidth <= 768) {
+    document.querySelector('.container').scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+function updateScheduleBadges() {
+  const today = new Date();
+  document.querySelectorAll('.round-date-badge').forEach(badge => {
+    const raceDateStr = badge.getAttribute('data-date');
+    const raceDate = new Date(raceDateStr);
+    
+    if (today >= raceDate) {
+      badge.outerHTML = `<a href="#" onclick="switchTab('results')" class="round-results-link">View Results</a>`;
+    } else {
+      badge.textContent = raceDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }).toUpperCase();
+    }
+  });
+}
+
 function loadStandings() {
-  fetch('standings.json')
+  fetch('data/standings.json')
     .then(res => res.json())
     .then(data => {
-      allDrivers = data.drivers || [];
-      renderDrivers(allDrivers);
-      renderTeams(data.teams || []);
+      globalDrivers = data.drivers || [];
+      globalTeams = data.teams || [];
+      filterDivision('Pro');
+      renderTeams(globalTeams);
     })
     .catch(err => {
-      console.warn("Could not load standings.json directly. Showing fallback.", err);
-      renderFallbackNotice();
+      console.warn("Waiting on data/standings.json", err);
+      renderDrivers([]);
+      renderTeams([]); 
     });
 }
 
-// Render Driver Rows
+function filterDivision(division, event) {
+  document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+  if (event && event.target) {
+    event.target.classList.add('active');
+  } else {
+    const defaultBtn = document.querySelector('.filter-btn');
+    if (defaultBtn) defaultBtn.classList.add('active');
+  }
+
+  const divLower = division.toLowerCase();
+  const filtered = globalDrivers.filter(d => {
+    const driverClass = (d.class || '').toLowerCase();
+    return driverClass === divLower;
+  });
+
+  renderDrivers(filtered);
+}
+
 function renderDrivers(drivers) {
   const tbody = document.getElementById('driver-rows');
   if (!tbody) return;
-  tbody.innerHTML = '';
-
-  if (drivers.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:#9ca3af;">No classified results recorded yet.</td></tr>';
+  
+  if (!drivers || drivers.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No drivers found in this division.</td></tr>`;
     return;
   }
 
+  tbody.innerHTML = '';
   drivers.forEach((driver, idx) => {
     const tr = document.createElement('tr');
-
-    let classClass = 'class-am';
-    if (driver.class === 'Pro') classClass = 'class-pro';
-    if (driver.class === 'Pro-Am') classClass = 'class-pro-am';
-
-    const statusBadge = driver.ban_active
-      ? `<span class="badge-ban">QUALIFYING BAN</span>`
-      : `<span class="badge-ok">ACTIVE</span>`;
-
     tr.innerHTML = `
-      <td class="pos-cell">${idx + 1}</td>
+      <td class="text-highlight">${idx + 1}</td>
       <td>
-        <div class="driver-name">${driver.name}</div>
-        <div class="driver-team">${driver.team || 'Independent'}</div>
+        <span class="text-highlight">${driver.name || 'Unknown Driver'}</span>
+        <span class="subtext">${driver.team || 'Independent'}</span>
       </td>
-      <td><span class="badge-class ${classClass}">${driver.class}</span></td>
-      <td><strong style="color:#fff; font-size:1.05rem;">${driver.net_points}</strong></td>
-      <td style="color:#9ca3af;">${driver.raw_points || driver.net_points}</td>
-      <td style="color:#ef4444;">-${driver.drop_points || 0}</td>
-      <td>${driver.license_points || 0} / 6</td>
-      <td>${statusBadge}</td>
+      <td>${driver.class || 'Pro'}</td>
+      <td class="text-highlight">${driver.net_points !== undefined ? driver.net_points : 0}</td>
     `;
     tbody.appendChild(tr);
   });
 }
 
-// Class Filtering Logic
-function filterClass(targetClass) {
-  // Update button styles
-  document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.classList.remove('active');
-    if (btn.innerText.toUpperCase() === targetClass.toUpperCase() || 
-       (targetClass === 'ALL' && btn.innerText.includes('All'))) {
-      btn.classList.add('active');
-    }
-  });
-
-  if (targetClass === 'ALL') {
-    renderDrivers(allDrivers);
-  } else {
-    const filtered = allDrivers.filter(d => d.class.toLowerCase() === targetClass.toLowerCase());
-    renderDrivers(filtered);
-  }
-}
-
-// Render Team Standings
 function renderTeams(teams) {
   const tbody = document.getElementById('team-rows');
   if (!tbody) return;
-  tbody.innerHTML = '';
 
-  if (teams.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:#9ca3af;">No team points recorded yet.</td></tr>';
+  const validTeams = (teams || []).filter(t => t && t.name);
+
+  if (validTeams.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">No team standings available.</td></tr>`;
     return;
   }
 
-  teams.forEach((team, idx) => {
+  tbody.innerHTML = '';
+  validTeams.forEach((team, idx) => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td class="pos-cell">${idx + 1}</td>
-      <td><strong style="color:#fff;">${team.name}</strong></td>
-      <td><strong style="color:var(--gold-accent);">${team.points}</strong></td>
+      <td class="text-highlight">${idx + 1}</td>
+      <td class="text-highlight">${team.name}</td>
+      <td class="text-highlight">${team.points !== undefined ? team.points : 0}</td>
     `;
     tbody.appendChild(tr);
   });
-}
-
-function renderFallbackNotice() {
-  const driverBody = document.getElementById('driver-rows');
-  const teamBody = document.getElementById('team-rows');
-  if (driverBody) driverBody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:#9ca3af;">Waiting for Round 1 standings update.</td></tr>';
-  if (teamBody) teamBody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:#9ca3af;">Waiting for Round 1 standings update.</td></tr>';
 }
