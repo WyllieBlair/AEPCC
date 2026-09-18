@@ -33,7 +33,6 @@
       --text-main: #f3f4f6;
       --text-muted: #9ca3af;
       
-      /* Motorsport Textures */
       --texture-carbon: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.015) 0px, rgba(255, 255, 255, 0.015) 2px, transparent 2px, transparent 8px);
       
       --font-brand: 'PP Monument', sans-serif;
@@ -53,7 +52,6 @@
       overflow-x: hidden;
     }
 
-    /* Subtle E-Sports Ambient Lighting */
     body::before {
       content: '';
       position: fixed;
@@ -78,7 +76,6 @@
       pointer-events: none;
     }
 
-    /* Navbar */
     header { 
       background-color: var(--bg-panel); 
       background-image: var(--texture-carbon);
@@ -102,7 +99,6 @@
     
     .brand-logo { height: 75px; width: auto; max-width: 400px; object-fit: contain; }
     
-    /* Horizontal Scrollable Nav for Mobile */
     nav { 
       display: flex; 
       gap: 20px; 
@@ -121,13 +117,11 @@
     .btn-discord { background: var(--brand-discord); color: #fff; padding: 8px 16px; border-radius: 4px; font-size: 0.85rem; font-weight: 800; text-decoration: none; transition: opacity 0.2s; display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-brand); text-transform: uppercase; white-space: nowrap; }
     .btn-discord:hover { opacity: 0.9; }
 
-    /* Mobile Nav Breakpoint */
     @media (max-width: 768px) {
       .nav-container { flex-direction: column; align-items: flex-start; gap: 15px; padding: 15px; }
       nav { width: 100%; padding-bottom: 5px; }
     }
 
-    /* Hero Slideshow */
     .hero { 
       width: 100%; 
       height: 600px; 
@@ -182,18 +176,15 @@
       .hero { height: 450px; }
     }
 
-    /* Layout */
     .container { max-width: 1200px; margin: auto; padding: 40px 20px; position: relative; z-index: 10; }
     .tab-view { display: none; animation: fadeIn 0.3s ease; }
     .tab-view.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    /* Typography */
     h2, h3 { font-family: var(--font-brand); font-weight: 800; text-transform: uppercase; margin-bottom: 15px; color: #fff; letter-spacing: 0.5px; }
     h2 { font-size: 1.6rem; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 25px; }
     p { color: var(--text-muted); margin-bottom: 15px; font-size: 0.95rem; font-family: var(--font-brand); font-weight: 400; }
 
-    /* Panels & Features */
     .panel { 
       background-color: var(--bg-panel); 
       background-image: var(--texture-carbon);
@@ -248,7 +239,6 @@
       font-weight: 800; 
     }
 
-    /* Info Lists */
     .info-list { list-style: none; padding: 0; }
     .info-list li { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; font-size: 0.95rem; color: #d1d5db; font-family: var(--font-brand); font-weight: 400; }
     .info-list li::before { content: '—'; color: var(--brand-red); font-weight: 800; }
@@ -256,7 +246,6 @@
     .info-list a { color: #fff; text-decoration: none; border-bottom: 1px solid var(--brand-red); transition: opacity 0.2s; }
     .info-list a:hover { opacity: 0.8; }
 
-    /* Calendar Schedule Cards */
     .schedule-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px; }
     @media (max-width: 900px) { .schedule-grid { grid-template-columns: 1fr; } }
     
@@ -370,12 +359,10 @@
     .round-meta span strong { color: rgba(255, 255, 255, 0.65); font-weight: 800; }
     .track-glass-panel p { font-size: 0.85rem; margin-bottom: 0; color: rgba(243, 244, 246, 0.6); font-family: var(--font-brand); font-weight: 400; }
 
-    /* Division Filter Buttons */
     .filter-container { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; }
     .filter-btn { background: var(--bg-panel); border: 1.5px solid var(--border-color); color: var(--text-muted); padding: 8px 16px; border-radius: 6px; font-family: var(--font-brand); font-weight: 800; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; text-transform: uppercase; }
     .filter-btn:hover, .filter-btn.active { background: var(--brand-red); border-color: var(--brand-red); color: #fff; }
 
-    /* Centered Standings Tables */
     .standings-container { max-width: 900px; margin: 0 auto; }
     .standings-container h2 { text-align: center; }
     
@@ -400,7 +387,6 @@
     .text-highlight { color: #fff; font-weight: 800; }
     .subtext { display: block; font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; font-weight: 400; }
 
-    /* FOOTER CSS */
     .site-footer {
       margin-top: 80px;
       border-top: 3px solid transparent;
@@ -528,7 +514,6 @@
 </head>
 <body>
 
-  <!-- Navigation -->
   <header>
     <div class="nav-container">
       <a href="#" onclick="switchTab('home')">
@@ -544,7 +529,6 @@
     </div>
   </header>
 
-  <!-- Hero Slideshow with Integrated Title -->
   <div class="hero" id="hero-slider">
     <div class="hero-overlay"></div>
     <div class="hero-content">
@@ -555,7 +539,6 @@
 
   <div class="container">
 
-    <!-- TAB: OVERVIEW (Home) -->
     <div id="tab-home" class="tab-view active">
       
       <div style="max-width: 900px; margin-bottom: 30px;">
@@ -599,13 +582,11 @@
       </div>
     </div>
     
-    <!-- TAB: SCHEDULE -->
     <div id="tab-schedule" class="tab-view">
       <h2>Season 1 Calendar</h2>
       
       <div class="schedule-grid">
         
-        <!-- Round 1 -->
         <div class="round-card">
           <div class="round-card-bg photo-sebring"></div>
           <div class="card-top-row">
@@ -622,7 +603,6 @@
           </div>
         </div>
 
-        <!-- Round 2 -->
         <div class="round-card">
           <div class="round-card-bg photo-bathurst"></div>
           <div class="card-top-row">
@@ -639,7 +619,6 @@
           </div>
         </div>
 
-        <!-- Round 3 -->
         <div class="round-card">
           <div class="round-card-bg photo-road-america"></div>
           <div class="card-top-row">
@@ -656,7 +635,6 @@
           </div>
         </div>
 
-        <!-- Round 4 -->
         <div class="round-card">
           <div class="round-card-bg photo-cota"></div>
           <div class="card-top-row">
@@ -673,7 +651,6 @@
           </div>
         </div>
 
-        <!-- Round 5 -->
         <div class="round-card">
           <div class="round-card-bg photo-hungaroring"></div>
           <div class="card-top-row">
@@ -690,7 +667,6 @@
           </div>
         </div>
 
-        <!-- Round 6 -->
         <div class="round-card">
           <div class="round-card-bg photo-algarve"></div>
           <div class="card-top-row">
@@ -707,7 +683,6 @@
           </div>
         </div>
 
-        <!-- Round 7 -->
         <div class="round-card">
           <div class="round-card-bg photo-long-beach"></div>
           <div class="card-top-row">
@@ -724,7 +699,6 @@
           </div>
         </div>
 
-        <!-- Round 8 -->
         <div class="round-card">
           <div class="round-card-bg photo-road-atlanta"></div>
           <div class="card-top-row">
@@ -744,7 +718,6 @@
       </div>
     </div>
 
-    <!-- TAB: STANDINGS (Centered) -->
     <div id="tab-standings" class="tab-view">
       <div class="standings-container">
         <h2>Driver Championship</h2>
@@ -788,7 +761,6 @@
       </div>
     </div>
 
-    <!-- TAB: RESULTS -->
     <div id="tab-results" class="tab-view">
       <h2>Race Results</h2>
       <div class="panel" style="text-align: center; padding: 60px 20px;">
@@ -798,20 +770,16 @@
 
   </div>
 
-  <!-- Footer Section -->
   <footer class="site-footer">
     <div class="footer-container">
       
-      <!-- Sponsors Grid -->
       <div class="footer-sponsors">
         <h4>Official Partners</h4>
         <div class="sponsor-grid">
-          <!-- Populating with adaptable "Looking for Sponsors" panel -->
           <div class="sponsor-placeholder">Looking For Sponsors</div>
         </div>
       </div>
       
-      <!-- Copyright & Links -->
       <div class="footer-bottom">
         <div class="footer-legal">
           <p>&copy; 2026 Australian E-Sport Porsche Cup Championship. All rights reserved.</p>
@@ -873,7 +841,6 @@
       const matchingBtn = Array.from(document.querySelectorAll('#nav-tabs button')).find(btn => btn.getAttribute('onclick')?.includes(tabId));
       if (matchingBtn) matchingBtn.classList.add('active');
       
-      // Scroll back to top of container when switching tabs on mobile
       if(window.innerWidth <= 768) {
         document.querySelector('.container').scrollIntoView({ behavior: 'smooth' });
       }
