@@ -15,7 +15,7 @@ async function initDynamicSlider() {
     const response = await fetch('https://api.github.com/repos/WyllieBlair/AEPCC/contents/photos');
     const files = await response.json();
     
-    // Fix #3: Use download_url to get the actual raw image
+    // Use download_url to get the actual raw image
     const images = files
       .filter(file => file.name.match(/\.(png|jpe?g|webp)$/i))
       .map(file => file.download_url); 
@@ -25,33 +25,41 @@ async function initDynamicSlider() {
       return;
     }
 
-    // Fix #2: Clear only the old slides so you don't delete your <h1> title
+    // Clear only the old slides so you don't delete your <h1> title
     heroContainer.querySelectorAll('.hero-slide').forEach(slide => slide.remove());
+
+    // Target the overlay so we can insert images right behind it
+    const overlay = heroContainer.querySelector('.hero-overlay');
 
     images.forEach((imgSrc, index) => {
       const slide = document.createElement('div');
       slide.className = `hero-slide ${index === 0 ? 'active' : ''}`;
       slide.style.backgroundImage = `url('${imgSrc}')`;
       
-      // Insert the background slides behind the title text
-      heroContainer.insertBefore(slide, heroContainer.firstChild);
+      // Insert in correct sequential order behind the dark gradient overlay
+      if (overlay) {
+        heroContainer.insertBefore(slide, overlay);
+      } else {
+        heroContainer.appendChild(slide);
+      }
     });
     
-    // --- NEW CYCLING LOGIC ADDED HERE ---
+    // Cycle logic
     const slides = heroContainer.querySelectorAll('.hero-slide');
     let currentSlide = 0;
     
-    // Only set an interval if there is more than one image
     if (slides.length > 1) {
       setInterval(() => {
-        // Fade out current slide
         slides[currentSlide].classList.remove('active');
-        // Move to the next slide, loop back to 0 if at the end
         currentSlide = (currentSlide + 1) % slides.length;
-        // Fade in new slide
         slides[currentSlide].classList.add('active');
-      }, 5000); // Changes every 5 seconds (5000 milliseconds)
+      }, 5000); // Changes every 5 seconds
     }
+
+  } catch (error) {
+    console.error("Error loading slider images:", error);
+  }
+}
 
   } catch (error) {
     console.error("Error loading slider images:", error);
