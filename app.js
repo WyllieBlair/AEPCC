@@ -11,12 +11,11 @@ function initDynamicSlider() {
   const heroContainer = document.getElementById('hero-slider');
   if (!heroContainer) return;
 
-  // Add new image file names to this list as you upload them to your photos folder
   const imageFiles = [
+    'PESCAPAC_Adelaide_Race_7_080126.png',
     'Adelaide-Jacob_C_Hughes-2.webp',
     'Adelaide-Jonathan_Akers-0.webp',
     'Adelaide-Jordan_Malcolm-0.webp',
-    'PESCAPAC_Adelaide_Race_7_080126.png',
     'Porkatthebring2.png',
     'Porkatthebring5.png',
     'Porkatthehock3-38.png',
@@ -35,7 +34,6 @@ function initDynamicSlider() {
     const slide = document.createElement('div');
     slide.className = `hero-slide ${index === 0 ? 'active' : ''}`;
     
-    // ONLY assign the first image immediately for instant loading
     if (index === 0) {
       slide.style.backgroundImage = `url('${imgSrc}')`;
     }
@@ -49,8 +47,7 @@ function initDynamicSlider() {
   
   const slides = heroContainer.querySelectorAll('.hero-slide');
   
-  // BACKGROUND PRE-LOAD
-  // Wait 1 second to let the website load first, then download the rest in the background
+ 
   setTimeout(() => {
     slides.forEach((slide, index) => {
       if (index !== 0) {
