@@ -45,8 +45,6 @@ async function initDynamicSlider() {
   }
 }
 
-
-// ... The rest of your code stays exactly the same from here down
 function switchTab(tabId) {
   document.querySelectorAll('.tab-view').forEach(view => view.classList.remove('active'));
   document.querySelectorAll('#nav-tabs button').forEach(btn => btn.classList.remove('active'));
@@ -58,7 +56,11 @@ function switchTab(tabId) {
   if (matchingBtn) matchingBtn.classList.add('active');
   
   if(window.innerWidth <= 768) {
-    document.querySelector('.container').scrollIntoView({ behavior: 'smooth' });
+    const container = document.querySelector('.container');
+    // Only scroll if the content is far below the top of the viewport
+    if (container && container.getBoundingClientRect().top > 150) {
+      container.scrollIntoView({ behavior: 'smooth' });
+    }
   }
 }
 
