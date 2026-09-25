@@ -11,17 +11,15 @@ function initDynamicSlider() {
   const heroContainer = document.getElementById('hero-slider');
   if (!heroContainer) return;
 
-  // Updated with your new, generic file names
   const imageFiles = [
+    'PESCAPAC_Adelaide_Race_7_080126.png',
+    'Porkatthebring2.png',
+    'Porkatthebring5.png',
+    'Porkatthehock3-38.png',
+    'Porkatthehock67-44.png',
     'photo2.webp',
-    'photo3.png',
-    'photo4.png',
-    'photo5.png',
-    'photo6.png',
-    'photo7.png',
-    'photo8.png',
     'photo9.webp'
-  ];
+  ]; 
 
   const images = imageFiles.map(file => `photos/${file}`);
 
@@ -34,7 +32,6 @@ function initDynamicSlider() {
     const slide = document.createElement('div');
     slide.className = `hero-slide ${index === 0 ? 'active' : ''}`;
     
-    // ONLY assign the first image immediately for instant loading
     if (index === 0) {
       slide.style.backgroundImage = `url('${imgSrc}')`;
     }
