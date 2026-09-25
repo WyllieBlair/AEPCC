@@ -11,16 +11,16 @@ function initDynamicSlider() {
   const heroContainer = document.getElementById('hero-slider');
   if (!heroContainer) return;
 
+  // Updated with your new, generic file names
   const imageFiles = [
-    'PESCAPAC_Adelaide_Race_7_080126.png',
-    'Adelaide-Jacob_C_Hughes-2.webp',
-    'Adelaide-Jonathan_Akers-0.webp',
-    'Adelaide-Jordan_Malcolm-0.webp',
-    'Porkatthebring2.png',
-    'Porkatthebring5.png',
-    'Porkatthehock3-38.png',
-    'Porkatthehock5-40.png',
-    'Porkatthehock67-44.png'
+    'photo2.webp',
+    'photo3.png',
+    'photo4.png',
+    'photo5.png',
+    'photo6.png',
+    'photo7.png',
+    'photo8.png',
+    'photo9.webp'
   ];
 
   const images = imageFiles.map(file => `photos/${file}`);
@@ -34,6 +34,7 @@ function initDynamicSlider() {
     const slide = document.createElement('div');
     slide.className = `hero-slide ${index === 0 ? 'active' : ''}`;
     
+    // ONLY assign the first image immediately for instant loading
     if (index === 0) {
       slide.style.backgroundImage = `url('${imgSrc}')`;
     }
@@ -47,7 +48,8 @@ function initDynamicSlider() {
   
   const slides = heroContainer.querySelectorAll('.hero-slide');
   
- 
+  // BACKGROUND PRE-LOAD
+  // Wait 1 second to let the website load first, then download the rest in the background
   setTimeout(() => {
     slides.forEach((slide, index) => {
       if (index !== 0) {
