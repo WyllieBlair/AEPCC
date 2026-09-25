@@ -37,8 +37,21 @@ async function initDynamicSlider() {
       heroContainer.insertBefore(slide, heroContainer.firstChild);
     });
     
-    // Note: If you had setInterval code to make the images cycle automatically,
-    // you'll need to keep that here (it is cut off from my view).
+    // --- NEW CYCLING LOGIC ADDED HERE ---
+    const slides = heroContainer.querySelectorAll('.hero-slide');
+    let currentSlide = 0;
+    
+    // Only set an interval if there is more than one image
+    if (slides.length > 1) {
+      setInterval(() => {
+        // Fade out current slide
+        slides[currentSlide].classList.remove('active');
+        // Move to the next slide, loop back to 0 if at the end
+        currentSlide = (currentSlide + 1) % slides.length;
+        // Fade in new slide
+        slides[currentSlide].classList.add('active');
+      }, 5000); // Changes every 5 seconds (5000 milliseconds)
+    }
 
   } catch (error) {
     console.error("Error loading slider images:", error);
