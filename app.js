@@ -7,62 +7,66 @@ document.addEventListener("DOMContentLoaded", () => {
   updateScheduleBadges();
 });
 
-async function initDynamicSlider() {
+function initDynamicSlider() {
   const heroContainer = document.getElementById('hero-slider');
   if (!heroContainer) return;
 
-  try {
-    const response = await fetch('https://api.github.com/repos/WyllieBlair/AEPCC/contents/photos');
-    const files = await response.json();
+  // Add new image file names to this list as you upload them to your photos folder
+  const imageFiles = [
+    'Adelaide-Jacob_C_Hughes-2.webp',
+    'Adelaide-Jonathan_Akers-0.webp',
+    'Adelaide-Jordan_Malcolm-0.webp',
+    'PESCAPAC_Adelaide_Race_7_080126.png',
+    'Porkatthebring2.png',
+    'Porkatthebring5.png',
+    'Porkatthehock3-38.png',
+    'Porkatthehock5-40.png',
+    'Porkatthehock67-44.png'
+  ];
+
+  const images = imageFiles.map(file => `photos/${file}`);
+
+  if (images.length === 0) return;
+
+  heroContainer.querySelectorAll('.hero-slide').forEach(slide => slide.remove());
+  const overlay = heroContainer.querySelector('.hero-overlay');
+
+  images.forEach((imgSrc, index) => {
+    const slide = document.createElement('div');
+    slide.className = `hero-slide ${index === 0 ? 'active' : ''}`;
     
-    // Use download_url to get the actual raw image
-    const images = files
-      .filter(file => file.name.match(/\.(png|jpe?g|webp)$/i))
-      .map(file => file.download_url); 
-
-    if (images.length === 0) {
-      console.warn("No images found in the photos folder.");
-      return;
-    }
-
-    // Clear only the old slides so you don't delete your <h1> title
-    heroContainer.querySelectorAll('.hero-slide').forEach(slide => slide.remove());
-
-    // Target the overlay so we can insert images right behind it
-    const overlay = heroContainer.querySelector('.hero-overlay');
-
-    images.forEach((imgSrc, index) => {
-      const slide = document.createElement('div');
-      slide.className = `hero-slide ${index === 0 ? 'active' : ''}`;
+    // ONLY assign the first image immediately for instant loading
+    if (index === 0) {
       slide.style.backgroundImage = `url('${imgSrc}')`;
-      
-      // Insert in correct sequential order behind the dark gradient overlay
-      if (overlay) {
-        heroContainer.insertBefore(slide, overlay);
-      } else {
-        heroContainer.appendChild(slide);
+    }
+    
+    if (overlay) {
+      heroContainer.insertBefore(slide, overlay);
+    } else {
+      heroContainer.appendChild(slide);
+    }
+  });
+  
+  const slides = heroContainer.querySelectorAll('.hero-slide');
+  
+  // BACKGROUND PRE-LOAD
+  // Wait 1 second to let the website load first, then download the rest in the background
+  setTimeout(() => {
+    slides.forEach((slide, index) => {
+      if (index !== 0) {
+        slide.style.backgroundImage = `url('${images[index]}')`;
       }
     });
-    
-    // Cycle logic
-    const slides = heroContainer.querySelectorAll('.hero-slide');
-    let currentSlide = 0;
-    
-    if (slides.length > 1) {
-      setInterval(() => {
-        slides[currentSlide].classList.remove('active');
-        currentSlide = (currentSlide + 1) % slides.length;
-        slides[currentSlide].classList.add('active');
-      }, 5000); // Changes every 5 seconds
-    }
+  }, 1000);
 
-  } catch (error) {
-    console.error("Error loading slider images:", error);
-  }
-}
-
-  } catch (error) {
-    console.error("Error loading slider images:", error);
+  let currentSlide = 0;
+  
+  if (slides.length > 1) {
+    setInterval(() => {
+      slides[currentSlide].classList.remove('active');
+      currentSlide = (currentSlide + 1) % slides.length;
+      slides[currentSlide].classList.add('active');
+    }, 5000); 
   }
 }
 
