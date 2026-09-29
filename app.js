@@ -100,7 +100,7 @@ function updateScheduleBadges() {
 }
 
 function loadStandings() {
-  fetch('data/standings.json')
+ fetch('data/standings.json')
     .then(res => res.json())
     .then(data => {
       globalDrivers = data.drivers || [];
