@@ -1,346 +1,403 @@
 {
   "drivers": [
     {
-      "driver": "Reece Wakefield",
-      "division": "Pro",
-      "team": "OPR x Gammaflare Sim Racing"
+      "name": "Reece Wakefield",
+      "class": "Pro",
+      "team": "OPR x Gammaflare Sim Racing",
+      "net_points": 0
     },
     {
-      "driver": "Ben G Pedersen",
-      "division": "Pro",
-      "team": "Automoves Racing Academy"
+      "name": "Ben G Pedersen",
+      "class": "Pro",
+      "team": "Automoves Racing Academy",
+      "net_points": 0
     },
     {
-      "driver": "Michael Voce",
-      "division": "Pro",
-      "team": "Simline Race Service"
+      "name": "Michael Voce",
+      "class": "Pro",
+      "team": "Simline Race Service",
+      "net_points": 0
     },
     {
-      "driver": "Sam Muir",
-      "division": "Pro",
-      "team": "Synergy Sim Racing"
+      "name": "Sam Muir",
+      "class": "Pro",
+      "team": "Synergy Sim Racing",
+      "net_points": 0
     },
     {
-      "driver": "Ellie Gardner",
-      "division": "Pro",
-      "team": "Blackout Sim Racing 1"
+      "name": "Ellie Gardner",
+      "class": "Pro",
+      "team": "Blackout Sim Racing 1",
+      "net_points": 0
     },
     {
-      "driver": "Pat Klein",
-      "division": "Pro",
-      "team": "Synergy Sim Racing"
+      "name": "Pat Klein",
+      "class": "Pro",
+      "team": "Synergy Sim Racing",
+      "net_points": 0
     },
     {
-      "driver": "Sam Chapman",
-      "division": "Pro",
-      "team": "Vermillion Esports"
+      "name": "Sam Chapman",
+      "class": "Pro",
+      "team": "Vermillion Esports",
+      "net_points": 0
     },
     {
-      "driver": "Jarrod MacLeod",
-      "division": "Pro",
-      "team": "Synergy Sim Racing"
+      "name": "Jarrod MacLeod",
+      "class": "Pro",
+      "team": "Synergy Sim Racing",
+      "net_points": 0
     },
     {
-      "driver": "Aidan Rankin",
-      "division": "Pro",
-      "team": "Simline Race Service"
+      "name": "Aidan Rankin",
+      "class": "Pro",
+      "team": "Simline Race Service",
+      "net_points": 0
     },
     {
-      "driver": "Dean Baxter",
-      "division": "Pro",
-      "team": "BTR"
+      "name": "Dean Baxter",
+      "class": "Pro",
+      "team": "BTR",
+      "net_points": 0
     },
     {
-      "driver": "Jordi Miller",
-      "division": "Pro",
-      "team": "Blackout Sim Racing 2"
+      "name": "Jordi Miller",
+      "class": "Pro",
+      "team": "Blackout Sim Racing 2",
+      "net_points": 0
     },
     {
-      "driver": "Harry Dodds",
-      "division": "Pro",
-      "team": "Sideways E-Sport"
+      "name": "Harry Dodds",
+      "class": "Pro",
+      "team": "Sideways E-Sport",
+      "net_points": 0
     },
     {
-      "driver": "Jayden Elliott",
-      "division": "Pro",
-      "team": "Blackout Sim Racing 2"
+      "name": "Jayden Elliott",
+      "class": "Pro",
+      "team": "Blackout Sim Racing 2",
+      "net_points": 0
     },
     {
-      "driver": "Rodney Gollan",
-      "division": "Pro",
-      "team": "Riot Sim Racing"
+      "name": "Rodney Gollan",
+      "class": "Pro",
+      "team": "Riot Sim Racing",
+      "net_points": 0
     },
     {
-      "driver": "Zak Kerr",
-      "division": "Pro",
-      "team": "Vermillion Esports"
+      "name": "Zak Kerr",
+      "class": "Pro",
+      "team": "Vermillion Esports",
+      "net_points": 0
     },
     {
-      "driver": "Mia Rose",
-      "division": "Pro",
-      "team": "Effect Simulations"
+      "name": "Mia Rose",
+      "class": "Pro",
+      "team": "Effect Simulations",
+      "net_points": 0
     },
     {
-      "driver": "Luke Page",
-      "division": "Pro",
-      "team": "Project 36"
+      "name": "Luke Page",
+      "class": "Pro",
+      "team": "Project 36",
+      "net_points": 0
     },
     {
-      "driver": "Jack Scalora",
-      "division": "Am",
-      "team": "Blackout Sim Racing 1"
+      "name": "Jack Scalora",
+      "class": "Am",
+      "team": "Blackout Sim Racing 1",
+      "net_points": 0
     },
     {
-      "driver": "Steve Harvs",
-      "division": "Am",
-      "team": "Triple 5 SimSports"
+      "name": "Steve Harvs",
+      "class": "Am",
+      "team": "Triple 5 SimSports",
+      "net_points": 0
     },
     {
-      "driver": "Ari Blakey",
-      "division": "Am",
-      "team": "Momentum Racing"
+      "name": "Ari Blakey",
+      "class": "Am",
+      "team": "Momentum Racing",
+      "net_points": 0
     },
     {
-      "driver": "Jonathan Akers",
-      "division": "Am",
-      "team": "Riot Sim Racing"
+      "name": "Jonathan Akers",
+      "class": "Am",
+      "team": "Riot Sim Racing",
+      "net_points": 0
     },
     {
-      "driver": "Ben Roost",
-      "division": "Am",
-      "team": ""
+      "name": "Ben Roost",
+      "class": "Am",
+      "team": null,
+      "net_points": 0
     },
     {
-      "driver": "Tomoya Goodwin",
-      "division": "Am",
-      "team": "VJR97 Racing"
+      "name": "Tomoya Goodwin",
+      "class": "Am",
+      "team": "VJR97 Racing",
+      "net_points": 0
     },
     {
-      "driver": "Luke Wegener",
-      "division": "Am",
-      "team": "Triple 5 SimSports"
+      "name": "Luke Wegener",
+      "class": "Am",
+      "team": "Triple 5 SimSports",
+      "net_points": 0
     },
     {
-      "driver": "Kristian Tkatchenko",
-      "division": "Am",
-      "team": "The DownShift"
+      "name": "Kristian Tkatchenko",
+      "class": "Am",
+      "team": "The DownShift",
+      "net_points": 0
     },
     {
-      "driver": "Jackson Russ",
-      "division": "Am",
-      "team": "Aventa Racing"
+      "name": "Jackson Russ",
+      "class": "Am",
+      "team": "Aventa Racing",
+      "net_points": 0
     },
     {
-      "driver": "Thomaz Hernandes",
-      "division": "Am",
-      "team": "EDR- Endurotech Racing"
+      "name": "Thomaz Hernandes",
+      "class": "Am",
+      "team": "EDR- Endurotech Racing",
+      "net_points": 0
     },
     {
-      "driver": "Alex Tzikas",
-      "division": "Am",
-      "team": "JMR"
+      "name": "Alex Tzikas",
+      "class": "Am",
+      "team": "JMR",
+      "net_points": 0
     },
     {
-      "driver": "Barry Punter",
-      "division": "Am",
-      "team": "Riot Sim Racing"
+      "name": "Barry Punter",
+      "class": "Am",
+      "team": "Riot Sim Racing",
+      "net_points": 0
     },
     {
-      "driver": "BennyPrice",
-      "division": "Am",
-      "team": ""
+      "name": "BennyPrice",
+      "class": "Am",
+      "team": null,
+      "net_points": 0
     },
     {
-      "driver": "Brendan Pursell",
-      "division": "Am",
-      "team": "Box 1 Racing"
+      "name": "Brendan Pursell",
+      "class": "Am",
+      "team": "Box 1 Racing",
+      "net_points": 0
     },
     {
-      "driver": "Chris Paech",
-      "division": "Am",
-      "team": "Fully Chubbed Racing"
+      "name": "Chris Paech",
+      "class": "Am",
+      "team": "Fully Chubbed Racing",
+      "net_points": 0
     },
     {
-      "driver": "Hayden Cupitt",
-      "division": "Am",
-      "team": "Sideways E-Sport"
+      "name": "Hayden Cupitt",
+      "class": "Am",
+      "team": "Sideways E-Sport",
+      "net_points": 0
     },
     {
-      "driver": "Nathan Harvey3",
-      "division": "Am",
-      "team": "Triple 5 SimSports"
+      "name": "Nathan Harvey3",
+      "class": "Am",
+      "team": "Triple 5 SimSports",
+      "net_points": 0
     },
     {
-      "driver": "Nicholas Guy",
-      "division": "Am",
-      "team": "Raccoon Racing"
+      "name": "Nicholas Guy",
+      "class": "Am",
+      "team": "Raccoon Racing",
+      "net_points": 0
     }
   ],
   "teams": [
     {
-      "team": "OPR x Gammaflare Sim Racing",
-      "division": "Pro",
+      "name": "OPR x Gammaflare Sim Racing",
+      "class": "Pro",
       "drivers": [
         "Reece Wakefield"
-      ]
+      ],
+      "points": 0
     },
     {
-      "team": "Automoves Racing Academy",
-      "division": "Pro",
+      "name": "Automoves Racing Academy",
+      "class": "Pro",
       "drivers": [
         "Ben G Pedersen"
-      ]
+      ],
+      "points": 0
     },
     {
-      "team": "Simline Race Service",
-      "division": "Pro",
+      "name": "Simline Race Service",
+      "class": "Pro",
       "drivers": [
         "Michael Voce",
         "Aidan Rankin"
-      ]
+      ],
+      "points": 0
     },
     {
-      "team": "Synergy Sim Racing",
-      "division": "Pro",
+      "name": "Synergy Sim Racing",
+      "class": "Pro",
       "drivers": [
         "Sam Muir",
         "Pat Klein",
         "Jarrod MacLeod"
-      ]
+      ],
+      "points": 0
     },
     {
-      "team": "Blackout Sim Racing 1",
-      "division": "Pro",
+      "name": "Blackout Sim Racing 1",
+      "class": "Pro",
       "drivers": [
         "Ellie Gardner",
         "Jack Scalora"
-      ]
+      ],
+      "points": 0
     },
     {
-      "team": "Vermillion Esports",
-      "division": "Pro",
+      "name": "Vermillion Esports",
+      "class": "Pro",
       "drivers": [
         "Sam Chapman",
         "Zak Kerr"
-      ]
+      ],
+      "points": 0
     },
     {
-      "team": "BTR",
-      "division": "Pro",
+      "name": "BTR",
+      "class": "Pro",
       "drivers": [
         "Dean Baxter"
-      ]
+      ],
+      "points": 0
     },
     {
-      "team": "Blackout Sim Racing 2",
-      "division": "Pro",
+      "name": "Blackout Sim Racing 2",
+      "class": "Pro",
       "drivers": [
         "Jordi Miller",
         "Jayden Elliott"
-      ]
+      ],
+      "points": 0
     },
     {
-      "team": "Sideways E-Sport",
-      "division": "Pro",
+      "name": "Sideways E-Sport",
+      "class": "Pro",
       "drivers": [
         "Harry Dodds",
         "Hayden Cupitt"
-      ]
+      ],
+      "points": 0
     },
     {
-      "team": "Riot Sim Racing",
-      "division": "Pro",
+      "name": "Riot Sim Racing",
+      "class": "Pro",
       "drivers": [
         "Rodney Gollan",
         "Jonathan Akers",
         "Barry Punter"
-      ]
+      ],
+      "points": 0
     },
     {
-      "team": "Effect Simulations",
-      "division": "Pro",
+      "name": "Effect Simulations",
+      "class": "Pro",
       "drivers": [
         "Mia Rose"
-      ]
+      ],
+      "points": 0
     },
     {
-      "team": "Project 36",
-      "division": "Pro",
+      "name": "Project 36",
+      "class": "Pro",
       "drivers": [
         "Luke Page"
-      ]
+      ],
+      "points": 0
     },
     {
-      "team": "Triple 5 SimSports",
-      "division": "Am",
+      "name": "Triple 5 SimSports",
+      "class": "Am",
       "drivers": [
         "Steve Harvs",
         "Luke Wegener",
         "Nathan Harvey3"
-      ]
+      ],
+      "points": 0
     },
     {
-      "team": "Momentum Racing",
-      "division": "Am",
+      "name": "Momentum Racing",
+      "class": "Am",
       "drivers": [
         "Ari Blakey"
-      ]
+      ],
+      "points": 0
     },
     {
-      "team": "VJR97 Racing",
-      "division": "Am",
+      "name": "VJR97 Racing",
+      "class": "Am",
       "drivers": [
         "Tomoya Goodwin"
-      ]
+      ],
+      "points": 0
     },
     {
-      "team": "The DownShift",
-      "division": "Am",
+      "name": "The DownShift",
+      "class": "Am",
       "drivers": [
         "Kristian Tkatchenko"
-      ]
+      ],
+      "points": 0
     },
     {
-      "team": "Aventa Racing",
-      "division": "Am",
+      "name": "Aventa Racing",
+      "class": "Am",
       "drivers": [
         "Jackson Russ"
-      ]
+      ],
+      "points": 0
     },
     {
-      "team": "EDR- Endurotech Racing",
-      "division": "Am",
+      "name": "EDR- Endurotech Racing",
+      "class": "Am",
       "drivers": [
         "Thomaz Hernandes"
-      ]
+      ],
+      "points": 0
     },
     {
-      "team": "JMR",
-      "division": "Am",
+      "name": "JMR",
+      "class": "Am",
       "drivers": [
         "Alex Tzikas"
-      ]
+      ],
+      "points": 0
     },
     {
-      "team": "Box 1 Racing",
-      "division": "Am",
+      "name": "Box 1 Racing",
+      "class": "Am",
       "drivers": [
         "Brendan Pursell"
-      ]
+      ],
+      "points": 0
     },
     {
-      "team": "Fully Chubbed Racing",
-      "division": "Am",
+      "name": "Fully Chubbed Racing",
+      "class": "Am",
       "drivers": [
         "Chris Paech"
-      ]
+      ],
+      "points": 0
     },
     {
-      "team": "Raccoon Racing",
-      "division": "Am",
+      "name": "Raccoon Racing",
+      "class": "Am",
       "drivers": [
         "Nicholas Guy"
-      ]
+      ],
+      "points": 0
     }
   ]
 }
