@@ -1,12 +1,346 @@
 {
   "drivers": [
     {
-
+      "driver": "Reece Wakefield",
+      "division": "Pro",
+      "team": "OPR x Gammaflare Sim Racing"
+    },
+    {
+      "driver": "Ben G Pedersen",
+      "division": "Pro",
+      "team": "Automoves Racing Academy"
+    },
+    {
+      "driver": "Michael Voce",
+      "division": "Pro",
+      "team": "Simline Race Service"
+    },
+    {
+      "driver": "Sam Muir",
+      "division": "Pro",
+      "team": "Synergy Sim Racing"
+    },
+    {
+      "driver": "Ellie Gardner",
+      "division": "Pro",
+      "team": "Blackout Sim Racing 1"
+    },
+    {
+      "driver": "Pat Klein",
+      "division": "Pro",
+      "team": "Synergy Sim Racing"
+    },
+    {
+      "driver": "Sam Chapman",
+      "division": "Pro",
+      "team": "Vermillion Esports"
+    },
+    {
+      "driver": "Jarrod MacLeod",
+      "division": "Pro",
+      "team": "Synergy Sim Racing"
+    },
+    {
+      "driver": "Aidan Rankin",
+      "division": "Pro",
+      "team": "Simline Race Service"
+    },
+    {
+      "driver": "Dean Baxter",
+      "division": "Pro",
+      "team": "BTR"
+    },
+    {
+      "driver": "Jordi Miller",
+      "division": "Pro",
+      "team": "Blackout Sim Racing 2"
+    },
+    {
+      "driver": "Harry Dodds",
+      "division": "Pro",
+      "team": "Sideways E-Sport"
+    },
+    {
+      "driver": "Jayden Elliott",
+      "division": "Pro",
+      "team": "Blackout Sim Racing 2"
+    },
+    {
+      "driver": "Rodney Gollan",
+      "division": "Pro",
+      "team": "Riot Sim Racing"
+    },
+    {
+      "driver": "Zak Kerr",
+      "division": "Pro",
+      "team": "Vermillion Esports"
+    },
+    {
+      "driver": "Mia Rose",
+      "division": "Pro",
+      "team": "Effect Simulations"
+    },
+    {
+      "driver": "Luke Page",
+      "division": "Pro",
+      "team": "Project 36"
+    },
+    {
+      "driver": "Jack Scalora",
+      "division": "Am",
+      "team": "Blackout Sim Racing 1"
+    },
+    {
+      "driver": "Steve Harvs",
+      "division": "Am",
+      "team": "Triple 5 SimSports"
+    },
+    {
+      "driver": "Ari Blakey",
+      "division": "Am",
+      "team": "Momentum Racing"
+    },
+    {
+      "driver": "Jonathan Akers",
+      "division": "Am",
+      "team": "Riot Sim Racing"
+    },
+    {
+      "driver": "Ben Roost",
+      "division": "Am",
+      "team": null
+    },
+    {
+      "driver": "Tomoya Goodwin",
+      "division": "Am",
+      "team": "VJR97 Racing"
+    },
+    {
+      "driver": "Luke Wegener",
+      "division": "Am",
+      "team": "Triple 5 SimSports"
+    },
+    {
+      "driver": "Kristian Tkatchenko",
+      "division": "Am",
+      "team": "The DownShift"
+    },
+    {
+      "driver": "Jackson Russ",
+      "division": "Am",
+      "team": "Aventa Racing"
+    },
+    {
+      "driver": "Thomaz Hernandes",
+      "division": "Am",
+      "team": "EDR- Endurotech Racing"
+    },
+    {
+      "driver": "Alex Tzikas",
+      "division": "Am",
+      "team": "JMR"
+    },
+    {
+      "driver": "Barry Punter",
+      "division": "Am",
+      "team": "Riot Sim Racing"
+    },
+    {
+      "driver": "BennyPrice",
+      "division": "Am",
+      "team": null
+    },
+    {
+      "driver": "Brendan Pursell",
+      "division": "Am",
+      "team": "Box 1 Racing"
+    },
+    {
+      "driver": "Chris Paech",
+      "division": "Am",
+      "team": "Fully Chubbed Racing"
+    },
+    {
+      "driver": "Hayden Cupitt",
+      "division": "Am",
+      "team": "Sideways E-Sport"
+    },
+    {
+      "driver": "Nathan Harvey3",
+      "division": "Am",
+      "team": "Triple 5 SimSports"
+    },
+    {
+      "driver": "Nicholas Guy",
+      "division": "Am",
+      "team": "Raccoon Racing"
     }
   ],
   "teams": [
     {
-
+      "team": "OPR x Gammaflare Sim Racing",
+      "division": "Pro",
+      "drivers": [
+        "Reece Wakefield"
+      ]
+    },
+    {
+      "team": "Automoves Racing Academy",
+      "division": "Pro",
+      "drivers": [
+        "Ben G Pedersen"
+      ]
+    },
+    {
+      "team": "Simline Race Service",
+      "division": "Pro",
+      "drivers": [
+        "Michael Voce",
+        "Aidan Rankin"
+      ]
+    },
+    {
+      "team": "Synergy Sim Racing",
+      "division": "Pro",
+      "drivers": [
+        "Sam Muir",
+        "Pat Klein",
+        "Jarrod MacLeod"
+      ]
+    },
+    {
+      "team": "Blackout Sim Racing 1",
+      "division": "Pro",
+      "drivers": [
+        "Ellie Gardner",
+        "Jack Scalora"
+      ]
+    },
+    {
+      "team": "Vermillion Esports",
+      "division": "Pro",
+      "drivers": [
+        "Sam Chapman",
+        "Zak Kerr"
+      ]
+    },
+    {
+      "team": "BTR",
+      "division": "Pro",
+      "drivers": [
+        "Dean Baxter"
+      ]
+    },
+    {
+      "team": "Blackout Sim Racing 2",
+      "division": "Pro",
+      "drivers": [
+        "Jordi Miller",
+        "Jayden Elliott"
+      ]
+    },
+    {
+      "team": "Sideways E-Sport",
+      "division": "Pro",
+      "drivers": [
+        "Harry Dodds",
+        "Hayden Cupitt"
+      ]
+    },
+    {
+      "team": "Riot Sim Racing",
+      "division": "Pro",
+      "drivers": [
+        "Rodney Gollan",
+        "Jonathan Akers",
+        "Barry Punter"
+      ]
+    },
+    {
+      "team": "Effect Simulations",
+      "division": "Pro",
+      "drivers": [
+        "Mia Rose"
+      ]
+    },
+    {
+      "team": "Project 36",
+      "division": "Pro",
+      "drivers": [
+        "Luke Page"
+      ]
+    },
+    {
+      "team": "Triple 5 SimSports",
+      "division": "Am",
+      "drivers": [
+        "Steve Harvs",
+        "Luke Wegener",
+        "Nathan Harvey3"
+      ]
+    },
+    {
+      "team": "Momentum Racing",
+      "division": "Am",
+      "drivers": [
+        "Ari Blakey"
+      ]
+    },
+    {
+      "team": "VJR97 Racing",
+      "division": "Am",
+      "drivers": [
+        "Tomoya Goodwin"
+      ]
+    },
+    {
+      "team": "The DownShift",
+      "division": "Am",
+      "drivers": [
+        "Kristian Tkatchenko"
+      ]
+    },
+    {
+      "team": "Aventa Racing",
+      "division": "Am",
+      "drivers": [
+        "Jackson Russ"
+      ]
+    },
+    {
+      "team": "EDR- Endurotech Racing",
+      "division": "Am",
+      "drivers": [
+        "Thomaz Hernandes"
+      ]
+    },
+    {
+      "team": "JMR",
+      "division": "Am",
+      "drivers": [
+        "Alex Tzikas"
+      ]
+    },
+    {
+      "team": "Box 1 Racing",
+      "division": "Am",
+      "drivers": [
+        "Brendan Pursell"
+      ]
+    },
+    {
+      "team": "Fully Chubbed Racing",
+      "division": "Am",
+      "drivers": [
+        "Chris Paech"
+      ]
+    },
+    {
+      "team": "Raccoon Racing",
+      "division": "Am",
+      "drivers": [
+        "Nicholas Guy"
+      ]
     }
   ]
 }
