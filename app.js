@@ -225,15 +225,3 @@ function renderTeams(teams) {
     tbody.appendChild(subTr);
   });
 }
-
-  tbody.innerHTML = '';
-  validTeams.forEach((team, idx) => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td class="text-highlight">${idx + 1}</td>
-      <td class="text-highlight">${team.name}</td>
-      <td class="text-highlight">${team.points !== undefined ? team.points : 0}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
