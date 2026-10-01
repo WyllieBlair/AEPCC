@@ -171,6 +171,63 @@ function renderTeams(teams) {
 
   tbody.innerHTML = '';
   validTeams.forEach((team, idx) => {
+    // Parent Row (Clickable)
+    const tr = document.createElement('tr');
+    tr.className = 'team-row';
+    tr.innerHTML = `
+      <td class="text-highlight">${idx + 1}</td>
+      <td class="text-highlight">
+        ${team.name}
+        <span class="expand-icon" style="float: right; opacity: 0.5;">▼</span>
+      </td>
+      <td class="text-highlight">${team.points !== undefined ? team.points : 0}</td>
+    `;
+    
+    // Child Row (Hidden initially)
+    const subTr = document.createElement('tr');
+    subTr.className = 'team-sub-row';
+    
+    let driverHtml = team.drivers && team.drivers.length > 0 
+      ? team.drivers.map(d => `
+          <div class="team-driver-item">
+            <span><strong>${d.name}</strong> <span style="opacity:0.6; font-size:0.8em;">(${d.class})</span></span>
+            <span>${d.points} pts</span>
+          </div>
+        `).join('')
+      : '<div style="opacity: 0.5;">No driver data found</div>';
+
+    subTr.innerHTML = `
+      <td colspan="3" style="padding: 0;">
+        <div class="team-drivers-container">
+          ${driverHtml}
+        </div>
+      </td>
+    `;
+
+    // Toggle logic
+    tr.addEventListener('click', () => {
+      const isExpanded = subTr.classList.contains('active');
+      
+      // Optional: Close all other open rows if you want an accordion effect
+      // document.querySelectorAll('.team-sub-row').forEach(row => row.classList.remove('active'));
+      // document.querySelectorAll('.expand-icon').forEach(icon => icon.textContent = '▼');
+
+      if (isExpanded) {
+        subTr.classList.remove('active');
+        tr.querySelector('.expand-icon').textContent = '▼';
+      } else {
+        subTr.classList.add('active');
+        tr.querySelector('.expand-icon').textContent = '▲';
+      }
+    });
+
+    tbody.appendChild(tr);
+    tbody.appendChild(subTr);
+  });
+}
+
+  tbody.innerHTML = '';
+  validTeams.forEach((team, idx) => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td class="text-highlight">${idx + 1}</td>
