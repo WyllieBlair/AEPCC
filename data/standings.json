@@ -1,5 +1,5 @@
 {
-  "drivers": [ 
+  "drivers": [
     {
       "name": "Reece Wakefield",
       "team": "OPR x Gammaflare Sim Racing",
@@ -512,6 +512,263 @@
           "name": "Dean Baxter",
           "class": "Pro",
           "points": 1
+        }
+      ]
+    }
+  ],
+  "rounds": [
+    {
+      "id": "1",
+      "name": "Round 1 - Sebring",
+      "type": "Regular",
+      "results": [
+        {
+          "driver": "Reece Wakefield",
+          "class": "Pro",
+          "team": "OPR x Gammaflare Sim Racing",
+          "pos": 1,
+          "inc": 4,
+          "pts": 35
+        },
+        {
+          "driver": "Jackson Russ",
+          "class": "Am",
+          "team": "Aventa Garage Racing",
+          "pos": 1,
+          "inc": 2,
+          "pts": 35
+        },
+        {
+          "driver": "Luke Page3",
+          "class": "Pro",
+          "team": "Project 36",
+          "pos": 2,
+          "inc": 5,
+          "pts": 30
+        },
+        {
+          "driver": "Jack Scalora",
+          "class": "Am",
+          "team": "Blackout SimRacing Pink",
+          "pos": 2,
+          "inc": 6,
+          "pts": 30
+        },
+        {
+          "driver": "Ben G Pedersen",
+          "class": "Pro",
+          "team": "Automoves Racing Academy",
+          "pos": 3,
+          "inc": 6,
+          "pts": 26
+        },
+        {
+          "driver": "Nicholas Guy",
+          "class": "Am",
+          "team": "Raccoon Racing",
+          "pos": 3,
+          "inc": 10,
+          "pts": 26
+        },
+        {
+          "driver": "Sam Muir",
+          "class": "Pro",
+          "team": "Synergy Sim Racing",
+          "pos": 4,
+          "inc": 6,
+          "pts": 22
+        },
+        {
+          "driver": "Brendan Pursell",
+          "class": "Am",
+          "team": "Aventa Garage Racing",
+          "pos": 4,
+          "inc": 10,
+          "pts": 22
+        },
+        {
+          "driver": "Michael Voce",
+          "class": "Pro",
+          "team": "Simline Race Service",
+          "pos": 5,
+          "inc": 0,
+          "pts": 19
+        },
+        {
+          "driver": "Thomaz Hernandes",
+          "class": "Am",
+          "team": "EDR- Endurotech Racing",
+          "pos": 5,
+          "inc": 11,
+          "pts": 19
+        },
+        {
+          "driver": "Pat Klein",
+          "class": "Pro",
+          "team": "Synergy Sim Racing",
+          "pos": 6,
+          "inc": 8,
+          "pts": 16
+        },
+        {
+          "driver": "Ben Roost",
+          "class": "Am",
+          "team": "Independent",
+          "pos": 6,
+          "inc": 10,
+          "pts": 16
+        },
+        {
+          "driver": "Sam Chapman2",
+          "class": "Pro",
+          "team": "Vermillion Esports",
+          "pos": 7,
+          "inc": 6,
+          "pts": 14
+        },
+        {
+          "driver": "Nathan Harvey3",
+          "class": "Am",
+          "team": "Triple 5 SimSports",
+          "pos": 7,
+          "inc": 11,
+          "pts": 14
+        },
+        {
+          "driver": "Ellie Gardner",
+          "class": "Pro",
+          "team": "Blackout SimRacing Pink",
+          "pos": 8,
+          "inc": 3,
+          "pts": 12
+        },
+        {
+          "driver": "Ari Blakey",
+          "class": "Am",
+          "team": "Momentum Racing",
+          "pos": 8,
+          "inc": 5,
+          "pts": 12
+        },
+        {
+          "driver": "Stefan Lawrence",
+          "class": "Pro",
+          "team": "RIOT Sim Racing 2",
+          "pos": 9,
+          "inc": 3,
+          "pts": 10
+        },
+        {
+          "driver": "Jonathan Akers",
+          "class": "Am",
+          "team": "RIOT Sim Racing 1",
+          "pos": 9,
+          "inc": 6,
+          "pts": 10
+        },
+        {
+          "driver": "Aidan Rankin",
+          "class": "Pro",
+          "team": "Simline Race Service",
+          "pos": 10,
+          "inc": 5,
+          "pts": 8
+        },
+        {
+          "driver": "Luke Wegener",
+          "class": "Am",
+          "team": "Triple 5 SimSports",
+          "pos": 10,
+          "inc": 8,
+          "pts": 8
+        },
+        {
+          "driver": "Rodney Gollan",
+          "class": "Pro",
+          "team": "RIOT Sim Racing 1",
+          "pos": 11,
+          "inc": 3,
+          "pts": 6
+        },
+        {
+          "driver": "Tomoya Goodwin",
+          "class": "Am",
+          "team": "VJR97 Racing",
+          "pos": 11,
+          "inc": 9,
+          "pts": 6
+        },
+        {
+          "driver": "Jarrod Macleod",
+          "class": "Pro",
+          "team": "Synergy Sim Racing",
+          "pos": 12,
+          "inc": 7,
+          "pts": 5
+        },
+        {
+          "driver": "Kristian Tkatchenko",
+          "class": "Am",
+          "team": "The DownShift Racing Team",
+          "pos": 12,
+          "inc": 9,
+          "pts": 5
+        },
+        {
+          "driver": "Jayden Elliott",
+          "class": "Pro",
+          "team": "Blackout SimRacing Green",
+          "pos": 13,
+          "inc": 5,
+          "pts": 4
+        },
+        {
+          "driver": "Steve Harvs",
+          "class": "Am",
+          "team": "Triple 5 SimSports",
+          "pos": 13,
+          "inc": 10,
+          "pts": 4
+        },
+        {
+          "driver": "Benny Price",
+          "class": "Pro",
+          "team": "Independent",
+          "pos": 14,
+          "inc": 12,
+          "pts": 3
+        },
+        {
+          "driver": "Chris Paech",
+          "class": "Am",
+          "team": "Fully Chubbed Racing",
+          "pos": 14,
+          "inc": 15,
+          "pts": 3
+        },
+        {
+          "driver": "Harry Dodds",
+          "class": "Pro",
+          "team": "Sideways E-Sport",
+          "pos": 15,
+          "inc": 18,
+          "pts": 2
+        },
+        {
+          "driver": "Barry Punter",
+          "class": "Am",
+          "team": "RIOT Sim Racing 2",
+          "pos": 15,
+          "inc": 4,
+          "pts": 2
+        },
+        {
+          "driver": "Dean Baxter",
+          "class": "Pro",
+          "team": "BTR",
+          "pos": 16,
+          "inc": 10,
+          "pts": 1
         }
       ]
     }
