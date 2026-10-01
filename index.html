@@ -6,6 +6,32 @@
   <title>AEPCC | Australian E-Sport Porsche Cup Championship</title>
   
   <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Inline sponsor layout styling to enforce side-by-side display and constrained size */
+    .footer-sponsors .sponsor-grid {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+      flex-wrap: wrap;
+      margin-top: 15px;
+    }
+    .footer-sponsors .sponsor-item {
+      display: block;
+      max-width: 220px;
+      height: auto;
+    }
+    .footer-sponsors .sponsor-item img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      border-radius: 6px;
+      transition: opacity 0.2s ease;
+    }
+    .footer-sponsors .sponsor-item img:hover {
+      opacity: 0.85;
+    }
+  </style>
 </head>
 <body>
 
