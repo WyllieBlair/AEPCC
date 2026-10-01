@@ -483,7 +483,49 @@ tr:hover td { background-color: rgba(255,255,255,0.02); }
 .footer-links a:hover {
   color: var(--brand-red);
 }
+/* --- Team Standings Dropdown Styling --- */
+.team-row {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
 
+.team-row:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.team-sub-row {
+  display: none;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.team-sub-row.active {
+  display: table-row;
+}
+
+.team-drivers-container {
+  padding: 15px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-left: 2px solid var(--brand-red);
+  margin-left: 20px;
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.team-driver-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  padding-bottom: 5px;
+}
+
+.team-driver-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
 
 @media (max-width: 900px) { 
   .grid-feature { grid-template-columns: 1fr; gap: 15px; } 
