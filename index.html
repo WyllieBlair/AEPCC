@@ -308,13 +308,32 @@
       </div>
     </div>
 
-    <div id="tab-results" class="tab-view">
-      <h2>Race Results</h2>
-      <div class="panel" style="text-align: center; padding: 60px 20px;">
-        <p>Results will be published here 24 hours after the conclusion of the event, following steward reviews.</p>
+<div id="tab-results" class="tab-view">
+      <div class="standings-container">
+        <h2>Race Results</h2>
+        
+        <div class="filter-container">
+          <select id="round-selector" class="filter-btn" style="padding: 10px; min-width: 250px; text-align: center;" onchange="renderResults(this.value)">
+            <option value="">-- Select a Round --</option>
+          </select>
+        </div>
+
+        <div class="table-wrapper">
+          <table id="results-table" style="display:none;">
+            <thead id="results-header">
+              <!-- JS Injects Headers Here based on format -->
+            </thead>
+            <tbody id="results-rows">
+              <!-- JS Injects Results Here -->
+            </tbody>
+          </table>
+          
+          <div id="results-placeholder" style="text-align: center; padding: 60px 20px; color: var(--text-muted);">
+            Select a completed round from the dropdown above to view the official results.
+          </div>
+        </div>
       </div>
     </div>
-
   </div>
 
   <footer class="site-footer">
