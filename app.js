@@ -1,6 +1,6 @@
 let globalDrivers = [];
 let globalTeams = [];
-
+let globalRounds = [];
 document.addEventListener("DOMContentLoaded", () => {
   initDynamicSlider();
   loadStandings();
