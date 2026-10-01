@@ -1,6 +1,7 @@
 let globalDrivers = [];
 let globalTeams = [];
 let globalRounds = [];
+
 document.addEventListener("DOMContentLoaded", () => {
   initDynamicSlider();
   loadStandings();
@@ -105,8 +106,21 @@ function loadStandings() {
     .then(data => {
       globalDrivers = data.drivers || [];
       globalTeams = data.teams || [];
+      globalRounds = data.rounds || [];
+      
       filterDivision('Pro');
       renderTeams(globalTeams);
+      
+      // Populate Round Dropdown for the Results view
+      const selector = document.getElementById('round-selector');
+      if (selector) {
+        globalRounds.forEach(r => {
+          const opt = document.createElement('option');
+          opt.value = r.id;
+          opt.textContent = r.name;
+          selector.appendChild(opt);
+        });
+      }
     })
     .catch(err => {
       console.warn("Waiting on data/standings.json", err);
@@ -208,10 +222,6 @@ function renderTeams(teams) {
     tr.addEventListener('click', () => {
       const isExpanded = subTr.classList.contains('active');
       
-      // Optional: Close all other open rows if you want an accordion effect
-      // document.querySelectorAll('.team-sub-row').forEach(row => row.classList.remove('active'));
-      // document.querySelectorAll('.expand-icon').forEach(icon => icon.textContent = '▼');
-
       if (isExpanded) {
         subTr.classList.remove('active');
         tr.querySelector('.expand-icon').textContent = '▼';
@@ -224,4 +234,71 @@ function renderTeams(teams) {
     tbody.appendChild(tr);
     tbody.appendChild(subTr);
   });
+}
+
+function renderResults(roundId) {
+  const table = document.getElementById('results-table');
+  const placeholder = document.getElementById('results-placeholder');
+  const thead = document.getElementById('results-header');
+  const tbody = document.getElementById('results-rows');
+  
+  if (!roundId) {
+    table.style.display = 'none';
+    placeholder.style.display = 'block';
+    return;
+  }
+
+  const round = globalRounds.find(r => r.id === roundId);
+  if (!round || !round.results || round.results.length === 0) {
+    table.style.display = 'none';
+    placeholder.style.display = 'block';
+    placeholder.textContent = "Results are currently being processed for this round.";
+    return;
+  }
+
+  // Setup headers based on race format
+  let headerHtml = `<tr><th>Driver</th><th>Class</th>`;
+  
+  if (round.type === 'Regular') {
+    headerHtml += `<th>Pos</th><th>Inc</th><th>Pts</th>`;
+  } else if (round.type === 'SprintFeature') {
+    headerHtml += `<th>Sprint Pos</th><th>Feature Pos</th><th>Total Pts</th>`;
+  } else if (round.type === 'SuperSprint') {
+    headerHtml += `<th>Race 1</th><th>Race 2</th><th>Race 3</th><th>Total Pts</th>`;
+  }
+  headerHtml += `</tr>`;
+  thead.innerHTML = headerHtml;
+
+  // Render Rows
+  tbody.innerHTML = round.results.map((r, idx) => {
+    let rowHtml = `
+      <td>
+        <span class="text-highlight">${r.driver}</span>
+        <span class="subtext">${r.team}</span>
+      </td>
+      <td>${r.class}</td>
+    `;
+    
+    if (round.type === 'Regular') {
+      rowHtml += `
+        <td class="text-highlight">${r.pos}</td>
+        <td>${r.inc}</td>
+        <td class="text-highlight">${r.pts}</td>`;
+    } else if (round.type === 'SprintFeature') {
+      rowHtml += `
+        <td>${r.s_pos}</td>
+        <td>${r.f_pos}</td>
+        <td class="text-highlight">${r.pts}</td>`;
+    } else if (round.type === 'SuperSprint') {
+      rowHtml += `
+        <td>${r.r1_pos}</td>
+        <td>${r.r2_pos}</td>
+        <td>${r.r3_pos}</td>
+        <td class="text-highlight">${r.pts}</td>`;
+    }
+    return `<tr>${rowHtml}</tr>`;
+  }).join('');
+
+  table.style.display = 'table';
+  placeholder.style.display = 'none';
 }
