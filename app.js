@@ -8,62 +8,59 @@ document.addEventListener("DOMContentLoaded", () => {
   updateScheduleBadges();
 });
 
-function initDynamicSlider() {
+async function initDynamicSlider() {
   const heroContainer = document.getElementById('hero-slider');
   if (!heroContainer) return;
 
-  const imageFiles = [
-    'PESCAPAC_Adelaide_Race_7_080126.png',
-    'Porkatthebring2.png',
-    'Porkatthebring5.png',
-    'Porkatthehock3-38.png',
-    'Porkatthehock67-44.png',
-    'photo2.webp',
-    'photo9.webp'
-  ]; 
-
-  const images = imageFiles.map(file => `photos/${file}`);
-
-  if (images.length === 0) return;
-
-  heroContainer.querySelectorAll('.hero-slide').forEach(slide => slide.remove());
-  const overlay = heroContainer.querySelector('.hero-overlay');
-
-  images.forEach((imgSrc, index) => {
-    const slide = document.createElement('div');
-    slide.className = `hero-slide ${index === 0 ? 'active' : ''}`;
+  try {
+    const response = await fetch('photos.json');
+    const imageFiles = await response.json();
     
-    if (index === 0) {
-      slide.style.backgroundImage = `url('${imgSrc}')`;
-    }
+    if (imageFiles.length === 0) return;
     
-    if (overlay) {
-      heroContainer.insertBefore(slide, overlay);
-    } else {
-      heroContainer.appendChild(slide);
-    }
-  });
-  
-  const slides = heroContainer.querySelectorAll('.hero-slide');
-  
-  // BACKGROUND PRE-LOAD
-  // Wait 1 second to let the website load first, then download the rest in the background
-  setTimeout(() => {
-    slides.forEach((slide, index) => {
-      if (index !== 0) {
-        slide.style.backgroundImage = `url('${images[index]}')`;
+    const images = imageFiles.map(file => `photos/${file}`);
+    
+    heroContainer.querySelectorAll('.hero-slide').forEach(slide => slide.remove());
+    const overlay = heroContainer.querySelector('.hero-overlay');
+
+    images.forEach((imgSrc, index) => {
+      const slide = document.createElement('div');
+      slide.className = `hero-slide ${index === 0 ? 'active' : ''}`;
+      
+      if (index === 0) {
+        slide.style.backgroundImage = `url('${imgSrc}')`;
+      }
+      
+      if (overlay) {
+        heroContainer.insertBefore(slide, overlay);
+      } else {
+        heroContainer.appendChild(slide);
       }
     });
-  }, 1000);
+    
+    const slides = heroContainer.querySelectorAll('.hero-slide');
+    
+    // BACKGROUND PRE-LOAD
+    // Wait 1 second to let the website load first, then download the rest in the background
+    setTimeout(() => {
+      slides.forEach((slide, index) => {
+        if (index !== 0) {
+          slide.style.backgroundImage = `url('${images[index]}')`;
+        }
+      });
+    }, 1000);
 
-  let currentSlide = 0;
-  
-  if (slides.length > 1) {
-    setInterval(() => {
-      slides[currentSlide].classList.remove('active');
-      currentSlide = (currentSlide + 1) % slides.length;
-      slides[currentSlide].classList.add('active');
-    }, 5000); 
+    let currentSlide = 0;
+    
+    if (slides.length > 1) {
+      setInterval(() => {
+        slides[currentSlide].classList.remove('active');
+        currentSlide = (currentSlide + 1) % slides.length;
+        slides[currentSlide].classList.add('active');
+      }, 5000); 
+    }
+  } catch (error) {
+    console.error("Error loading the photo manifest (photos.json):", error);
   }
 }
 
