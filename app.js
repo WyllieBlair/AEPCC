@@ -8,59 +8,61 @@ document.addEventListener("DOMContentLoaded", () => {
   updateScheduleBadges();
 });
 
-async function initDynamicSlider() {
+function initDynamicSlider() {
   const heroContainer = document.getElementById('hero-slider');
   if (!heroContainer) return;
 
-  try {
-    const response = await fetch('photos.json');
-    const imageFiles = await response.json();
-    
-    if (imageFiles.length === 0) return;
-    
-    const images = imageFiles.map(file => `photos/${file}`);
-    
-    heroContainer.querySelectorAll('.hero-slide').forEach(slide => slide.remove());
-    const overlay = heroContainer.querySelector('.hero-overlay');
+  // Manually list your hero images here
+  const imageFiles = [
+    'Sebring-Sam Chapman PRO-0.png',
+    'Sebring-Stefan Lawrence-0.png',
+    'Sebring-Nicholas Guy AM-0.png',
+    'Sebring-Reece Wakefield PRO-0.png',
+    'Sebring-Sam Chapman PRO-1.png'
+  ]; 
 
-    images.forEach((imgSrc, index) => {
-      const slide = document.createElement('div');
-      slide.className = `hero-slide ${index === 0 ? 'active' : ''}`;
-      
-      if (index === 0) {
-        slide.style.backgroundImage = `url('${imgSrc}')`;
-      }
-      
-      if (overlay) {
-        heroContainer.insertBefore(slide, overlay);
-      } else {
-        heroContainer.appendChild(slide);
+  const images = imageFiles.map(file => `photos/${file}`);
+
+  if (images.length === 0) return;
+
+  heroContainer.querySelectorAll('.hero-slide').forEach(slide => slide.remove());
+  const overlay = heroContainer.querySelector('.hero-overlay');
+
+  images.forEach((imgSrc, index) => {
+    const slide = document.createElement('div');
+    slide.className = `hero-slide ${index === 0 ? 'active' : ''}`;
+    
+    if (index === 0) {
+      slide.style.backgroundImage = `url('${imgSrc}')`;
+    }
+    
+    if (overlay) {
+      heroContainer.insertBefore(slide, overlay);
+    } else {
+      heroContainer.appendChild(slide);
+    }
+  });
+  
+  const slides = heroContainer.querySelectorAll('.hero-slide');
+  
+  // BACKGROUND PRE-LOAD
+  // Wait 1 second to let the website load first, then download the rest in the background
+  setTimeout(() => {
+    slides.forEach((slide, index) => {
+      if (index !== 0) {
+        slide.style.backgroundImage = `url('${images[index]}')`;
       }
     });
-    
-    const slides = heroContainer.querySelectorAll('.hero-slide');
-    
-    // BACKGROUND PRE-LOAD
-    // Wait 1 second to let the website load first, then download the rest in the background
-    setTimeout(() => {
-      slides.forEach((slide, index) => {
-        if (index !== 0) {
-          slide.style.backgroundImage = `url('${images[index]}')`;
-        }
-      });
-    }, 1000);
+  }, 1000);
 
-    let currentSlide = 0;
-    
-    if (slides.length > 1) {
-      setInterval(() => {
-        slides[currentSlide].classList.remove('active');
-        currentSlide = (currentSlide + 1) % slides.length;
-        slides[currentSlide].classList.add('active');
-      }, 5000); 
-    }
-  } catch (error) {
-    console.error("Error loading the photo manifest (photos.json):", error);
+  let currentSlide = 0;
+  
+  if (slides.length > 1) {
+    setInterval(() => {
+      slides[currentSlide].classList.remove('active');
+      currentSlide = (currentSlide + 1) % slides.length;
+      slides[currentSlide].classList.add('active');
+    }, 5000); 
   }
 }
 
