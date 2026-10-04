@@ -1,6 +1,7 @@
 const API_BASE_URL = 'https://purple-shape-358a.wyllieblair15.workers.dev';
 const SERIES_ID = '4ef87fbf-fbd3-41ae-8991-5e2e25d7b26c';
 const SEASON_ID = 'e46694cb-25ad-46f8-a45f-02532b70b32f';
+
 let globalDrivers = [];
 let globalTeams = [];
 let globalRounds = [];
@@ -98,42 +99,59 @@ function updateScheduleBadges() {
 
 async function loadStandings() {
   try {
-    const [driverRes, teamRes, roundRes] = await Promise.all([
+    const [driverRes, teamRes, roundRes, rosterRes] = await Promise.all([
       fetch(`${API_BASE_URL}/series/${SERIES_ID}/seasons/${SEASON_ID}/standings/Driver`),
       fetch(`${API_BASE_URL}/series/${SERIES_ID}/seasons/${SEASON_ID}/standings/Team`),
-      fetch(`${API_BASE_URL}/series/${SERIES_ID}/seasons/${SEASON_ID}/events`)
+      fetch(`${API_BASE_URL}/series/${SERIES_ID}/seasons/${SEASON_ID}/events`),
+      fetch(`${API_BASE_URL}/series/${SERIES_ID}/seasons/${SEASON_ID}/rosters`)
     ]);
 
-    if (!driverRes.ok || !teamRes.ok || !roundRes.ok) {
-      throw new Error("Failed to fetch standings data");
+    if (!driverRes.ok || !teamRes.ok || !roundRes.ok || !rosterRes.ok) {
+      throw new Error("Failed to fetch API data");
     }
 
     const driverData = await driverRes.json();
     const teamData = await teamRes.json();
     const roundData = await roundRes.json();
+    const rosterData = await rosterRes.json();
+
+    // Build a mapping dictionary from the Roster (DriverName -> TeamName)
+    const driverToTeamMap = {};
+    const rosterEntries = rosterData.Entries || rosterData.entries || [];
+    
+    rosterEntries.forEach(entry => {
+      const teamName = entry.Team?.Name || 'Independent';
+      const primaryDrivers = entry.PrimaryDrivers || entry.primaryDrivers || [];
+      
+      primaryDrivers.forEach(d => {
+        const dName = d.DisplayName || d.Name;
+        if (dName) {
+          driverToTeamMap[dName] = teamName;
+        }
+      });
+    });
 
     // Map Drivers Championship
     const driverResults = driverData.Standings?.DriverStandings?.[0]?.Results || [];
-    globalDrivers = driverResults.map(item => ({
-      name: item.Driver?.DisplayName || item.Driver?.Name || 'Unknown',
-      team: item.Team?.Name || 'Independent', 
-      class: item.Class || 'Pro',
-      net_points: item.TotalPoints || 0
-    }));
+    globalDrivers = driverResults.map(item => {
+      const driverName = item.Driver?.DisplayName || item.Driver?.Name || 'Unknown';
+      return {
+        name: driverName,
+        team: driverToTeamMap[driverName] || 'Independent', 
+        class: item.Class || 'Pro',
+        net_points: item.TotalPoints || 0
+      };
+    });
 
     // Map Teams Championship
-// Map Teams Championship
     const teamResults = teamData.Standings?.TeamStandings?.[0]?.Results || [];
     globalTeams = teamResults.map(item => {
       const teamName = item.Team?.Name || 'Unknown Team';
-      
-      // Look through the drivers we just fetched and find anyone racing for this team
       const teamDrivers = globalDrivers.filter(d => d.team === teamName);
 
       return {
         name: teamName,
         points: item.TotalPoints || 0,
-        // Attach those matched drivers into the dropdown roster
         drivers: teamDrivers.map(d => ({
           name: d.name,
           class: d.class,
@@ -148,12 +166,14 @@ async function loadStandings() {
       id: item.EventId || item.eventId,
       name: item.EventName || item.eventName,
       type: item.TypeEvent || item.typeEvent || 'Regular', 
-      results: null // Loaded on-demand
+      date: new Date(item.EventDate || item.eventDate),
+      broadcastLink: item.BroadcastLink || item.broadcastLink,
+      results: null
     }));
     
-    // Auto-load the Pro division on startup
     filterDivision('Pro');
     renderTeams(globalTeams);
+    syncBroadcast();
     
     // Populate Round Dropdown
     const selector = document.getElementById('round-selector');
@@ -277,7 +297,6 @@ function renderTeams(teams) {
   });
 }
 
-// Fetches and renders official event results dynamically
 async function renderResults(roundId) {
   const table = document.getElementById('results-table');
   const placeholder = document.getElementById('results-placeholder');
@@ -294,7 +313,6 @@ async function renderResults(roundId) {
   const round = globalRounds.find(r => r.id === roundId);
   if (!round) return;
 
-  // If not yet fetched, pull from the event export endpoint
   if (round.results === null) {
     table.style.display = 'none';
     placeholder.style.display = 'block';
@@ -323,9 +341,8 @@ async function renderResults(roundId) {
       console.warn("Could not load results for round:", roundId, err);
       round.results = [];
     }
-  } // <-- THIS WAS MISSING IN YOUR LAST PASTE
+  }
 
-  // Handle empty or uncompleted rounds
   if (!round.results || round.results.length === 0) {
     table.style.display = 'none';
     placeholder.style.display = 'block';
@@ -333,7 +350,6 @@ async function renderResults(roundId) {
     return;
   }
 
-  // Setup headers
   thead.innerHTML = `
     <tr>
       <th>Driver</th>
@@ -344,7 +360,6 @@ async function renderResults(roundId) {
     </tr>
   `;
 
-  // Render Rows
   tbody.innerHTML = round.results.map(r => `
     <tr>
       <td>
@@ -360,4 +375,36 @@ async function renderResults(roundId) {
 
   table.style.display = 'table';
   placeholder.style.display = 'none';
+}
+
+function syncBroadcast() {
+  const iframe = document.querySelector('#tab-watch iframe');
+  if (!iframe || globalRounds.length === 0) return;
+
+  const now = new Date();
+  const activeThreshold = new Date(now.getTime() - (4 * 60 * 60 * 1000));
+
+  let activeRound = globalRounds.find(r => r.date >= activeThreshold);
+  
+  if (!activeRound) {
+    activeRound = globalRounds[globalRounds.length - 1];
+  }
+
+  if (activeRound && activeRound.broadcastLink) {
+    let embedUrl = activeRound.broadcastLink;
+
+    if (embedUrl.includes('watch?v=')) {
+      embedUrl = embedUrl.replace('watch?v=', 'embed/');
+    } else if (embedUrl.includes('youtu.be/')) {
+      embedUrl = embedUrl.replace('youtu.be/', 'www.youtube.com/embed/');
+    }
+
+    const separator = embedUrl.includes('?') ? '&' : '?';
+    iframe.src = `${embedUrl}${separator}vq=hd1080&highres=1&hd=1`;
+    
+    const watchHeading = document.querySelector('#tab-watch h2');
+    if (watchHeading) {
+      watchHeading.textContent = `AEPCC ${activeRound.name}`;
+    }
+  }
 }
