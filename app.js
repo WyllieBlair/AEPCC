@@ -122,12 +122,25 @@ async function loadStandings() {
     }));
 
     // Map Teams Championship
+// Map Teams Championship
     const teamResults = teamData.Standings?.TeamStandings?.[0]?.Results || [];
-    globalTeams = teamResults.map(item => ({
-      name: item.Team?.Name || 'Unknown Team',
-      points: item.TotalPoints || 0,
-      drivers: [] 
-    }));
+    globalTeams = teamResults.map(item => {
+      const teamName = item.Team?.Name || 'Unknown Team';
+      
+      // Look through the drivers we just fetched and find anyone racing for this team
+      const teamDrivers = globalDrivers.filter(d => d.team === teamName);
+
+      return {
+        name: teamName,
+        points: item.TotalPoints || 0,
+        // Attach those matched drivers into the dropdown roster
+        drivers: teamDrivers.map(d => ({
+          name: d.name,
+          class: d.class,
+          points: d.net_points
+        }))
+      };
+    });
 
     // Map Schedule & Rounds
     const eventResults = roundData.Events || roundData.events || [];
