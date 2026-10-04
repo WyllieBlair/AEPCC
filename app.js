@@ -113,31 +113,31 @@ async function loadStandings() {
     const roundData = await roundRes.json();
     console.log("RAW XTREME DATA:", driverData);
     // Map Drivers Championship
-    const driverResults = driverData.standings?.driverStandings?.[0]?.results || [];
+    // Map Drivers Championship
+    const driverResults = driverData.Standings?.DriverStandings?.[0]?.Results || [];
     globalDrivers = driverResults.map(item => ({
-      name: item.driver?.displayName || item.driver?.name || 'Unknown',
-      team: 'Independent', 
-      class: item.class || 'Pro',
-      net_points: item.totalPoints || 0
+      name: item.Driver?.DisplayName || item.Driver?.Name || 'Unknown',
+      team: item.Team?.Name || 'Independent', 
+      class: item.Class || 'Pro',
+      net_points: item.TotalPoints || 0
     }));
 
     // Map Teams Championship
-    const teamResults = teamData.standings?.teamStandings?.[0]?.results || [];
+    const teamResults = teamData.Standings?.TeamStandings?.[0]?.Results || [];
     globalTeams = teamResults.map(item => ({
-      name: item.team?.name || 'Unknown Team',
-      points: item.totalPoints || 0,
+      name: item.Team?.Name || 'Unknown Team',
+      points: item.TotalPoints || 0,
       drivers: [] 
     }));
 
     // Map Schedule & Rounds
-    const eventResults = roundData.events || [];
+    const eventResults = roundData.Events || roundData.events || [];
     globalRounds = eventResults.map(item => ({
-      id: item.eventId,
-      name: item.eventName,
-      type: item.typeEvent || 'Regular', 
+      id: item.EventId || item.eventId,
+      name: item.EventName || item.eventName,
+      type: item.TypeEvent || item.typeEvent || 'Regular', 
       results: null // Loaded on-demand
     }));
-    
     filterDivision('Pro');
     renderTeams(globalTeams);
     
@@ -286,31 +286,29 @@ async function renderResults(roundId) {
     placeholder.style.display = 'block';
     placeholder.textContent = 'Loading official race results...';
 
-    try {
+try {
       const res = await fetch(`${API_BASE_URL}/series/${SERIES_ID}/seasons/${SEASON_ID}/events/${roundId}/results/export`);
       if (!res.ok) throw new Error("Results unavailable");
 
       const data = await res.json();
-      const rawEntries = data.results?.eventResults || [];
+      const rawEntries = data.Results?.EventResults || data.results?.eventResults || [];
 
       if (rawEntries.length === 0) {
         round.results = [];
       } else {
-        // Map export fields directly to UI attributes
         round.results = rawEntries.map(entry => ({
-          driver: entry.driver?.displayName || entry.driver?.name || 'Driver',
-          team: entry.team?.name || 'Independent',
-          class: entry.runClass || 'Pro',
-          pos: entry.classFinishPosition || entry.finishPosition || '-',
-          inc: entry.incidents !== undefined ? entry.incidents : 0,
-          pts: entry.totalPointsDriver ?? entry.totalPoints ?? 0
+          driver: entry.Driver?.DisplayName || entry.Driver?.Name || entry.driver?.displayName || 'Driver',
+          team: entry.Team?.Name || entry.team?.name || 'Independent',
+          class: entry.RunClass || entry.runClass || 'Pro',
+          pos: entry.ClassFinishPosition || entry.classFinishPosition || entry.FinishPosition || '-',
+          inc: entry.Incidents !== undefined ? entry.Incidents : (entry.incidents !== undefined ? entry.incidents : 0),
+          pts: entry.TotalPointsDriver ?? entry.totalPointsDriver ?? entry.TotalPoints ?? entry.totalPoints ?? 0
         }));
       }
     } catch (err) {
       console.warn("Could not load results for round:", roundId, err);
       round.results = [];
     }
-  }
 
   // Handle empty or uncompleted rounds
   if (!round.results || round.results.length === 0) {
