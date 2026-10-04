@@ -114,8 +114,7 @@ async function loadStandings() {
     const teamData = await teamRes.json();
     const roundData = await roundRes.json();
     const rosterData = await rosterRes.json();
-  console.log("TEAM STANDINGS DATA:", teamData);
-  console.log("ROSTER DATA:", rosterData);
+
     // Build a mapping dictionary from the Roster (DriverName -> TeamName)
     const driverToTeamMap = {};
     const rosterEntries = rosterData.Entries || rosterData.entries || [];
