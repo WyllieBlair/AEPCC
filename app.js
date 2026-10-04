@@ -1,7 +1,6 @@
-
 const API_BASE_URL = 'https://purple-shape-358a.wyllieblair15.workers.dev';
-const SERIES_ID = 'AEPCC';
-const SEASON_ID = 'Season 1'; 
+const SERIES_ID = 'AEPCC'; // Double check this! (See note below)
+const SEASON_ID = 'Season 1'; // Double check this! (See note below)
 
 let globalDrivers = [];
 let globalTeams = [];
