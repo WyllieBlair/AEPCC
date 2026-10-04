@@ -111,7 +111,7 @@ async function loadStandings() {
     const driverData = await driverRes.json();
     const teamData = await teamRes.json();
     const roundData = await roundRes.json();
-
+    console.log("RAW XTREME DATA:", driverData);
     // Map Drivers Championship
     const driverResults = driverData.standings?.driverStandings?.[0]?.results || [];
     globalDrivers = driverResults.map(item => ({
