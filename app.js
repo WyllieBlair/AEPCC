@@ -111,8 +111,7 @@ async function loadStandings() {
     const driverData = await driverRes.json();
     const teamData = await teamRes.json();
     const roundData = await roundRes.json();
-    console.log("RAW XTREME DATA:", driverData);
-    // Map Drivers Championship
+
     // Map Drivers Championship
     const driverResults = driverData.Standings?.DriverStandings?.[0]?.Results || [];
     globalDrivers = driverResults.map(item => ({
@@ -138,6 +137,8 @@ async function loadStandings() {
       type: item.TypeEvent || item.typeEvent || 'Regular', 
       results: null // Loaded on-demand
     }));
+    
+    // Auto-load the Pro division on startup
     filterDivision('Pro');
     renderTeams(globalTeams);
     
@@ -286,7 +287,7 @@ async function renderResults(roundId) {
     placeholder.style.display = 'block';
     placeholder.textContent = 'Loading official race results...';
 
-try {
+    try {
       const res = await fetch(`${API_BASE_URL}/series/${SERIES_ID}/seasons/${SEASON_ID}/events/${roundId}/results/export`);
       if (!res.ok) throw new Error("Results unavailable");
 
@@ -309,6 +310,7 @@ try {
       console.warn("Could not load results for round:", roundId, err);
       round.results = [];
     }
+  } // <-- THIS WAS MISSING IN YOUR LAST PASTE
 
   // Handle empty or uncompleted rounds
   if (!round.results || round.results.length === 0) {
