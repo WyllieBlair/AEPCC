@@ -1,3 +1,8 @@
+
+const API_BASE_URL = 'const API_BASE_URL = 'https://purple-shape-358a.wyllieblair15.workers.dev';'; 
+const SERIES_ID = 'AEPCC';
+const SEASON_ID = 'Season 1'; 
+
 let globalDrivers = [];
 let globalTeams = [];
 let globalRounds = [];
@@ -12,7 +17,6 @@ function initDynamicSlider() {
   const heroContainer = document.getElementById('hero-slider');
   if (!heroContainer) return;
 
-  // Manually list your hero images here
   const imageFiles = [
     'Sebring-Sam Chapman PRO-0.png',
     'Sebring-Stefan Lawrence-0.png',
@@ -22,7 +26,6 @@ function initDynamicSlider() {
   ]; 
 
   const images = imageFiles.map(file => `photos/${file}`);
-
   if (images.length === 0) return;
 
   heroContainer.querySelectorAll('.hero-slide').forEach(slide => slide.remove());
@@ -45,8 +48,6 @@ function initDynamicSlider() {
   
   const slides = heroContainer.querySelectorAll('.hero-slide');
   
-  // BACKGROUND PRE-LOAD
-  // Wait 1 second to let the website load first, then download the rest in the background
   setTimeout(() => {
     slides.forEach((slide, index) => {
       if (index !== 0) {
@@ -56,7 +57,6 @@ function initDynamicSlider() {
   }, 1000);
 
   let currentSlide = 0;
-  
   if (slides.length > 1) {
     setInterval(() => {
       slides[currentSlide].classList.remove('active');
@@ -76,9 +76,8 @@ function switchTab(tabId) {
   const matchingBtn = Array.from(document.querySelectorAll('#nav-tabs button')).find(btn => btn.getAttribute('onclick')?.includes(tabId));
   if (matchingBtn) matchingBtn.classList.add('active');
   
-  if(window.innerWidth <= 768) {
+  if (window.innerWidth <= 768) {
     const container = document.querySelector('.container');
-    // Only scroll if the content is far below the top of the viewport
     if (container && container.getBoundingClientRect().top > 150) {
       container.scrollIntoView({ behavior: 'smooth' });
     }
@@ -99,33 +98,68 @@ function updateScheduleBadges() {
   });
 }
 
-function loadStandings() {
- fetch('data/standings.json')
-    .then(res => res.json())
-    .then(data => {
-      globalDrivers = data.drivers || [];
-      globalTeams = data.teams || [];
-      globalRounds = data.rounds || [];
-      
-      filterDivision('Pro');
-      renderTeams(globalTeams);
-      
-      // Populate Round Dropdown for the Results view
-      const selector = document.getElementById('round-selector');
-      if (selector) {
-        globalRounds.forEach(r => {
-          const opt = document.createElement('option');
-          opt.value = r.id;
-          opt.textContent = r.name;
-          selector.appendChild(opt);
-        });
-      }
-    })
-    .catch(err => {
-      console.warn("Waiting on data/standings.json", err);
-      renderDrivers([]);
-      renderTeams([]); 
-    });
+async function loadStandings() {
+  try {
+    const [driverRes, teamRes, roundRes] = await Promise.all([
+      fetch(`${API_BASE_URL}/series/${SERIES_ID}/seasons/${SEASON_ID}/standings/Driver`),
+      fetch(`${API_BASE_URL}/series/${SERIES_ID}/seasons/${SEASON_ID}/standings/Team`),
+      fetch(`${API_BASE_URL}/series/${SERIES_ID}/seasons/${SEASON_ID}/events`)
+    ]);
+
+    if (!driverRes.ok || !teamRes.ok || !roundRes.ok) {
+      throw new Error("Failed to fetch standings data");
+    }
+
+    const driverData = await driverRes.json();
+    const teamData = await teamRes.json();
+    const roundData = await roundRes.json();
+
+    // Map Drivers Championship
+    const driverResults = driverData.standings?.driverStandings?.[0]?.results || [];
+    globalDrivers = driverResults.map(item => ({
+      name: item.driver?.displayName || item.driver?.name || 'Unknown',
+      team: 'Independent', 
+      class: item.class || 'Pro',
+      net_points: item.totalPoints || 0
+    }));
+
+    // Map Teams Championship
+    const teamResults = teamData.standings?.teamStandings?.[0]?.results || [];
+    globalTeams = teamResults.map(item => ({
+      name: item.team?.name || 'Unknown Team',
+      points: item.totalPoints || 0,
+      drivers: [] 
+    }));
+
+    // Map Schedule & Rounds
+    const eventResults = roundData.events || [];
+    globalRounds = eventResults.map(item => ({
+      id: item.eventId,
+      name: item.eventName,
+      type: item.typeEvent || 'Regular', 
+      results: null // Loaded on-demand
+    }));
+    
+    filterDivision('Pro');
+    renderTeams(globalTeams);
+    
+    // Populate Round Dropdown
+    const selector = document.getElementById('round-selector');
+    if (selector) {
+      selector.innerHTML = '<option value="">-- Select a Round --</option>';
+      globalRounds.forEach(r => {
+        const opt = document.createElement('option');
+        opt.value = r.id;
+        opt.textContent = r.name;
+        selector.appendChild(opt);
+      });
+    }
+
+  } catch (err) {
+    console.error("Error loading data from XtremeScoring:", err);
+    renderDrivers([]);
+    renderTeams([]); 
+  }
 }
 
 function filterDivision(division, event) {
@@ -184,7 +218,6 @@ function renderTeams(teams) {
 
   tbody.innerHTML = '';
   validTeams.forEach((team, idx) => {
-    // Parent Row (Clickable)
     const tr = document.createElement('tr');
     tr.className = 'team-row';
     tr.innerHTML = `
@@ -196,7 +229,6 @@ function renderTeams(teams) {
       <td class="text-highlight">${team.points !== undefined ? team.points : 0}</td>
     `;
     
-    // Child Row (Hidden initially)
     const subTr = document.createElement('tr');
     subTr.className = 'team-sub-row';
     
@@ -207,7 +239,7 @@ function renderTeams(teams) {
             <span>${d.points} pts</span>
           </div>
         `).join('')
-      : '<div style="opacity: 0.5;">No driver data found</div>';
+      : '<div style="opacity: 0.5; font-size: 0.85rem;">Roster details not available in this view.</div>';
 
     subTr.innerHTML = `
       <td colspan="3" style="padding: 0;">
@@ -217,10 +249,8 @@ function renderTeams(teams) {
       </td>
     `;
 
-    // Toggle logic
     tr.addEventListener('click', () => {
       const isExpanded = subTr.classList.contains('active');
-      
       if (isExpanded) {
         subTr.classList.remove('active');
         tr.querySelector('.expand-icon').textContent = '▼';
@@ -235,7 +265,8 @@ function renderTeams(teams) {
   });
 }
 
-function renderResults(roundId) {
+// Fetches and renders official event results dynamically
+async function renderResults(roundId) {
   const table = document.getElementById('results-table');
   const placeholder = document.getElementById('results-placeholder');
   const thead = document.getElementById('results-header');
@@ -244,59 +275,77 @@ function renderResults(roundId) {
   if (!roundId) {
     table.style.display = 'none';
     placeholder.style.display = 'block';
+    placeholder.textContent = 'Select a completed round from the dropdown above to view the official results.';
     return;
   }
 
   const round = globalRounds.find(r => r.id === roundId);
-  if (!round || !round.results || round.results.length === 0) {
+  if (!round) return;
+
+  // If not yet fetched, pull from the event export endpoint
+  if (round.results === null) {
     table.style.display = 'none';
     placeholder.style.display = 'block';
-    placeholder.textContent = "Results are currently being processed for this round.";
+    placeholder.textContent = 'Loading official race results...';
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/series/${SERIES_ID}/seasons/${SEASON_ID}/events/${roundId}/results/export`);
+      if (!res.ok) throw new Error("Results unavailable");
+
+      const data = await res.json();
+      const rawEntries = data.results?.eventResults || [];
+
+      if (rawEntries.length === 0) {
+        round.results = [];
+      } else {
+        // Map export fields directly to UI attributes
+        round.results = rawEntries.map(entry => ({
+          driver: entry.driver?.displayName || entry.driver?.name || 'Driver',
+          team: entry.team?.name || 'Independent',
+          class: entry.runClass || 'Pro',
+          pos: entry.classFinishPosition || entry.finishPosition || '-',
+          inc: entry.incidents !== undefined ? entry.incidents : 0,
+          pts: entry.totalPointsDriver ?? entry.totalPoints ?? 0
+        }));
+      }
+    } catch (err) {
+      console.warn("Could not load results for round:", roundId, err);
+      round.results = [];
+    }
+  }
+
+  // Handle empty or uncompleted rounds
+  if (!round.results || round.results.length === 0) {
+    table.style.display = 'none';
+    placeholder.style.display = 'block';
+    placeholder.textContent = 'Results are currently being processed or this event has not taken place yet.';
     return;
   }
 
-  // Setup headers based on race format
-  let headerHtml = `<tr><th>Driver</th><th>Class</th>`;
-  
-  if (round.type === 'Regular') {
-    headerHtml += `<th>Pos</th><th>Inc</th><th>Pts</th>`;
-  } else if (round.type === 'SprintFeature') {
-    headerHtml += `<th>Sprint Pos</th><th>Feature Pos</th><th>Total Pts</th>`;
-  } else if (round.type === 'SuperSprint') {
-    headerHtml += `<th>Race 1</th><th>Race 2</th><th>Race 3</th><th>Total Pts</th>`;
-  }
-  headerHtml += `</tr>`;
-  thead.innerHTML = headerHtml;
+  // Setup headers
+  thead.innerHTML = `
+    <tr>
+      <th>Driver</th>
+      <th>Class</th>
+      <th>Pos</th>
+      <th>Inc</th>
+      <th>Pts</th>
+    </tr>
+  `;
 
   // Render Rows
-  tbody.innerHTML = round.results.map((r, idx) => {
-    let rowHtml = `
+  tbody.innerHTML = round.results.map(r => `
+    <tr>
       <td>
         <span class="text-highlight">${r.driver}</span>
         <span class="subtext">${r.team}</span>
       </td>
       <td>${r.class}</td>
-    `;
-    
-    if (round.type === 'Regular') {
-      rowHtml += `
-        <td class="text-highlight">${r.pos}</td>
-        <td>${r.inc}</td>
-        <td class="text-highlight">${r.pts}</td>`;
-    } else if (round.type === 'SprintFeature') {
-      rowHtml += `
-        <td>${r.s_pos}</td>
-        <td>${r.f_pos}</td>
-        <td class="text-highlight">${r.pts}</td>`;
-    } else if (round.type === 'SuperSprint') {
-      rowHtml += `
-        <td>${r.r1_pos}</td>
-        <td>${r.r2_pos}</td>
-        <td>${r.r3_pos}</td>
-        <td class="text-highlight">${r.pts}</td>`;
-    }
-    return `<tr>${rowHtml}</tr>`;
-  }).join('');
+      <td class="text-highlight">${r.pos}</td>
+      <td>${r.inc}</td>
+      <td class="text-highlight">${r.pts}</td>
+    </tr>
+  `).join('');
 
   table.style.display = 'table';
   placeholder.style.display = 'none';
