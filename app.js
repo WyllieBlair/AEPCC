@@ -1,7 +1,6 @@
 const API_BASE_URL = 'https://purple-shape-358a.wyllieblair15.workers.dev';
-const SERIES_ID = 'AEPCC'; // Double check this! (See note below)
-const SEASON_ID = 'Season 1'; // Double check this! (See note below)
-
+const SERIES_ID = '4ef87fbf-fbd3-41ae-8991-5e2e25d7b26c';
+const SEASON_ID = 'e46694cb-25ad-46f8-a45f-02532b70b32f';
 let globalDrivers = [];
 let globalTeams = [];
 let globalRounds = [];
