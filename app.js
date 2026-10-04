@@ -1,5 +1,5 @@
 
-const API_BASE_URL = 'const API_BASE_URL = 'https://purple-shape-358a.wyllieblair15.workers.dev';'; 
+const API_BASE_URL = 'https://purple-shape-358a.wyllieblair15.workers.dev';
 const SERIES_ID = 'AEPCC';
 const SEASON_ID = 'Season 1'; 
 
