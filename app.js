@@ -229,17 +229,25 @@ function renderDrivers(drivers) {
   if (!tbody) return;
   
   if (!drivers || drivers.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No drivers found in this division.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No drivers found in this division.</td></tr>`;
     return;
   }
 
+  // Find the leader's points for the math calculation
+  const leaderPts = Math.max(...drivers.map(d => d.net_points || 0));
+
   tbody.innerHTML = '';
   drivers.forEach((driver, idx) => {
+    // Calculate the gap to the leader
+    const gap = (driver.net_points === leaderPts) ? '-' : `-${leaderPts - (driver.net_points || 0)}`;
+
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td class="text-highlight">${idx + 1}</td>
       <td style="text-align: center; padding-right: 0;">
-        ${driver.teamLogo ? `<img src="${driver.teamLogo}" alt="Logo" style="width: 24px; height: 24px; border-radius: 4px; object-fit: contain;">` : ''}
+        ${driver.teamLogo 
+          ? `<img src="${driver.teamLogo}" alt="" style="width: 22px; height: 22px; border-radius: 3px; object-fit: contain; flex-shrink: 0;">` 
+          : `<div style="width: 22px; height: 22px; flex-shrink: 0;"></div>`}
       </td>
       <td style="text-align: left;">
         <span class="text-highlight" style="display: block;">${driver.name || 'Unknown Driver'}</span>
@@ -247,6 +255,7 @@ function renderDrivers(drivers) {
       </td>
       <td>${driver.class || 'Pro'}</td>
       <td class="text-highlight">${driver.net_points !== undefined ? driver.net_points : 0}</td>
+      <td style="color: var(--text-muted); font-weight: 800;">${gap}</td>
     `;
     tbody.appendChild(tr);
   });
@@ -258,25 +267,37 @@ function renderTeams(teams) {
 
   const validTeams = (teams || []).filter(t => t && t.name);
 
+  // Ensure teams are always sorted from highest to lowest points
+  validTeams.sort((a, b) => (b.points || 0) - (a.points || 0));
+
   if (validTeams.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No team standings available.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No team standings available.</td></tr>`;
     return;
   }
 
+  // Grab the points of the 1st place team
+  const leaderPts = validTeams.length > 0 ? validTeams[0].points : 0;
+
   tbody.innerHTML = '';
   validTeams.forEach((team, idx) => {
+    // Calculate the gap to the leader
+    const gap = (team.points === leaderPts) ? '-' : `-${leaderPts - (team.points || 0)}`;
+    
     const tr = document.createElement('tr');
     tr.className = 'team-row';
     tr.innerHTML = `
       <td class="text-highlight">${idx + 1}</td>
       <td style="text-align: center; padding-right: 0;">
-        ${team.logo ? `<img src="${team.logo}" alt="${team.name} Logo" style="width: 24px; height: 24px; border-radius: 4px; object-fit: contain;">` : ''}
+        ${team.logo 
+          ? `<img src="${team.logo}" alt="" style="width: 22px; height: 22px; border-radius: 3px; object-fit: contain; flex-shrink: 0;">` 
+          : `<div style="width: 22px; height: 22px; flex-shrink: 0;"></div>`}
       </td>
       <td class="text-highlight" style="text-align: left;">
         ${team.name}
         <span class="expand-icon" style="float: right; opacity: 0.5;">▼</span>
       </td>
       <td class="text-highlight">${team.points !== undefined ? team.points : 0}</td>
+      <td style="color: var(--text-muted); font-weight: 800;">${gap}</td>
     `;
     
     const subTr = document.createElement('tr');
@@ -292,7 +313,7 @@ function renderTeams(teams) {
       : '<div style="opacity: 0.5; font-size: 0.85rem;">Roster details not available in this view.</div>';
 
     subTr.innerHTML = `
-      <td colspan="4" style="padding: 0;">
+      <td colspan="5" style="padding: 0;">
         <div class="team-drivers-container">
           ${driverHtml}
         </div>
