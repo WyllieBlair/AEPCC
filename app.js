@@ -131,12 +131,13 @@ async function loadStandings() {
     
     rosterEntries.forEach(entry => {
       const teamName = entry.Team?.Name || 'Independent';
+      const teamLogo = entry.Team?.TeamLogoPath || null;
       const primaryDrivers = entry.PrimaryDrivers || entry.primaryDrivers || [];
       
       primaryDrivers.forEach(d => {
         const dName = d.DisplayName || d.Name;
         if (dName) {
-          driverToTeamMap[dName] = teamName;
+          driverToTeamMap[dName] = { name: teamName, logo: teamLogo };
         }
       });
     });
@@ -144,9 +145,12 @@ async function loadStandings() {
     const driverResults = driverData.Standings?.DriverStandings?.[0]?.Results || [];
     globalDrivers = driverResults.map(item => {
       const driverName = item.Driver?.DisplayName || item.Driver?.Name || 'Unknown';
+      const teamInfo = driverToTeamMap[driverName] || { name: 'Independent', logo: null };
+      
       return {
         name: driverName,
-        team: driverToTeamMap[driverName] || 'Independent', 
+        team: teamInfo.name, 
+        teamLogo: teamInfo.logo,
         class: item.Class || 'Pro',
         net_points: item.TotalPoints || 0
       };
@@ -233,9 +237,12 @@ function renderDrivers(drivers) {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td class="text-highlight">${idx + 1}</td>
-      <td>
-        <span class="text-highlight">${driver.name || 'Unknown Driver'}</span>
-        <span class="subtext">${driver.team || 'Independent'}</span>
+      <td style="display: flex; align-items: center; gap: 12px;">
+        ${driver.teamLogo ? `<img src="${driver.teamLogo}" alt="Logo" style="width: 24px; height: 24px; border-radius: 4px; object-fit: contain; flex-shrink: 0;">` : ''}
+        <div>
+          <span class="text-highlight" style="display: block;">${driver.name || 'Unknown Driver'}</span>
+          <span class="subtext">${driver.team || 'Independent'}</span>
+        </div>
       </td>
       <td>${driver.class || 'Pro'}</td>
       <td class="text-highlight">${driver.net_points !== undefined ? driver.net_points : 0}</td>
@@ -335,18 +342,18 @@ async function renderResults(roundId) {
 
       const data = await res.json();
       const rawEntries = data.Results?.EventResults || data.results?.eventResults || [];
-      console.log("RAW RESULTS DATA:", rawEntries);
-   if (rawEntries.length === 0) {
+
+      if (rawEntries.length === 0) {
         round.results = [];
       } else {
         round.results = rawEntries.map(entry => {
           const calculatedBonus = (entry.Bonuses || []).reduce((sum, b) => sum + (b.Points || 0), 0);
+          
           return {
             driver: entry.Driver?.DisplayName || entry.Driver?.Name || entry.driver?.displayName || 'Driver',
             team: entry.Team?.Name || entry.team?.name || 'Independent',
             class: entry.RunClass || entry.runClass || 'Pro',
             pos: entry.ClassFinishPosition || entry.classFinishPosition || entry.FinishPosition || '-',
-            inc: entry.Incidents !== undefined ? entry.Incidents : (entry.incidents !== undefined ? entry.incidents : 0),
             bonus: calculatedBonus,
             pts: entry.TotalPointsDriver ?? entry.totalPointsDriver ?? entry.TotalPoints ?? entry.totalPoints ?? 0
           };
@@ -371,7 +378,6 @@ async function renderResults(roundId) {
       <th>Driver</th>
       <th>Class</th>
       <th>Pos</th>
-      <th>Inc</th>
       <th>Bonus</th>
       <th>Pts</th>
     </tr>
@@ -385,7 +391,6 @@ async function renderResults(roundId) {
       </td>
       <td>${r.class}</td>
       <td class="text-highlight">${r.pos}</td>
-      <td>${r.inc}</td>
       <td style="color: #4ade80;">${r.bonus > 0 ? '+' + r.bonus : '-'}</td>
       <td class="text-highlight">${r.pts}</td>
     </tr>
