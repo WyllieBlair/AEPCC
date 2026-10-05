@@ -348,7 +348,6 @@ async function renderResults(roundId) {
 
       const data = await res.json();
       
-      // Grab BOTH the race results and the separate roster list from the new endpoint
       const rawEntries = data.Results?.EventResults || data.results?.eventResults || [];
       const rosterDetails = data.Results?.Entries || data.results?.entries || [];
 
@@ -357,7 +356,6 @@ async function renderResults(roundId) {
       } else {
         round.results = rawEntries.map(entry => {
           
-          // Cross-reference the RosterId to find the driver's actual name and team
           const rosterMatch = rosterDetails.find(r => r.RosterId === entry.RosterId || r.rosterId === entry.RosterId) || {};
           const driverData = rosterMatch.PrimaryDrivers?.[0] || rosterMatch.primaryDrivers?.[0] || {};
           const teamData = rosterMatch.Team || rosterMatch.team || {};
@@ -379,9 +377,13 @@ async function renderResults(roundId) {
                  : (entry.FinishPosition || '-'),
             inc: entry.Incidents !== undefined ? entry.Incidents : (entry.incidents !== undefined ? entry.incidents : 0),
             bonus: calculatedBonus,
-            pts: driverPts
+            pts: driverPts,
+            overallFinish: entry.FinishPosition || entry.finishPosition || 9999 // Capture overall finish for sorting
           };
         });
+
+        // Sort the results array by overall finishing position before rendering
+        round.results.sort((a, b) => a.overallFinish - b.overallFinish);
       }
     } catch (err) {
       console.warn("Could not load results for round:", roundId, err);
@@ -432,7 +434,6 @@ async function renderResults(roundId) {
   if (legend) legend.style.display = 'block';
   if (placeholder) placeholder.style.display = 'none';
 }
-
 function syncBroadcast() {
   const now = new Date();
   const activeThreshold = new Date(now.getTime() - (4 * 60 * 60 * 1000));
