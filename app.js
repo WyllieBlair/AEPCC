@@ -343,31 +343,36 @@ async function renderResults(roundId) {
     }
 
     try {
-      // Changed to the standard /results endpoint to bypass the 500 Export error
       const res = await fetch(`${API_BASE_URL}/series/${SERIES_ID}/seasons/${SEASON_ID}/events/${roundId}/results`);
       if (!res.ok) throw new Error("Results unavailable");
 
       const data = await res.json();
+      
+      // Grab BOTH the race results and the separate roster list from the new endpoint
       const rawEntries = data.Results?.EventResults || data.results?.eventResults || [];
+      const rosterDetails = data.Results?.Entries || data.results?.entries || [];
 
       if (rawEntries.length === 0) {
         round.results = [];
       } else {
         round.results = rawEntries.map(entry => {
+          
+          // Cross-reference the RosterId to find the driver's actual name and team
+          const rosterMatch = rosterDetails.find(r => r.RosterId === entry.RosterId || r.rosterId === entry.RosterId) || {};
+          const driverData = rosterMatch.PrimaryDrivers?.[0] || rosterMatch.primaryDrivers?.[0] || {};
+          const teamData = rosterMatch.Team || rosterMatch.team || {};
+
           const calculatedBonus = (entry.Bonuses || entry.bonuses || []).reduce((sum, b) => sum + (b.Points || b.points || 0), 0);
 
-          // The standard endpoint nests total points slightly differently than the export endpoint
           const driverPts = entry.DriverEntryPoints?.[0]?.TotalPoints 
                          ?? entry.driverEntryPoints?.[0]?.totalPoints 
-                         ?? entry.TotalPointsDriver 
-                         ?? entry.totalPointsDriver 
                          ?? entry.TotalPoints 
                          ?? entry.totalPoints 
                          ?? 0;
 
           return {
-            driver: entry.Driver?.DisplayName || entry.Driver?.Name || entry.driver?.displayName || 'Driver',
-            team: entry.Team?.Name || entry.team?.name || 'Independent',
+            driver: driverData.DisplayName || driverData.Name || 'Unknown Driver',
+            team: teamData.Name || 'Independent',
             class: entry.RunClass || entry.runClass || 'Pro',
             pos: entry.ClassFinishPosition !== undefined && entry.ClassFinishPosition !== null && entry.ClassFinishPosition !== 0
                  ? entry.ClassFinishPosition 
@@ -397,9 +402,9 @@ async function renderResults(roundId) {
   if (thead) {
     thead.innerHTML = `
       <tr>
-        <th>Driver</th>
+        <th style="width: 80px;">Pos</th>
+        <th style="text-align: left;">Driver</th>
         <th>Class</th>
-        <th>Pos</th>
         <th>Inc</th>
         <th>Bonus</th>
         <th>Pts</th>
@@ -410,12 +415,12 @@ async function renderResults(roundId) {
   if (tbody) {
     tbody.innerHTML = round.results.map(r => `
       <tr>
-        <td>
-          <span class="text-highlight">${r.driver}</span>
+        <td class="text-highlight">${r.pos}</td>
+        <td style="text-align: left;">
+          <span class="text-highlight" style="display: block;">${r.driver}</span>
           <span class="subtext">${r.team}</span>
         </td>
         <td>${r.class}</td>
-        <td class="text-highlight">${r.pos}</td>
         <td>${r.inc}</td>
         <td style="color: #4ade80;">${r.bonus > 0 ? '+' + r.bonus : '-'}</td>
         <td class="text-highlight">${r.pts}</td>
