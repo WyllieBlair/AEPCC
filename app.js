@@ -240,7 +240,9 @@ function renderDrivers(drivers) {
       <td class="text-highlight">${idx + 1}</td>
       <td>
         <div style="display: flex; align-items: center;">
-          ${driver.teamLogo ? `<img src="${driver.teamLogo}" alt="" style="width: 22px; height: 22px; border-radius: 3px; object-fit: contain; margin-right: 10px; flex-shrink: 0;">` : ''}
+          ${driver.teamLogo 
+            ? `<img src="${driver.teamLogo}" alt="" style="width: 22px; height: 22px; border-radius: 3px; object-fit: contain; margin-right: 10px; flex-shrink: 0;">` 
+            : `<div style="width: 22px; height: 22px; margin-right: 10px; flex-shrink: 0;"></div>` /* Invisible placeholder */}
           <div>
             <span class="text-highlight" style="display: block;">${driver.name || 'Unknown Driver'}</span>
             <span class="subtext">${driver.team || 'Independent'}</span>
@@ -273,7 +275,9 @@ function renderTeams(teams) {
       <td class="text-highlight">${idx + 1}</td>
       <td class="text-highlight">
         <div style="display: flex; align-items: center;">
-          ${team.logo ? `<img src="${team.logo}" alt="" style="width: 22px; height: 22px; border-radius: 3px; object-fit: contain; margin-right: 10px; flex-shrink: 0;">` : ''}
+          ${team.logo 
+            ? `<img src="${team.logo}" alt="" style="width: 22px; height: 22px; border-radius: 3px; object-fit: contain; margin-right: 10px; flex-shrink: 0;">` 
+            : `<div style="width: 22px; height: 22px; margin-right: 10px; flex-shrink: 0;"></div>` /* Invisible placeholder */}
           <span>${team.name}</span>
           <span class="expand-icon" style="margin-left: auto; opacity: 0.5;">▼</span>
         </div>
@@ -316,7 +320,6 @@ function renderTeams(teams) {
     tbody.appendChild(subTr);
   });
 }
-
 async function renderResults(roundId) {
   const table = document.getElementById('results-table');
   const placeholder = document.getElementById('results-placeholder');
