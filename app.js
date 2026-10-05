@@ -335,7 +335,7 @@ async function renderResults(roundId) {
 
       const data = await res.json();
       const rawEntries = data.Results?.EventResults || data.results?.eventResults || [];
-
+      console.log("RAW RESULTS DATA:", rawEntries);
       if (rawEntries.length === 0) {
         round.results = [];
       } else {
