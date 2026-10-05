@@ -343,7 +343,8 @@ async function renderResults(roundId) {
     }
 
     try {
-      const res = await fetch(`${API_BASE_URL}/series/${SERIES_ID}/seasons/${SEASON_ID}/events/${roundId}/results/export`);
+      // Changed to the standard /results endpoint to bypass the 500 Export error
+      const res = await fetch(`${API_BASE_URL}/series/${SERIES_ID}/seasons/${SEASON_ID}/events/${roundId}/results`);
       if (!res.ok) throw new Error("Results unavailable");
 
       const data = await res.json();
@@ -353,7 +354,16 @@ async function renderResults(roundId) {
         round.results = [];
       } else {
         round.results = rawEntries.map(entry => {
-          const calculatedBonus = (entry.Bonuses || []).reduce((sum, b) => sum + (b.Points || 0), 0);
+          const calculatedBonus = (entry.Bonuses || entry.bonuses || []).reduce((sum, b) => sum + (b.Points || b.points || 0), 0);
+
+          // The standard endpoint nests total points slightly differently than the export endpoint
+          const driverPts = entry.DriverEntryPoints?.[0]?.TotalPoints 
+                         ?? entry.driverEntryPoints?.[0]?.totalPoints 
+                         ?? entry.TotalPointsDriver 
+                         ?? entry.totalPointsDriver 
+                         ?? entry.TotalPoints 
+                         ?? entry.totalPoints 
+                         ?? 0;
 
           return {
             driver: entry.Driver?.DisplayName || entry.Driver?.Name || entry.driver?.displayName || 'Driver',
@@ -364,7 +374,7 @@ async function renderResults(roundId) {
                  : (entry.FinishPosition || '-'),
             inc: entry.Incidents !== undefined ? entry.Incidents : (entry.incidents !== undefined ? entry.incidents : 0),
             bonus: calculatedBonus,
-            pts: entry.TotalPointsDriver ?? entry.totalPointsDriver ?? entry.TotalPoints ?? entry.totalPoints ?? 0
+            pts: driverPts
           };
         });
       }
