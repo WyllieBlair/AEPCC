@@ -229,7 +229,7 @@ function renderDrivers(drivers) {
   if (!tbody) return;
   
   if (!drivers || drivers.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No drivers found in this division.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No drivers found in this division.</td></tr>`;
     return;
   }
 
@@ -238,16 +238,12 @@ function renderDrivers(drivers) {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td class="text-highlight">${idx + 1}</td>
-      <td>
-        <div style="display: flex; align-items: center;">
-          ${driver.teamLogo 
-            ? `<img src="${driver.teamLogo}" alt="" style="width: 22px; height: 22px; border-radius: 3px; object-fit: contain; margin-right: 10px; flex-shrink: 0;">` 
-            : `<div style="width: 22px; height: 22px; margin-right: 10px; flex-shrink: 0;"></div>` /* Invisible placeholder */}
-          <div>
-            <span class="text-highlight" style="display: block;">${driver.name || 'Unknown Driver'}</span>
-            <span class="subtext">${driver.team || 'Independent'}</span>
-          </div>
-        </div>
+      <td style="text-align: center; padding-right: 0;">
+        ${driver.teamLogo ? `<img src="${driver.teamLogo}" alt="Logo" style="width: 24px; height: 24px; border-radius: 4px; object-fit: contain;">` : ''}
+      </td>
+      <td style="text-align: left;">
+        <span class="text-highlight" style="display: block;">${driver.name || 'Unknown Driver'}</span>
+        <span class="subtext">${driver.team || 'Independent'}</span>
       </td>
       <td>${driver.class || 'Pro'}</td>
       <td class="text-highlight">${driver.net_points !== undefined ? driver.net_points : 0}</td>
@@ -263,7 +259,7 @@ function renderTeams(teams) {
   const validTeams = (teams || []).filter(t => t && t.name);
 
   if (validTeams.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">No team standings available.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No team standings available.</td></tr>`;
     return;
   }
 
@@ -273,14 +269,12 @@ function renderTeams(teams) {
     tr.className = 'team-row';
     tr.innerHTML = `
       <td class="text-highlight">${idx + 1}</td>
-      <td class="text-highlight">
-        <div style="display: flex; align-items: center;">
-          ${team.logo 
-            ? `<img src="${team.logo}" alt="" style="width: 22px; height: 22px; border-radius: 3px; object-fit: contain; margin-right: 10px; flex-shrink: 0;">` 
-            : `<div style="width: 22px; height: 22px; margin-right: 10px; flex-shrink: 0;"></div>` /* Invisible placeholder */}
-          <span>${team.name}</span>
-          <span class="expand-icon" style="margin-left: auto; opacity: 0.5;">▼</span>
-        </div>
+      <td style="text-align: center; padding-right: 0;">
+        ${team.logo ? `<img src="${team.logo}" alt="${team.name} Logo" style="width: 24px; height: 24px; border-radius: 4px; object-fit: contain;">` : ''}
+      </td>
+      <td class="text-highlight" style="text-align: left;">
+        ${team.name}
+        <span class="expand-icon" style="float: right; opacity: 0.5;">▼</span>
       </td>
       <td class="text-highlight">${team.points !== undefined ? team.points : 0}</td>
     `;
@@ -298,7 +292,7 @@ function renderTeams(teams) {
       : '<div style="opacity: 0.5; font-size: 0.85rem;">Roster details not available in this view.</div>';
 
     subTr.innerHTML = `
-      <td colspan="3" style="padding: 0;">
+      <td colspan="4" style="padding: 0;">
         <div class="team-drivers-container">
           ${driverHtml}
         </div>
