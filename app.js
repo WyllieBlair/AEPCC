@@ -129,14 +129,16 @@ async function loadStandings() {
     const driverToTeamMap = {};
     const rosterEntries = rosterData.Entries || rosterData.entries || [];
     
+    // Extract Logo mapping from roster data
     rosterEntries.forEach(entry => {
       const teamName = entry.Team?.Name || 'Independent';
+      const teamLogo = entry.Team?.TeamLogoPath || null;
       const primaryDrivers = entry.PrimaryDrivers || entry.primaryDrivers || [];
       
       primaryDrivers.forEach(d => {
         const dName = d.DisplayName || d.Name;
         if (dName) {
-          driverToTeamMap[dName] = teamName;
+          driverToTeamMap[dName] = { name: teamName, logo: teamLogo };
         }
       });
     });
@@ -144,9 +146,12 @@ async function loadStandings() {
     const driverResults = driverData.Standings?.DriverStandings?.[0]?.Results || [];
     globalDrivers = driverResults.map(item => {
       const driverName = item.Driver?.DisplayName || item.Driver?.Name || 'Unknown';
+      const teamInfo = driverToTeamMap[driverName] || { name: 'Independent', logo: null };
+      
       return {
         name: driverName,
-        team: driverToTeamMap[driverName] || 'Independent', 
+        team: teamInfo.name, 
+        teamLogo: teamInfo.logo,
         class: item.Class || 'Pro',
         net_points: item.TotalPoints || 0
       };
@@ -234,8 +239,13 @@ function renderDrivers(drivers) {
     tr.innerHTML = `
       <td class="text-highlight">${idx + 1}</td>
       <td>
-        <span class="text-highlight">${driver.name || 'Unknown Driver'}</span>
-        <span class="subtext">${driver.team || 'Independent'}</span>
+        <div style="display: flex; align-items: center;">
+          ${driver.teamLogo ? `<img src="${driver.teamLogo}" alt="" style="width: 22px; height: 22px; border-radius: 3px; object-fit: contain; margin-right: 10px; flex-shrink: 0;">` : ''}
+          <div>
+            <span class="text-highlight" style="display: block;">${driver.name || 'Unknown Driver'}</span>
+            <span class="subtext">${driver.team || 'Independent'}</span>
+          </div>
+        </div>
       </td>
       <td>${driver.class || 'Pro'}</td>
       <td class="text-highlight">${driver.net_points !== undefined ? driver.net_points : 0}</td>
@@ -261,10 +271,12 @@ function renderTeams(teams) {
     tr.className = 'team-row';
     tr.innerHTML = `
       <td class="text-highlight">${idx + 1}</td>
-      <td class="text-highlight" style="display: flex; align-items: center; gap: 10px;">
-        ${team.logo ? `<img src="${team.logo}" alt="${team.name} Logo" style="width: 24px; height: 24px; border-radius: 4px; object-fit: contain;">` : ''}
-        ${team.name}
-        <span class="expand-icon" style="margin-left: auto; opacity: 0.5;">▼</span>
+      <td class="text-highlight">
+        <div style="display: flex; align-items: center;">
+          ${team.logo ? `<img src="${team.logo}" alt="" style="width: 22px; height: 22px; border-radius: 3px; object-fit: contain; margin-right: 10px; flex-shrink: 0;">` : ''}
+          <span>${team.name}</span>
+          <span class="expand-icon" style="margin-left: auto; opacity: 0.5;">▼</span>
+        </div>
       </td>
       <td class="text-highlight">${team.points !== undefined ? team.points : 0}</td>
     `;
@@ -313,21 +325,25 @@ async function renderResults(roundId) {
   const tbody = document.getElementById('results-rows');
   
   if (!roundId) {
-    table.style.display = 'none';
-    legend.style.display = 'none';
-    placeholder.style.display = 'block';
-    placeholder.textContent = 'Select a completed round from the dropdown above to view the official results.';
+    if (table) table.style.display = 'none';
+    if (legend) legend.style.display = 'none';
+    if (placeholder) {
+      placeholder.style.display = 'block';
+      placeholder.textContent = 'Select a completed round from the dropdown above to view the official results.';
+    }
     return;
   }
 
-  const round = globalRounds.find(r => r.id === roundId);
+  const round = globalRounds.find(r => String(r.id) === String(roundId));
   if (!round) return;
 
   if (round.results === null) {
-    table.style.display = 'none';
-    legend.style.display = 'none';
-    placeholder.style.display = 'block';
-    placeholder.textContent = 'Loading official race results...';
+    if (table) table.style.display = 'none';
+    if (legend) legend.style.display = 'none';
+    if (placeholder) {
+      placeholder.style.display = 'block';
+      placeholder.textContent = 'Loading official race results...';
+    }
 
     try {
       const res = await fetch(`${API_BASE_URL}/series/${SERIES_ID}/seasons/${SEASON_ID}/events/${roundId}/results/export`);
@@ -336,18 +352,19 @@ async function renderResults(roundId) {
       const data = await res.json();
       const rawEntries = data.Results?.EventResults || data.results?.eventResults || [];
 
-    if (rawEntries.length === 0) {
+      if (rawEntries.length === 0) {
         round.results = [];
       } else {
         round.results = rawEntries.map(entry => {
-          // Calculate the total bonus points by summing up the array
           const calculatedBonus = (entry.Bonuses || []).reduce((sum, b) => sum + (b.Points || 0), 0);
 
           return {
             driver: entry.Driver?.DisplayName || entry.Driver?.Name || entry.driver?.displayName || 'Driver',
             team: entry.Team?.Name || entry.team?.name || 'Independent',
             class: entry.RunClass || entry.runClass || 'Pro',
-            pos: entry.ClassFinishPosition || entry.classFinishPosition || entry.FinishPosition || '-',
+            pos: entry.ClassFinishPosition !== undefined && entry.ClassFinishPosition !== null && entry.ClassFinishPosition !== 0
+                 ? entry.ClassFinishPosition 
+                 : (entry.FinishPosition || '-'),
             inc: entry.Incidents !== undefined ? entry.Incidents : (entry.incidents !== undefined ? entry.incidents : 0),
             bonus: calculatedBonus,
             pts: entry.TotalPointsDriver ?? entry.totalPointsDriver ?? entry.TotalPoints ?? entry.totalPoints ?? 0
@@ -361,41 +378,47 @@ async function renderResults(roundId) {
   }
 
   if (!round.results || round.results.length === 0) {
-    table.style.display = 'none';
-    legend.style.display = 'none';
-    placeholder.style.display = 'block';
-    placeholder.textContent = 'Results are currently being processed or this event has not taken place yet.';
+    if (table) table.style.display = 'none';
+    if (legend) legend.style.display = 'none';
+    if (placeholder) {
+      placeholder.style.display = 'block';
+      placeholder.textContent = 'Results are currently being processed or this event has not taken place yet.';
+    }
     return;
   }
 
-  thead.innerHTML = `
-    <tr>
-      <th>Driver</th>
-      <th>Class</th>
-      <th>Pos</th>
-      <th>Inc</th>
-      <th>Bonus</th>
-      <th>Pts</th>
-    </tr>
-  `;
+  if (thead) {
+    thead.innerHTML = `
+      <tr>
+        <th>Driver</th>
+        <th>Class</th>
+        <th>Pos</th>
+        <th>Inc</th>
+        <th>Bonus</th>
+        <th>Pts</th>
+      </tr>
+    `;
+  }
 
-  tbody.innerHTML = round.results.map(r => `
-    <tr>
-      <td>
-        <span class="text-highlight">${r.driver}</span>
-        <span class="subtext">${r.team}</span>
-      </td>
-      <td>${r.class}</td>
-      <td class="text-highlight">${r.pos}</td>
-      <td>${r.inc}</td>
-      <td style="color: #4ade80;">${r.bonus > 0 ? '+' + r.bonus : '-'}</td>
-      <td class="text-highlight">${r.pts}</td>
-    </tr>
-  `).join('');
+  if (tbody) {
+    tbody.innerHTML = round.results.map(r => `
+      <tr>
+        <td>
+          <span class="text-highlight">${r.driver}</span>
+          <span class="subtext">${r.team}</span>
+        </td>
+        <td>${r.class}</td>
+        <td class="text-highlight">${r.pos}</td>
+        <td>${r.inc}</td>
+        <td style="color: #4ade80;">${r.bonus > 0 ? '+' + r.bonus : '-'}</td>
+        <td class="text-highlight">${r.pts}</td>
+      </tr>
+    `).join('');
+  }
 
-  table.style.display = 'table';
-  legend.style.display = 'block';
-  placeholder.style.display = 'none';
+  if (table) table.style.display = 'table';
+  if (legend) legend.style.display = 'block';
+  if (placeholder) placeholder.style.display = 'none';
 }
 
 function syncBroadcast() {
@@ -409,7 +432,6 @@ function syncBroadcast() {
   }
   
   const currentRound = (activeRoundIndex !== -1) ? (activeRoundIndex + 1) : 1;
-  
   const broadcastUrl = BROADCAST_LINKS[currentRound] || 'https://www.youtube.com/playlist?list=PLINvGbO65PbU';
 
   const watchBtn = document.getElementById('nav-watch-btn');
