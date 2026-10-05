@@ -409,9 +409,36 @@ function loadBroadcast(roundNumber) {
 }
 
 function syncBroadcast() {
-  // Automatically loads the latest round available in the map
-  const activeRounds = Object.keys(BROADCAST_LINKS).filter(r => BROADCAST_LINKS[r] && !BROADCAST_LINKS[r].includes('VIDEO_ID'));
-  const latestRound = activeRounds.length > 0 ? Math.max(...activeRounds) : 1;
+  const selector = document.getElementById('broadcast-selector');
+
+  // 1. Find the current active round based on today's date
+  const now = new Date();
+  // Subtract 4 hours to ensure a live race stays "active" on the page during the broadcast
+  const activeThreshold = new Date(now.getTime() - (4 * 60 * 60 * 1000));
   
-  loadBroadcast(latestRound);
+  // Find the first round in the schedule that hasn't finished yet
+  let activeRoundIndex = globalRounds.findIndex(r => r.date >= activeThreshold);
+  
+  // If the season is completely over, default to the finale
+  if (activeRoundIndex === -1 && globalRounds.length > 0) {
+    activeRoundIndex = globalRounds.length - 1;
+  }
+  
+  // Convert the array index (0-7) to a Round Number (1-8)
+  // Fallback to 1 if the schedule array hasn't loaded yet
+  const currentRound = (activeRoundIndex !== -1) ? (activeRoundIndex + 1) : 1;
+
+  // 2. Populate the dropdown menu with all available rounds
+  const availableRounds = Object.keys(BROADCAST_LINKS).filter(r => BROADCAST_LINKS[r] && BROADCAST_LINKS[r].trim() !== '');
+  
+  if (selector && availableRounds.length > 0) {
+    selector.innerHTML = availableRounds
+      .map(r => `<option value="${r}">Round ${r}</option>`)
+      .join('');
+    // Snap the dropdown to the active round
+    selector.value = currentRound;
+  }
+
+  // 3. Load the video for the active round
+  loadBroadcast(currentRound);
 }
