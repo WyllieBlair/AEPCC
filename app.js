@@ -131,13 +131,12 @@ async function loadStandings() {
     
     rosterEntries.forEach(entry => {
       const teamName = entry.Team?.Name || 'Independent';
-      const teamLogo = entry.Team?.TeamLogoPath || null;
       const primaryDrivers = entry.PrimaryDrivers || entry.primaryDrivers || [];
       
       primaryDrivers.forEach(d => {
         const dName = d.DisplayName || d.Name;
         if (dName) {
-          driverToTeamMap[dName] = { name: teamName, logo: teamLogo };
+          driverToTeamMap[dName] = teamName;
         }
       });
     });
@@ -145,12 +144,9 @@ async function loadStandings() {
     const driverResults = driverData.Standings?.DriverStandings?.[0]?.Results || [];
     globalDrivers = driverResults.map(item => {
       const driverName = item.Driver?.DisplayName || item.Driver?.Name || 'Unknown';
-      const teamInfo = driverToTeamMap[driverName] || { name: 'Independent', logo: null };
-      
       return {
         name: driverName,
-        team: teamInfo.name, 
-        teamLogo: teamInfo.logo,
+        team: driverToTeamMap[driverName] || 'Independent', 
         class: item.Class || 'Pro',
         net_points: item.TotalPoints || 0
       };
@@ -163,7 +159,6 @@ async function loadStandings() {
 
       return {
         name: teamName,
-        logo: item.Team?.TeamLogoPath || null, 
         points: item.TotalPoints || 0,
         drivers: teamDrivers.map(d => ({
           name: d.name,
@@ -238,13 +233,8 @@ function renderDrivers(drivers) {
     tr.innerHTML = `
       <td class="text-highlight">${idx + 1}</td>
       <td>
-        <div style="display: flex; align-items: center; gap: 10px;">
-          ${driver.teamLogo ? `<img src="${driver.teamLogo}" alt="Logo" style="width: 22px; height: 22px; border-radius: 4px; object-fit: contain; flex-shrink: 0;">` : ''}
-          <div>
-            <span class="text-highlight" style="display: block;">${driver.name || 'Unknown Driver'}</span>
-            <span class="subtext">${driver.team || 'Independent'}</span>
-          </div>
-        </div>
+        <span class="text-highlight">${driver.name || 'Unknown Driver'}</span>
+        <span class="subtext">${driver.team || 'Independent'}</span>
       </td>
       <td>${driver.class || 'Pro'}</td>
       <td class="text-highlight">${driver.net_points !== undefined ? driver.net_points : 0}</td>
@@ -271,11 +261,8 @@ function renderTeams(teams) {
     tr.innerHTML = `
       <td class="text-highlight">${idx + 1}</td>
       <td class="text-highlight">
-        <div style="display: flex; align-items: center; gap: 10px;">
-          ${team.logo ? `<img src="${team.logo}" alt="${team.name} Logo" style="width: 22px; height: 22px; border-radius: 4px; object-fit: contain; flex-shrink: 0;">` : ''}
-          <span>${team.name}</span>
-          <span class="expand-icon" style="margin-left: auto; opacity: 0.5;">▼</span>
-        </div>
+        ${team.name}
+        <span class="expand-icon" style="float: right; opacity: 0.5;">▼</span>
       </td>
       <td class="text-highlight">${team.points !== undefined ? team.points : 0}</td>
     `;
@@ -319,9 +306,9 @@ function renderTeams(teams) {
 async function renderResults(roundId) {
   const table = document.getElementById('results-table');
   const placeholder = document.getElementById('results-placeholder');
-  const legend = document.getElementById('results-legend');
   const thead = document.getElementById('results-header');
   const tbody = document.getElementById('results-rows');
+  const legend = document.getElementById('results-legend');
   
   if (!roundId) {
     if (table) table.style.display = 'none';
