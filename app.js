@@ -148,7 +148,6 @@ async function loadStandings() {
         name: driverName,
         team: driverToTeamMap[driverName] || 'Independent', 
         class: item.Class || 'Pro',
-        bonus: item.Bonus || 0,
         net_points: item.TotalPoints || 0
       };
     });
@@ -225,7 +224,7 @@ function renderDrivers(drivers) {
   if (!tbody) return;
   
   if (!drivers || drivers.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No drivers found in this division.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No drivers found in this division.</td></tr>`;
     return;
   }
 
@@ -239,7 +238,6 @@ function renderDrivers(drivers) {
         <span class="subtext">${driver.team || 'Independent'}</span>
       </td>
       <td>${driver.class || 'Pro'}</td>
-      <td style="color: #4ade80;">+${driver.bonus}</td>
       <td class="text-highlight">${driver.net_points !== undefined ? driver.net_points : 0}</td>
     `;
     tbody.appendChild(tr);
@@ -347,7 +345,7 @@ async function renderResults(roundId) {
           class: entry.RunClass || entry.runClass || 'Pro',
           pos: entry.ClassFinishPosition || entry.classFinishPosition || entry.FinishPosition || '-',
           inc: entry.Incidents !== undefined ? entry.Incidents : (entry.incidents !== undefined ? entry.incidents : 0),
-          bonus: entry.BonusPoints ?? entry.bonusPoints ?? 0,
+          bonus: entry.Bonus ?? entry.bonus ?? entry.BonusPoints ?? entry.bonusPoints ?? 0,
           pts: entry.TotalPointsDriver ?? entry.totalPointsDriver ?? entry.TotalPoints ?? entry.totalPoints ?? 0
         }));
       }
