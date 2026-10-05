@@ -5,6 +5,7 @@ const SEASON_ID = 'e46694cb-25ad-46f8-a45f-02532b70b32f';
 let globalDrivers = [];
 let globalTeams = [];
 let globalRounds = [];
+
 const BROADCAST_LINKS = {
   1: 'https://www.youtube.com/watch?v=0MZNa67QBGQ&list=PLINvGbO65PbU&index=9',
   2: 'https://www.youtube.com/watch?v=lFdLiXwO8ss&list=PLINvGbO65PbU&index=2',
@@ -15,6 +16,7 @@ const BROADCAST_LINKS = {
   7: 'https://www.youtube.com/watch?v=xztP-3Fp56g&list=PLINvGbO65PbU&index=7',
   8: 'https://www.youtube.com/watch?v=kd9v4PH4Gpk&list=PLINvGbO65PbU&index=8',
 };
+
 document.addEventListener("DOMContentLoaded", () => {
   initDynamicSlider();
   loadStandings();
@@ -124,7 +126,6 @@ async function loadStandings() {
     const roundData = await roundRes.json();
     const rosterData = await rosterRes.json();
 
-    // Build a mapping dictionary from the Roster (DriverName -> TeamName)
     const driverToTeamMap = {};
     const rosterEntries = rosterData.Entries || rosterData.entries || [];
     
@@ -140,7 +141,6 @@ async function loadStandings() {
       });
     });
 
-    // Map Drivers Championship
     const driverResults = driverData.Standings?.DriverStandings?.[0]?.Results || [];
     globalDrivers = driverResults.map(item => {
       const driverName = item.Driver?.DisplayName || item.Driver?.Name || 'Unknown';
@@ -148,11 +148,11 @@ async function loadStandings() {
         name: driverName,
         team: driverToTeamMap[driverName] || 'Independent', 
         class: item.Class || 'Pro',
+        bonus: item.Bonus || 0,
         net_points: item.TotalPoints || 0
       };
     });
 
-    // Map Teams Championship
     const teamResults = teamData.Standings?.TeamStandings?.[0]?.Results || [];
     globalTeams = teamResults.map(item => {
       const teamName = item.Team?.Name || 'Unknown Team';
@@ -160,6 +160,7 @@ async function loadStandings() {
 
       return {
         name: teamName,
+        logo: item.Team?.TeamLogoPath || null, 
         points: item.TotalPoints || 0,
         drivers: teamDrivers.map(d => ({
           name: d.name,
@@ -169,7 +170,6 @@ async function loadStandings() {
       };
     });
 
-    // Map Schedule & Rounds
     const eventResults = roundData.Events || roundData.events || [];
     globalRounds = eventResults.map(item => ({
       id: item.EventId || item.eventId,
@@ -184,7 +184,6 @@ async function loadStandings() {
     renderTeams(globalTeams);
     syncBroadcast();
     
-    // Populate Round Dropdown
     const selector = document.getElementById('round-selector');
     if (selector) {
       selector.innerHTML = '<option value="">-- Select a Round --</option>';
@@ -226,7 +225,7 @@ function renderDrivers(drivers) {
   if (!tbody) return;
   
   if (!drivers || drivers.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No drivers found in this division.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No drivers found in this division.</td></tr>`;
     return;
   }
 
@@ -240,6 +239,7 @@ function renderDrivers(drivers) {
         <span class="subtext">${driver.team || 'Independent'}</span>
       </td>
       <td>${driver.class || 'Pro'}</td>
+      <td style="color: #4ade80;">+${driver.bonus}</td>
       <td class="text-highlight">${driver.net_points !== undefined ? driver.net_points : 0}</td>
     `;
     tbody.appendChild(tr);
@@ -263,9 +263,10 @@ function renderTeams(teams) {
     tr.className = 'team-row';
     tr.innerHTML = `
       <td class="text-highlight">${idx + 1}</td>
-      <td class="text-highlight">
+      <td class="text-highlight" style="display: flex; align-items: center; gap: 10px;">
+        ${team.logo ? `<img src="${team.logo}" alt="${team.name} Logo" style="width: 24px; height: 24px; border-radius: 4px; object-fit: contain;">` : ''}
         ${team.name}
-        <span class="expand-icon" style="float: right; opacity: 0.5;">▼</span>
+        <span class="expand-icon" style="margin-left: auto; opacity: 0.5;">▼</span>
       </td>
       <td class="text-highlight">${team.points !== undefined ? team.points : 0}</td>
     `;
@@ -309,11 +310,13 @@ function renderTeams(teams) {
 async function renderResults(roundId) {
   const table = document.getElementById('results-table');
   const placeholder = document.getElementById('results-placeholder');
+  const legend = document.getElementById('results-legend');
   const thead = document.getElementById('results-header');
   const tbody = document.getElementById('results-rows');
   
   if (!roundId) {
     table.style.display = 'none';
+    legend.style.display = 'none';
     placeholder.style.display = 'block';
     placeholder.textContent = 'Select a completed round from the dropdown above to view the official results.';
     return;
@@ -324,6 +327,7 @@ async function renderResults(roundId) {
 
   if (round.results === null) {
     table.style.display = 'none';
+    legend.style.display = 'none';
     placeholder.style.display = 'block';
     placeholder.textContent = 'Loading official race results...';
 
@@ -343,6 +347,7 @@ async function renderResults(roundId) {
           class: entry.RunClass || entry.runClass || 'Pro',
           pos: entry.ClassFinishPosition || entry.classFinishPosition || entry.FinishPosition || '-',
           inc: entry.Incidents !== undefined ? entry.Incidents : (entry.incidents !== undefined ? entry.incidents : 0),
+          bonus: entry.BonusPoints ?? entry.bonusPoints ?? 0,
           pts: entry.TotalPointsDriver ?? entry.totalPointsDriver ?? entry.TotalPoints ?? entry.totalPoints ?? 0
         }));
       }
@@ -354,6 +359,7 @@ async function renderResults(roundId) {
 
   if (!round.results || round.results.length === 0) {
     table.style.display = 'none';
+    legend.style.display = 'none';
     placeholder.style.display = 'block';
     placeholder.textContent = 'Results are currently being processed or this event has not taken place yet.';
     return;
@@ -365,6 +371,7 @@ async function renderResults(roundId) {
       <th>Class</th>
       <th>Pos</th>
       <th>Inc</th>
+      <th>Bonus</th>
       <th>Pts</th>
     </tr>
   `;
@@ -378,67 +385,32 @@ async function renderResults(roundId) {
       <td>${r.class}</td>
       <td class="text-highlight">${r.pos}</td>
       <td>${r.inc}</td>
+      <td style="color: #4ade80;">${r.bonus > 0 ? '+' + r.bonus : '-'}</td>
       <td class="text-highlight">${r.pts}</td>
     </tr>
   `).join('');
 
   table.style.display = 'table';
+  legend.style.display = 'block';
   placeholder.style.display = 'none';
 }
 
-function extractYouTubeId(url) {
-  if (!url) return null;
-  const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|live\/))([\w-]{11})/);
-  return match ? match[1] : (url.length === 11 ? url : null);
-}
-
-function loadBroadcast(roundNumber) {
-  const iframe = document.querySelector('#tab-watch iframe');
-  const watchHeading = document.querySelector('#tab-watch h2');
-  if (!iframe) return;
-
-  const rawUrl = BROADCAST_LINKS[roundNumber];
-  const videoId = extractYouTubeId(rawUrl);
-
-  if (videoId) {
-    iframe.src = `https://www.youtube.com/embed/${videoId}?vq=hd1080&highres=1&hd=1`;
-    if (watchHeading) {
-      watchHeading.textContent = `AEPCC Round ${roundNumber}`;
-    }
-  }
-}
-
 function syncBroadcast() {
-  const selector = document.getElementById('broadcast-selector');
-
-  // 1. Find the current active round based on today's date
   const now = new Date();
-  // Subtract 4 hours to ensure a live race stays "active" on the page during the broadcast
   const activeThreshold = new Date(now.getTime() - (4 * 60 * 60 * 1000));
   
-  // Find the first round in the schedule that hasn't finished yet
   let activeRoundIndex = globalRounds.findIndex(r => r.date >= activeThreshold);
   
-  // If the season is completely over, default to the finale
   if (activeRoundIndex === -1 && globalRounds.length > 0) {
     activeRoundIndex = globalRounds.length - 1;
   }
   
-  // Convert the array index (0-7) to a Round Number (1-8)
-  // Fallback to 1 if the schedule array hasn't loaded yet
   const currentRound = (activeRoundIndex !== -1) ? (activeRoundIndex + 1) : 1;
-
-  // 2. Populate the dropdown menu with all available rounds
-  const availableRounds = Object.keys(BROADCAST_LINKS).filter(r => BROADCAST_LINKS[r] && BROADCAST_LINKS[r].trim() !== '');
   
-  if (selector && availableRounds.length > 0) {
-    selector.innerHTML = availableRounds
-      .map(r => `<option value="${r}">Round ${r}</option>`)
-      .join('');
-    // Snap the dropdown to the active round
-    selector.value = currentRound;
-  }
+  const broadcastUrl = BROADCAST_LINKS[currentRound] || 'https://www.youtube.com/playlist?list=PLINvGbO65PbU';
 
-  // 3. Load the video for the active round
-  loadBroadcast(currentRound);
+  const watchBtn = document.getElementById('nav-watch-btn');
+  if (watchBtn) {
+    watchBtn.onclick = () => window.open(broadcastUrl, '_blank');
+  }
 }
