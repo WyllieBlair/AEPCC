@@ -5,7 +5,16 @@ const SEASON_ID = 'e46694cb-25ad-46f8-a45f-02532b70b32f';
 let globalDrivers = [];
 let globalTeams = [];
 let globalRounds = [];
-
+const BROADCAST_LINKS = {
+  1: 'https://www.youtube.com/watch?v=lFdLiXwO8ss&list=PLINvGbO65PbU&index=1',
+  2: 'https://www.youtube.com/watch?v=ggyB3frRU4w&list=PLINvGbO65PbU&index=2',
+  3: 'https://www.youtube.com/watch?v=ggyB3frRU4w&list=PLINvGbO65PbU&index=3',
+  4: 'https://www.youtube.com/watch?v=ggyB3frRU4w&list=PLINvGbO65PbU&index=4',
+  5: 'https://www.youtube.com/watch?v=ggyB3frRU4w&list=PLINvGbO65PbU&index=5',
+  6: 'https://www.youtube.com/watch?v=ggyB3frRU4w&list=PLINvGbO65PbU&index=6',
+  7: 'https://www.youtube.com/watch?v=ggyB3frRU4w&list=PLINvGbO65PbU&index=7',
+  8: 'https://www.youtube.com/watch?v=ggyB3frRU4w&list=PLINvGbO65PbU&index=8',
+};
 document.addEventListener("DOMContentLoaded", () => {
   initDynamicSlider();
   loadStandings();
@@ -377,34 +386,32 @@ async function renderResults(roundId) {
   placeholder.style.display = 'none';
 }
 
-function syncBroadcast() {
+function extractYouTubeId(url) {
+  if (!url) return null;
+  const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|live\/))([\w-]{11})/);
+  return match ? match[1] : (url.length === 11 ? url : null);
+}
+
+function loadBroadcast(roundNumber) {
   const iframe = document.querySelector('#tab-watch iframe');
-  if (!iframe || globalRounds.length === 0) return;
+  const watchHeading = document.querySelector('#tab-watch h2');
+  if (!iframe) return;
 
-  const now = new Date();
-  const activeThreshold = new Date(now.getTime() - (4 * 60 * 60 * 1000));
+  const rawUrl = BROADCAST_LINKS[roundNumber];
+  const videoId = extractYouTubeId(rawUrl);
 
-  let activeRound = globalRounds.find(r => r.date >= activeThreshold);
-  
-  if (!activeRound) {
-    activeRound = globalRounds[globalRounds.length - 1];
-  }
-
-  if (activeRound && activeRound.broadcastLink) {
-    let embedUrl = activeRound.broadcastLink;
-
-    if (embedUrl.includes('watch?v=')) {
-      embedUrl = embedUrl.replace('watch?v=', 'embed/');
-    } else if (embedUrl.includes('youtu.be/')) {
-      embedUrl = embedUrl.replace('youtu.be/', 'www.youtube.com/embed/');
-    }
-
-    const separator = embedUrl.includes('?') ? '&' : '?';
-    iframe.src = `${embedUrl}${separator}vq=hd1080&highres=1&hd=1`;
-    
-    const watchHeading = document.querySelector('#tab-watch h2');
+  if (videoId) {
+    iframe.src = `https://www.youtube.com/embed/${videoId}?vq=hd1080&highres=1&hd=1`;
     if (watchHeading) {
-      watchHeading.textContent = `AEPCC ${activeRound.name}`;
+      watchHeading.textContent = `AEPCC Round ${roundNumber}`;
     }
   }
+}
+
+function syncBroadcast() {
+  // Automatically loads the latest round available in the map
+  const activeRounds = Object.keys(BROADCAST_LINKS).filter(r => BROADCAST_LINKS[r] && !BROADCAST_LINKS[r].includes('VIDEO_ID'));
+  const latestRound = activeRounds.length > 0 ? Math.max(...activeRounds) : 1;
+  
+  loadBroadcast(latestRound);
 }
