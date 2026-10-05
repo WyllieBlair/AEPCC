@@ -336,18 +336,21 @@ async function renderResults(roundId) {
       const data = await res.json();
       const rawEntries = data.Results?.EventResults || data.results?.eventResults || [];
       console.log("RAW RESULTS DATA:", rawEntries);
-      if (rawEntries.length === 0) {
+   if (rawEntries.length === 0) {
         round.results = [];
       } else {
-        round.results = rawEntries.map(entry => ({
-          driver: entry.Driver?.DisplayName || entry.Driver?.Name || entry.driver?.displayName || 'Driver',
-          team: entry.Team?.Name || entry.team?.name || 'Independent',
-          class: entry.RunClass || entry.runClass || 'Pro',
-          pos: entry.ClassFinishPosition || entry.classFinishPosition || entry.FinishPosition || '-',
-          inc: entry.Incidents !== undefined ? entry.Incidents : (entry.incidents !== undefined ? entry.incidents : 0),
-          bonus: entry.Bonus ?? entry.bonus ?? entry.BonusPoints ?? entry.bonusPoints ?? 0,
-          pts: entry.TotalPointsDriver ?? entry.totalPointsDriver ?? entry.TotalPoints ?? entry.totalPoints ?? 0
-        }));
+        round.results = rawEntries.map(entry => {
+          const calculatedBonus = (entry.Bonuses || []).reduce((sum, b) => sum + (b.Points || 0), 0);
+          return {
+            driver: entry.Driver?.DisplayName || entry.Driver?.Name || entry.driver?.displayName || 'Driver',
+            team: entry.Team?.Name || entry.team?.name || 'Independent',
+            class: entry.RunClass || entry.runClass || 'Pro',
+            pos: entry.ClassFinishPosition || entry.classFinishPosition || entry.FinishPosition || '-',
+            inc: entry.Incidents !== undefined ? entry.Incidents : (entry.incidents !== undefined ? entry.incidents : 0),
+            bonus: calculatedBonus,
+            pts: entry.TotalPointsDriver ?? entry.totalPointsDriver ?? entry.TotalPoints ?? entry.totalPoints ?? 0
+          };
+        });
       }
     } catch (err) {
       console.warn("Could not load results for round:", roundId, err);
