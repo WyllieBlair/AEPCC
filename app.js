@@ -381,7 +381,22 @@ async function renderResults(roundId) {
           const driverData = rosterMatch.PrimaryDrivers?.[0] || rosterMatch.primaryDrivers?.[0] || {};
           const teamData = rosterMatch.Team || rosterMatch.team || {};
 
-          const calculatedBonus = (entry.Bonuses || entry.bonuses || []).reduce((sum, b) => sum + (b.Points || b.points || 0), 0);
+          // Extract Bonus details
+          const bonusesArray = entry.Bonuses || entry.bonuses || [];
+          const calculatedBonus = bonusesArray.reduce((sum, b) => sum + (b.Points || b.points || 0), 0);
+          
+          // Generate small tags based on the bonus description from the API
+          let bonusTags = [];
+          bonusesArray.forEach(b => {
+            const desc = (b.Description || b.description || '').toLowerCase();
+            if (desc.includes('pole')) bonusTags.push('Pole');
+            if (desc.includes('fastest')) bonusTags.push('FL');
+            if (desc.includes('0 incidents')) bonusTags.push('0x');
+            if (desc.includes('3 or less')) bonusTags.push('Clean');
+          });
+          const bonusDetailHtml = bonusTags.length > 0 
+            ? ` <span style="font-size: 0.7rem; color: rgba(255,255,255,0.45); margin-left: 4px;">(${bonusTags.join(', ')})</span>` 
+            : '';
 
           const driverPts = entry.DriverEntryPoints?.[0]?.TotalPoints 
                          ?? entry.driverEntryPoints?.[0]?.totalPoints 
@@ -398,8 +413,9 @@ async function renderResults(roundId) {
                  : (entry.FinishPosition || '-'),
             inc: entry.Incidents !== undefined ? entry.Incidents : (entry.incidents !== undefined ? entry.incidents : 0),
             bonus: calculatedBonus,
+            bonusTags: bonusDetailHtml,
             pts: driverPts,
-            overallFinish: entry.FinishPosition || entry.finishPosition || 9999 // Capture overall finish for sorting
+            overallFinish: entry.FinishPosition || entry.finishPosition || 9999 
           };
         });
 
@@ -445,7 +461,7 @@ async function renderResults(roundId) {
         </td>
         <td>${r.class}</td>
         <td>${r.inc}</td>
-        <td style="color: #4ade80;">${r.bonus > 0 ? '+' + r.bonus : '-'}</td>
+        <td style="color: #4ade80;">${r.bonus > 0 ? '+' + r.bonus + r.bonusTags : '-'}</td>
         <td class="text-highlight">${r.pts}</td>
       </tr>
     `).join('');
