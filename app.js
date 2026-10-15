@@ -246,8 +246,8 @@ function renderDrivers(drivers) {
       <td class="text-highlight">${idx + 1}</td>
       <td style="text-align: center; padding-right: 0;">
         ${driver.teamLogo 
-          ? `<img src="${driver.teamLogo}" alt="" style="width: 22px; height: 22px; border-radius: 3px; object-fit: contain; flex-shrink: 0;">` 
-          : `<div style="width: 22px; height: 22px; flex-shrink: 0;"></div>`}
+          ? `<img src="${driver.teamLogo}" alt="" style="width: 32px; height: 32px; border-radius: 4px; object-fit: contain; flex-shrink: 0;">` 
+          : `<div style="width: 32px; height: 32px; flex-shrink: 0;"></div>`}
       </td>
       <td style="text-align: left;">
         <span class="text-highlight" style="display: block;">${driver.name || 'Unknown Driver'}</span>
@@ -289,8 +289,8 @@ function renderTeams(teams) {
       <td class="text-highlight">${idx + 1}</td>
       <td style="text-align: center; padding-right: 0;">
         ${team.logo 
-          ? `<img src="${team.logo}" alt="" style="width: 22px; height: 22px; border-radius: 3px; object-fit: contain; flex-shrink: 0;">` 
-          : `<div style="width: 22px; height: 22px; flex-shrink: 0;"></div>`}
+          ? `<img src="${team.logo}" alt="" style="width: 32px; height: 32px; border-radius: 4px; object-fit: contain; flex-shrink: 0;">` 
+          : `<div style="width: 32px; height: 32px; flex-shrink: 0;"></div>`}
       </td>
       <td class="text-highlight" style="text-align: left;">
         ${team.name}
@@ -335,6 +335,7 @@ function renderTeams(teams) {
     tbody.appendChild(subTr);
   });
 }
+
 async function renderResults(roundId) {
   const table = document.getElementById('results-table');
   const placeholder = document.getElementById('results-placeholder');
@@ -471,6 +472,7 @@ async function renderResults(roundId) {
   if (legend) legend.style.display = 'block';
   if (placeholder) placeholder.style.display = 'none';
 }
+
 function syncBroadcast() {
   const now = new Date();
   const activeThreshold = new Date(now.getTime() - (4 * 60 * 60 * 1000));
