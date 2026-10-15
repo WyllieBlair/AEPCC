@@ -382,77 +382,81 @@ async function renderResults(roundId) {
       if (id) rosterMap[id] = r;
     });
 
-    const overallResults = rawEntries.map(entry => {
-      const roster = rosterMap[entry.RosterId] || {};
-      const driver = roster.PrimaryDrivers?.[0] || roster.primaryDrivers?.[0] || {};
-      const team = roster.Team || roster.team || {};
-      const bonus = getBonusMeta(entry.Bonuses || entry.bonuses);
-
-      return {
-        driver: driver.DisplayName || driver.Name || 'Unknown Driver',
-        team: team.Name || 'Independent',
-        class: entry.RunClass || entry.runClass || 'Pro',
-        pos: entry.ClassFinishPosition || entry.FinishPosition || '-',
-        inc: entry.Incidents ?? entry.incidents ?? 0,
-        bonus: bonus.points,
-        bonusTags: bonus.html,
-        pts: entry.DriverEntryPoints?.[0]?.TotalPoints ?? entry.TotalPoints ?? 0,
-        classFinish: entry.ClassFinishPosition || entry.finishPosition || 9999
-      };
-    });
-
-    const uniqueClasses = [...new Set(overallResults.map(r => r.class))].sort().reverse();
-    let finalHtml = '';
-
-    uniqueClasses.forEach(cls => {
-      const classResults = overallResults.filter(r => r.class === cls);
-      classResults.sort((a, b) => a.classFinish - b.classFinish);
-
-      finalHtml += `
-        <h3 style="margin-top: 20px; margin-bottom: 15px; color: #fff; text-transform: uppercase; font-size: 1.2rem; letter-spacing: 1px;">${cls} CLASS RESULTS</h3>
-        <div class="table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                <th style="width: 80px;">Pos</th>
-                <th style="text-align: left;">Driver</th>
-                <th>Inc</th>
-                <th>Bonus</th>
-                <th>Pts</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${classResults.map(r => `
-                <tr>
-                  <td class="text-highlight">${r.pos}</td>
-                  <td style="text-align: left;">
-                    <span class="text-highlight" style="display: block;">${r.driver}</span>
-                    <span class="subtext">${r.team}</span>
-                  </td>
-                  <td>${r.inc}</td>
-                  <td style="color: #4ade80;">${r.bonus > 0 ? '+' + r.bonus + r.bonusTags : '-'}</td>
-                  <td class="text-highlight">${r.pts}</td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        </div>
-      `;
-    });
-
     const raceSessions = sessions.filter(s => {
       const type = (s.TypeSession || s.typeSession || '').toLowerCase();
       return ['race', 'heat', 'feature', 'sprint', 'consolation'].includes(type);
     });
 
-    if (raceSessions.length > 1) {
+    const isSprintFormat = raceSessions.length > 1;
+    let finalHtml = '';
+
+    // ONLY render the Overall results if it is a standard single-race format
+    if (!isSprintFormat) {
+      const overallResults = rawEntries.map(entry => {
+        const roster = rosterMap[entry.RosterId] || {};
+        const driver = roster.PrimaryDrivers?.[0] || roster.primaryDrivers?.[0] || {};
+        const team = roster.Team || roster.team || {};
+        const bonus = getBonusMeta(entry.Bonuses || entry.bonuses);
+
+        return {
+          driver: driver.DisplayName || driver.Name || 'Unknown Driver',
+          team: team.Name || 'Independent',
+          class: entry.RunClass || entry.runClass || 'Pro',
+          pos: entry.ClassFinishPosition || entry.FinishPosition || '-',
+          inc: entry.Incidents ?? entry.incidents ?? 0,
+          bonus: bonus.points,
+          bonusTags: bonus.html,
+          pts: entry.DriverEntryPoints?.[0]?.TotalPoints ?? entry.TotalPoints ?? 0,
+          classFinish: entry.ClassFinishPosition || entry.finishPosition || 9999
+        };
+      });
+
+      const uniqueClasses = [...new Set(overallResults.map(r => r.class))].sort().reverse();
+
+      uniqueClasses.forEach(cls => {
+        const classResults = overallResults.filter(r => r.class === cls);
+        classResults.sort((a, b) => a.classFinish - b.classFinish);
+
+        finalHtml += `
+          <h3 style="margin-top: 20px; margin-bottom: 15px; color: #fff; text-transform: uppercase; font-size: 1.2rem; letter-spacing: 1px;">${cls} CLASS RESULTS</h3>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 80px;">Pos</th>
+                  <th style="text-align: left;">Driver</th>
+                  <th>Inc</th>
+                  <th>Bonus</th>
+                  <th>Pts</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${classResults.map(r => `
+                  <tr>
+                    <td class="text-highlight">${r.pos}</td>
+                    <td style="text-align: left;">
+                      <span class="text-highlight" style="display: block;">${r.driver}</span>
+                      <span class="subtext">${r.team}</span>
+                    </td>
+                    <td>${r.inc}</td>
+                    <td style="color: #4ade80;">${r.bonus > 0 ? '+' + r.bonus + r.bonusTags : '-'}</td>
+                    <td class="text-highlight">${r.pts}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+      });
+    } else {
+      // It is a Sprint format, so ONLY render the individual session breakdowns
       raceSessions.forEach((session, idx) => {
         const title = `${session.TypeSession || session.typeSession || 'Race'} (Session ${session.SessionNumber || session.sessionNumber || idx + 1})`;
         const entries = session.EventEntryResults || session.eventEntryResults || [];
         
         if (entries.length === 0) return;
 
-        finalHtml += `<h3 style="margin-top: 40px; margin-bottom: 5px; color: var(--brand-red); text-transform: uppercase; font-size: 1.1rem; letter-spacing: 1px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">${title} Breakdown</h3>`;
+        finalHtml += `<h3 style="margin-top: ${idx === 0 ? '20px' : '40px'}; margin-bottom: 5px; color: var(--brand-red); text-transform: uppercase; font-size: 1.1rem; letter-spacing: 1px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">${title} Results</h3>`;
 
         const sessionClasses = [...new Set(entries.map(e => e.RunClass || e.runClass || 'Pro'))].sort().reverse();
 
@@ -500,7 +504,8 @@ async function renderResults(roundId) {
 
     round.resultsHtml = finalHtml;
     if (dynamicArea) dynamicArea.innerHTML = finalHtml;
-    if (legend) legend.style.display = 'block';
+    // Only show the bonus legend if it's a standard race with overall results
+    if (legend) legend.style.display = isSprintFormat ? 'none' : 'block';
   } catch (err) {
     console.error("Could not load results:", err);
     if (dynamicArea) {
