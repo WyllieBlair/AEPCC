@@ -129,7 +129,6 @@ async function loadStandings() {
     const driverToTeamMap = {};
     const rosterEntries = rosterData.Entries || rosterData.entries || [];
     
-    // Extract Logo mapping from roster data
     rosterEntries.forEach(entry => {
       const teamName = entry.Team?.Name || 'Independent';
       const teamLogo = entry.Team?.TeamLogoPath || null;
@@ -229,17 +228,23 @@ function renderDrivers(drivers) {
   if (!tbody) return;
   
   if (!drivers || drivers.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No drivers found in this division.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;">No drivers found in this division.</td></tr>`;
     return;
   }
 
-  // Find the leader's points for the math calculation
-  const leaderPts = Math.max(...drivers.map(d => d.net_points || 0));
+  const sortedDrivers = [...drivers].sort((a, b) => (b.net_points || 0) - (a.net_points || 0));
+  const leaderPts = sortedDrivers.length > 0 ? sortedDrivers[0].net_points : 0;
 
   tbody.innerHTML = '';
-  drivers.forEach((driver, idx) => {
-    // Calculate the gap to the leader
+  sortedDrivers.forEach((driver, idx) => {
     const gap = (driver.net_points === leaderPts) ? '-' : `-${leaderPts - (driver.net_points || 0)}`;
+    
+    let interval = '-';
+    if (idx > 0) {
+      const prevPts = sortedDrivers[idx-1].net_points || 0;
+      const currPts = driver.net_points || 0;
+      interval = (prevPts === currPts) ? '-' : `-${prevPts - currPts}`;
+    }
 
     const tr = document.createElement('tr');
     tr.innerHTML = `
@@ -256,6 +261,7 @@ function renderDrivers(drivers) {
       <td>${driver.class || 'Pro'}</td>
       <td class="text-highlight">${driver.net_points !== undefined ? driver.net_points : 0}</td>
       <td style="color: var(--text-muted); font-weight: 800;">${gap}</td>
+      <td style="color: var(--text-muted); font-weight: 800;">${interval}</td>
     `;
     tbody.appendChild(tr);
   });
@@ -266,22 +272,25 @@ function renderTeams(teams) {
   if (!tbody) return;
 
   const validTeams = (teams || []).filter(t => t && t.name);
-
-  // Ensure teams are always sorted from highest to lowest points
   validTeams.sort((a, b) => (b.points || 0) - (a.points || 0));
 
   if (validTeams.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No team standings available.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No team standings available.</td></tr>`;
     return;
   }
 
-  // Grab the points of the 1st place team
   const leaderPts = validTeams.length > 0 ? validTeams[0].points : 0;
 
   tbody.innerHTML = '';
   validTeams.forEach((team, idx) => {
-    // Calculate the gap to the leader
     const gap = (team.points === leaderPts) ? '-' : `-${leaderPts - (team.points || 0)}`;
+    
+    let interval = '-';
+    if (idx > 0) {
+      const prevPts = validTeams[idx-1].points || 0;
+      const currPts = team.points || 0;
+      interval = (prevPts === currPts) ? '-' : `-${prevPts - currPts}`;
+    }
     
     const tr = document.createElement('tr');
     tr.className = 'team-row';
@@ -298,6 +307,7 @@ function renderTeams(teams) {
       </td>
       <td class="text-highlight">${team.points !== undefined ? team.points : 0}</td>
       <td style="color: var(--text-muted); font-weight: 800;">${gap}</td>
+      <td style="color: var(--text-muted); font-weight: 800;">${interval}</td>
     `;
     
     const subTr = document.createElement('tr');
@@ -313,7 +323,7 @@ function renderTeams(teams) {
       : '<div style="opacity: 0.5; font-size: 0.85rem;">Roster details not available in this view.</div>';
 
     subTr.innerHTML = `
-      <td colspan="5" style="padding: 0;">
+      <td colspan="6" style="padding: 0;">
         <div class="team-drivers-container">
           ${driverHtml}
         </div>
@@ -337,14 +347,12 @@ function renderTeams(teams) {
 }
 
 async function renderResults(roundId) {
-  const table = document.getElementById('results-table');
+  const dynamicArea = document.getElementById('dynamic-results-area');
   const placeholder = document.getElementById('results-placeholder');
   const legend = document.getElementById('results-legend');
-  const thead = document.getElementById('results-header');
-  const tbody = document.getElementById('results-rows');
   
   if (!roundId) {
-    if (table) table.style.display = 'none';
+    if (dynamicArea) dynamicArea.innerHTML = '';
     if (legend) legend.style.display = 'none';
     if (placeholder) {
       placeholder.style.display = 'block';
@@ -356,121 +364,185 @@ async function renderResults(roundId) {
   const round = globalRounds.find(r => String(r.id) === String(roundId));
   if (!round) return;
 
-  if (round.results === null) {
-    if (table) table.style.display = 'none';
-    if (legend) legend.style.display = 'none';
-    if (placeholder) {
-      placeholder.style.display = 'block';
-      placeholder.textContent = 'Loading official race results...';
-    }
+  if (placeholder) placeholder.style.display = 'none';
+  if (legend) legend.style.display = 'none';
 
-    try {
-      const res = await fetch(`${API_BASE_URL}/series/${SERIES_ID}/seasons/${SEASON_ID}/events/${roundId}/results`);
-      if (!res.ok) throw new Error("Results unavailable");
-
-      const data = await res.json();
-      
-      const rawEntries = data.Results?.EventResults || data.results?.eventResults || [];
-      const rosterDetails = data.Results?.Entries || data.results?.entries || [];
-
-      if (rawEntries.length === 0) {
-        round.results = [];
-      } else {
-        round.results = rawEntries.map(entry => {
-          
-          const rosterMatch = rosterDetails.find(r => r.RosterId === entry.RosterId || r.rosterId === entry.RosterId) || {};
-          const driverData = rosterMatch.PrimaryDrivers?.[0] || rosterMatch.primaryDrivers?.[0] || {};
-          const teamData = rosterMatch.Team || rosterMatch.team || {};
-
-          // Extract Bonus details
-          const bonusesArray = entry.Bonuses || entry.bonuses || [];
-          const calculatedBonus = bonusesArray.reduce((sum, b) => sum + (b.Points || b.points || 0), 0);
-          
-          // Generate small tags based on the bonus description from the API
-          let bonusTags = [];
-          bonusesArray.forEach(b => {
-            const desc = (b.Description || b.description || '').toLowerCase();
-            if (desc.includes('pole')) bonusTags.push('Pole');
-            if (desc.includes('fastest')) bonusTags.push('FL');
-            if (desc.includes('0 incidents')) bonusTags.push('0x');
-            if (desc.includes('3 or less')) bonusTags.push('Clean');
-          });
-          const bonusDetailHtml = bonusTags.length > 0 
-            ? ` <span style="font-size: 0.7rem; color: rgba(255,255,255,0.45); margin-left: 4px;">(${bonusTags.join(', ')})</span>` 
-            : '';
-
-          const driverPts = entry.DriverEntryPoints?.[0]?.TotalPoints 
-                         ?? entry.driverEntryPoints?.[0]?.totalPoints 
-                         ?? entry.TotalPoints 
-                         ?? entry.totalPoints 
-                         ?? 0;
-
-          return {
-            driver: driverData.DisplayName || driverData.Name || 'Unknown Driver',
-            team: teamData.Name || 'Independent',
-            class: entry.RunClass || entry.runClass || 'Pro',
-            pos: entry.ClassFinishPosition !== undefined && entry.ClassFinishPosition !== null && entry.ClassFinishPosition !== 0
-                 ? entry.ClassFinishPosition 
-                 : (entry.FinishPosition || '-'),
-            inc: entry.Incidents !== undefined ? entry.Incidents : (entry.incidents !== undefined ? entry.incidents : 0),
-            bonus: calculatedBonus,
-            bonusTags: bonusDetailHtml,
-            pts: driverPts,
-            overallFinish: entry.FinishPosition || entry.finishPosition || 9999 
-          };
-        });
-
-        // Sort the results array by overall finishing position before rendering
-        round.results.sort((a, b) => a.overallFinish - b.overallFinish);
-      }
-    } catch (err) {
-      console.warn("Could not load results for round:", roundId, err);
-      round.results = [];
-    }
-  }
-
-  if (!round.results || round.results.length === 0) {
-    if (table) table.style.display = 'none';
-    if (legend) legend.style.display = 'none';
-    if (placeholder) {
-      placeholder.style.display = 'block';
-      placeholder.textContent = 'Results are currently being processed or this event has not taken place yet.';
-    }
+  if (round.resultsHtml) {
+    if (dynamicArea) dynamicArea.innerHTML = round.resultsHtml;
+    if (legend) legend.style.display = 'block';
     return;
   }
 
-  if (thead) {
-    thead.innerHTML = `
-      <tr>
-        <th style="width: 80px;">Pos</th>
-        <th style="text-align: left;">Driver</th>
-        <th>Class</th>
-        <th>Inc</th>
-        <th>Bonus</th>
-        <th>Pts</th>
-      </tr>
+  if (dynamicArea) {
+    dynamicArea.innerHTML = '<div style="text-align: center; padding: 60px 20px; color: var(--text-muted); background-color: var(--bg-panel); border: 1.5px solid var(--border-color); border-radius: 12px; margin-bottom: 40px;">Loading official race results...</div>';
+  }
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/series/${SERIES_ID}/seasons/${SEASON_ID}/events/${roundId}/results`);
+    if (!res.ok) throw new Error("Results unavailable");
+
+    const data = await res.json();
+    
+    const rawEntries = data.Results?.EventResults || data.results?.eventResults || [];
+    const rosterDetails = data.Results?.Entries || data.results?.entries || [];
+    const sessions = data.Results?.EventSessionResults || data.results?.eventSessionResults || [];
+
+    if (rawEntries.length === 0) {
+      if (dynamicArea) {
+         dynamicArea.innerHTML = '<div style="text-align: center; padding: 60px 20px; color: var(--text-muted); background-color: var(--bg-panel); border: 1.5px solid var(--border-color); border-radius: 12px; margin-bottom: 40px;">Results are currently being processed or this event has not taken place yet.</div>';
+      }
+      return;
+    }
+
+    const overallResults = rawEntries.map(entry => {
+      const rosterMatch = rosterDetails.find(r => r.RosterId === entry.RosterId || r.rosterId === entry.RosterId) || {};
+      const driverData = rosterMatch.PrimaryDrivers?.[0] || rosterMatch.primaryDrivers?.[0] || {};
+      const teamData = rosterMatch.Team || rosterMatch.team || {};
+
+      const bonusesArray = entry.Bonuses || entry.bonuses || [];
+      const calculatedBonus = bonusesArray.reduce((sum, b) => sum + (b.Points || b.points || 0), 0);
+      
+      let bonusTags = [];
+      bonusesArray.forEach(b => {
+        const desc = (b.Description || b.description || '').toLowerCase();
+        if (desc.includes('pole')) bonusTags.push('Pole');
+        if (desc.includes('fastest')) bonusTags.push('FL');
+        if (desc.includes('0 incidents')) bonusTags.push('0x');
+        if (desc.includes('3 or less')) bonusTags.push('Clean');
+      });
+      const bonusDetailHtml = bonusTags.length > 0 
+        ? ` <span style="font-size: 0.7rem; color: rgba(255,255,255,0.45); margin-left: 4px;">(${bonusTags.join(', ')})</span>` 
+        : '';
+
+      const driverPts = entry.DriverEntryPoints?.[0]?.TotalPoints 
+                     ?? entry.driverEntryPoints?.[0]?.totalPoints 
+                     ?? entry.TotalPoints 
+                     ?? entry.totalPoints 
+                     ?? 0;
+
+      return {
+        driver: driverData.DisplayName || driverData.Name || 'Unknown Driver',
+        team: teamData.Name || 'Independent',
+        class: entry.RunClass || entry.runClass || 'Pro',
+        pos: entry.ClassFinishPosition !== undefined && entry.ClassFinishPosition !== null && entry.ClassFinishPosition !== 0
+             ? entry.ClassFinishPosition 
+             : (entry.FinishPosition || '-'),
+        inc: entry.Incidents !== undefined ? entry.Incidents : (entry.incidents !== undefined ? entry.incidents : 0),
+        bonus: calculatedBonus,
+        bonusTags: bonusDetailHtml,
+        pts: driverPts,
+        overallFinish: entry.FinishPosition || entry.finishPosition || 9999 
+      };
+    });
+
+    overallResults.sort((a, b) => a.overallFinish - b.overallFinish);
+
+    let finalHtml = `
+      <h3 style="margin-bottom: 15px; color: #fff; text-transform: uppercase; font-size: 1.2rem; letter-spacing: 1px;">Overall Results</h3>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 80px;">Pos</th>
+              <th style="text-align: left;">Driver</th>
+              <th>Class</th>
+              <th>Inc</th>
+              <th>Bonus</th>
+              <th>Pts</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${overallResults.map(r => `
+              <tr>
+                <td class="text-highlight">${r.pos}</td>
+                <td style="text-align: left;">
+                  <span class="text-highlight" style="display: block;">${r.driver}</span>
+                  <span class="subtext">${r.team}</span>
+                </td>
+                <td>${r.class}</td>
+                <td>${r.inc}</td>
+                <td style="color: #4ade80;">${r.bonus > 0 ? '+' + r.bonus + r.bonusTags : '-'}</td>
+                <td class="text-highlight">${r.pts}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
     `;
-  }
 
-  if (tbody) {
-    tbody.innerHTML = round.results.map(r => `
-      <tr>
-        <td class="text-highlight">${r.pos}</td>
-        <td style="text-align: left;">
-          <span class="text-highlight" style="display: block;">${r.driver}</span>
-          <span class="subtext">${r.team}</span>
-        </td>
-        <td>${r.class}</td>
-        <td>${r.inc}</td>
-        <td style="color: #4ade80;">${r.bonus > 0 ? '+' + r.bonus + r.bonusTags : '-'}</td>
-        <td class="text-highlight">${r.pts}</td>
-      </tr>
-    `).join('');
-  }
+    const raceSessions = sessions.filter(s => {
+        const t = (s.TypeSession || s.typeSession || '').toLowerCase();
+        return ['race', 'heat', 'feature', 'sprint', 'consolation'].includes(t);
+    });
 
-  if (table) table.style.display = 'table';
-  if (legend) legend.style.display = 'block';
-  if (placeholder) placeholder.style.display = 'none';
+    if (raceSessions.length > 1) {
+        raceSessions.forEach((session, idx) => {
+          const sessionType = session.TypeSession || session.typeSession || 'Race';
+          const sNumber = session.SessionNumber || session.sessionNumber || idx + 1;
+          const title = `${sessionType} (Session ${sNumber})`;
+
+          const sessionEntries = session.EventEntryResults || session.eventEntryResults || [];
+          sessionEntries.sort((a,b) => (a.FinishPosition || a.finishPosition || 9999) - (b.FinishPosition || b.finishPosition || 9999));
+          
+          if(sessionEntries.length === 0) return;
+
+          finalHtml += `
+            <h3 style="margin-top: 40px; margin-bottom: 15px; color: var(--text-muted); text-transform: uppercase; font-size: 1rem; letter-spacing: 1px;">${title} Breakdown</h3>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width: 80px;">Pos</th>
+                    <th style="text-align: left;">Driver</th>
+                    <th>Class</th>
+                    <th>Inc</th>
+                    <th>Pts</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${sessionEntries.map(entry => {
+                      const rosterMatch = rosterDetails.find(r => r.RosterId === entry.RosterId || r.rosterId === entry.RosterId) || {};
+                      const driverData = rosterMatch.PrimaryDrivers?.[0] || rosterMatch.primaryDrivers?.[0] || {};
+                      const teamData = rosterMatch.Team || rosterMatch.team || {};
+                      
+                      const driverName = driverData.DisplayName || driverData.Name || 'Unknown Driver';
+                      const teamName = teamData.Name || 'Independent';
+                      const pClass = entry.RunClass || entry.runClass || 'Pro';
+                      const pos = entry.ClassFinishPosition !== undefined && entry.ClassFinishPosition !== null && entry.ClassFinishPosition !== 0 ? entry.ClassFinishPosition : (entry.FinishPosition || '-');
+                      const inc = entry.Incidents !== undefined ? entry.Incidents : (entry.incidents !== undefined ? entry.incidents : 0);
+                      const pts = entry.DriverEntryPoints?.[0]?.TotalPoints ?? entry.TotalPoints ?? 0;
+
+                      return `
+                        <tr>
+                          <td class="text-highlight">${pos}</td>
+                          <td style="text-align: left;">
+                            <span class="text-highlight" style="display: block;">${driverName}</span>
+                            <span class="subtext">${teamName}</span>
+                          </td>
+                          <td>${pClass}</td>
+                          <td>${inc}</td>
+                          <td class="text-highlight">${pts}</td>
+                        </tr>
+                      `;
+                  }).join('')}
+                </tbody>
+              </table>
+            </div>
+          `;
+        });
+    }
+
+    round.resultsHtml = finalHtml; 
+    
+    if (dynamicArea) dynamicArea.innerHTML = finalHtml;
+    if (legend) legend.style.display = 'block';
+
+  } catch (err) {
+    console.error("Could not load results:", err);
+    if (dynamicArea) {
+       dynamicArea.innerHTML = '<div style="text-align: center; padding: 60px 20px; color: var(--brand-red); background-color: var(--bg-panel); border: 1.5px solid var(--border-color); border-radius: 12px;">Failed to load race results. Please try again later.</div>';
+    }
+  }
 }
 
 function syncBroadcast() {
