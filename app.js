@@ -35,20 +35,13 @@ function initDynamicSlider() {
     'Sebring-Sam Chapman PRO-1.png'
   ]; 
 
-  const images = imageFiles.map(file => `photos/${file}`);
-  if (images.length === 0) return;
-
   heroContainer.querySelectorAll('.hero-slide').forEach(slide => slide.remove());
   const overlay = heroContainer.querySelector('.hero-overlay');
 
-  images.forEach((imgSrc, index) => {
+  imageFiles.forEach((file, index) => {
     const slide = document.createElement('div');
     slide.className = `hero-slide ${index === 0 ? 'active' : ''}`;
-    
-    if (index === 0) {
-      slide.style.backgroundImage = `url('${imgSrc}')`;
-    }
-    
+    slide.style.backgroundImage = `url('photos/${file}')`;
     if (overlay) {
       heroContainer.insertBefore(slide, overlay);
     } else {
@@ -57,15 +50,6 @@ function initDynamicSlider() {
   });
   
   const slides = heroContainer.querySelectorAll('.hero-slide');
-  
-  setTimeout(() => {
-    slides.forEach((slide, index) => {
-      if (index !== 0) {
-        slide.style.backgroundImage = `url('${images[index]}')`;
-      }
-    });
-  }, 1000);
-
   let currentSlide = 0;
   if (slides.length > 1) {
     setInterval(() => {
@@ -101,7 +85,7 @@ function updateScheduleBadges() {
     const raceDate = new Date(raceDateStr);
     
     if (today >= raceDate) {
-      badge.outerHTML = `<a href="#" onclick="switchTab('results')" class="round-results-link">View Results</a>`;
+      badge.outerHTML = `<a href="javascript:void(0)" onclick="switchTab('results')" class="round-results-link">View Results</a>`;
     } else {
       badge.textContent = raceDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }).toUpperCase();
     }
@@ -121,10 +105,12 @@ async function loadStandings() {
       throw new Error("Failed to fetch API data");
     }
 
-    const driverData = await driverRes.json();
-    const teamData = await teamRes.json();
-    const roundData = await roundRes.json();
-    const rosterData = await rosterRes.json();
+    const [driverData, teamData, roundData, rosterData] = await Promise.all([
+      driverRes.json(),
+      teamRes.json(),
+      roundRes.json(),
+      rosterRes.json()
+    ]);
 
     const driverToTeamMap = {};
     const rosterEntries = rosterData.Entries || rosterData.entries || [];
@@ -132,44 +118,49 @@ async function loadStandings() {
     rosterEntries.forEach(entry => {
       const teamName = entry.Team?.Name || 'Independent';
       const teamLogo = entry.Team?.TeamLogoPath || null;
-      const primaryDrivers = entry.PrimaryDrivers || entry.primaryDrivers || [];
+      const drivers = entry.PrimaryDrivers || entry.primaryDrivers || [];
       
-      primaryDrivers.forEach(d => {
-        const dName = d.DisplayName || d.Name;
-        if (dName) {
-          driverToTeamMap[dName] = { name: teamName, logo: teamLogo };
+      drivers.forEach(d => {
+        const name = d.DisplayName || d.Name;
+        if (name) {
+          driverToTeamMap[name] = { name: teamName, logo: teamLogo };
         }
       });
     });
 
     const driverResults = driverData.Standings?.DriverStandings?.[0]?.Results || [];
+    const teamDriversMap = {};
+
     globalDrivers = driverResults.map(item => {
       const driverName = item.Driver?.DisplayName || item.Driver?.Name || 'Unknown';
       const teamInfo = driverToTeamMap[driverName] || { name: 'Independent', logo: null };
       
-      return {
+      const driverObj = {
         name: driverName,
         team: teamInfo.name, 
         teamLogo: teamInfo.logo,
         class: item.Class || 'Pro',
         net_points: item.TotalPoints || 0
       };
+
+      if (!teamDriversMap[teamInfo.name]) teamDriversMap[teamInfo.name] = [];
+      teamDriversMap[teamInfo.name].push({
+        name: driverObj.name,
+        class: driverObj.class,
+        points: driverObj.net_points
+      });
+
+      return driverObj;
     });
 
     const teamResults = teamData.Standings?.TeamStandings?.[0]?.Results || [];
     globalTeams = teamResults.map(item => {
       const teamName = item.Team?.Name || 'Unknown Team';
-      const teamDrivers = globalDrivers.filter(d => d.team === teamName);
-
       return {
         name: teamName,
         logo: item.Team?.TeamLogoPath || null, 
         points: item.TotalPoints || 0,
-        drivers: teamDrivers.map(d => ({
-          name: d.name,
-          class: d.class,
-          points: d.net_points
-        }))
+        drivers: teamDriversMap[teamName] || []
       };
     });
 
@@ -179,8 +170,7 @@ async function loadStandings() {
       name: item.EventName || item.eventName,
       type: item.TypeEvent || item.typeEvent || 'Regular', 
       date: new Date(item.EventDate || item.eventDate),
-      broadcastLink: item.BroadcastLink || item.broadcastLink,
-      results: null
+      resultsHtml: null
     }));
     
     filterDivision('Pro');
@@ -207,19 +197,14 @@ async function loadStandings() {
 
 function filterDivision(division, event) {
   document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-  if (event && event.target) {
+  if (event?.target) {
     event.target.classList.add('active');
   } else {
-    const defaultBtn = document.querySelector('.filter-btn');
-    if (defaultBtn) defaultBtn.classList.add('active');
+    document.querySelector('.filter-btn')?.classList.add('active');
   }
 
   const divLower = division.toLowerCase();
-  const filtered = globalDrivers.filter(d => {
-    const driverClass = (d.class || '').toLowerCase();
-    return driverClass === divLower;
-  });
-
+  const filtered = globalDrivers.filter(d => (d.class || '').toLowerCase() === divLower);
   renderDrivers(filtered);
 }
 
@@ -232,46 +217,39 @@ function renderDrivers(drivers) {
     return;
   }
 
-  const sortedDrivers = [...drivers].sort((a, b) => (b.net_points || 0) - (a.net_points || 0));
-  const leaderPts = sortedDrivers.length > 0 ? sortedDrivers[0].net_points : 0;
+  const sorted = [...drivers].sort((a, b) => (b.net_points || 0) - (a.net_points || 0));
+  const leaderPts = sorted[0]?.net_points || 0;
 
-  tbody.innerHTML = '';
-  sortedDrivers.forEach((driver, idx) => {
-    const gap = (driver.net_points === leaderPts) ? '-' : `-${leaderPts - (driver.net_points || 0)}`;
-    
-    let interval = '-';
-    if (idx > 0) {
-      const prevPts = sortedDrivers[idx-1].net_points || 0;
-      const currPts = driver.net_points || 0;
-      interval = (prevPts === currPts) ? '-' : `-${prevPts - currPts}`;
-    }
+  tbody.innerHTML = sorted.map((d, idx) => {
+    const gap = d.net_points === leaderPts ? '-' : `-${leaderPts - (d.net_points || 0)}`;
+    const interval = idx > 0 ? (sorted[idx - 1].net_points === d.net_points ? '-' : `-${sorted[idx - 1].net_points - d.net_points}`) : '-';
 
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td class="text-highlight">${idx + 1}</td>
-      <td style="text-align: center; padding-right: 0;">
-        ${driver.teamLogo 
-          ? `<img src="${driver.teamLogo}" alt="" style="width: 32px; height: 32px; border-radius: 4px; object-fit: contain; flex-shrink: 0;">` 
-          : `<div style="width: 32px; height: 32px; flex-shrink: 0;"></div>`}
-      </td>
-      <td style="text-align: left;">
-        <span class="text-highlight" style="display: block;">${driver.name || 'Unknown Driver'}</span>
-        <span class="subtext">${driver.team || 'Independent'}</span>
-      </td>
-      <td>${driver.class || 'Pro'}</td>
-      <td class="text-highlight">${driver.net_points !== undefined ? driver.net_points : 0}</td>
-      <td style="color: var(--text-muted); font-weight: 800;">${gap}</td>
-      <td style="color: var(--text-muted); font-weight: 800;">${interval}</td>
+    return `
+      <tr>
+        <td class="text-highlight">${idx + 1}</td>
+        <td style="text-align: center; padding-right: 0;">
+          ${d.teamLogo 
+            ? `<img src="${d.teamLogo}" alt="" style="width: 32px; height: 32px; border-radius: 4px; object-fit: contain; flex-shrink: 0;">` 
+            : `<div style="width: 32px; height: 32px; flex-shrink: 0;"></div>`}
+        </td>
+        <td style="text-align: left;">
+          <span class="text-highlight" style="display: block;">${d.name}</span>
+          <span class="subtext">${d.team}</span>
+        </td>
+        <td>${d.class}</td>
+        <td class="text-highlight">${d.net_points ?? 0}</td>
+        <td style="color: var(--text-muted); font-weight: 800;">${gap}</td>
+        <td style="color: var(--text-muted); font-weight: 800;">${interval}</td>
+      </tr>
     `;
-    tbody.appendChild(tr);
-  });
+  }).join('');
 }
 
 function renderTeams(teams) {
   const tbody = document.getElementById('team-rows');
   if (!tbody) return;
 
-  const validTeams = (teams || []).filter(t => t && t.name);
+  const validTeams = (teams || []).filter(t => t?.name);
   validTeams.sort((a, b) => (b.points || 0) - (a.points || 0));
 
   if (validTeams.length === 0) {
@@ -279,18 +257,12 @@ function renderTeams(teams) {
     return;
   }
 
-  const leaderPts = validTeams.length > 0 ? validTeams[0].points : 0;
-
+  const leaderPts = validTeams[0]?.points || 0;
   tbody.innerHTML = '';
+
   validTeams.forEach((team, idx) => {
-    const gap = (team.points === leaderPts) ? '-' : `-${leaderPts - (team.points || 0)}`;
-    
-    let interval = '-';
-    if (idx > 0) {
-      const prevPts = validTeams[idx-1].points || 0;
-      const currPts = team.points || 0;
-      interval = (prevPts === currPts) ? '-' : `-${prevPts - currPts}`;
-    }
+    const gap = team.points === leaderPts ? '-' : `-${leaderPts - (team.points || 0)}`;
+    const interval = idx > 0 ? (validTeams[idx - 1].points === team.points ? '-' : `-${validTeams[idx - 1].points - team.points}`) : '-';
     
     const tr = document.createElement('tr');
     tr.className = 'team-row';
@@ -305,7 +277,7 @@ function renderTeams(teams) {
         ${team.name}
         <span class="expand-icon" style="float: right; opacity: 0.5;">▼</span>
       </td>
-      <td class="text-highlight">${team.points !== undefined ? team.points : 0}</td>
+      <td class="text-highlight">${team.points ?? 0}</td>
       <td style="color: var(--text-muted); font-weight: 800;">${gap}</td>
       <td style="color: var(--text-muted); font-weight: 800;">${interval}</td>
     `;
@@ -313,7 +285,7 @@ function renderTeams(teams) {
     const subTr = document.createElement('tr');
     subTr.className = 'team-sub-row';
     
-    let driverHtml = team.drivers && team.drivers.length > 0 
+    const driverHtml = team.drivers.length > 0 
       ? team.drivers.map(d => `
           <div class="team-driver-item">
             <span><strong>${d.name}</strong> <span style="opacity:0.6; font-size:0.8em;">(${d.class})</span></span>
@@ -331,14 +303,8 @@ function renderTeams(teams) {
     `;
 
     tr.addEventListener('click', () => {
-      const isExpanded = subTr.classList.contains('active');
-      if (isExpanded) {
-        subTr.classList.remove('active');
-        tr.querySelector('.expand-icon').textContent = '▼';
-      } else {
-        subTr.classList.add('active');
-        tr.querySelector('.expand-icon').textContent = '▲';
-      }
+      const isExpanded = subTr.classList.toggle('active');
+      tr.querySelector('.expand-icon').textContent = isExpanded ? '▲' : '▼';
     });
 
     tbody.appendChild(tr);
@@ -346,11 +312,28 @@ function renderTeams(teams) {
   });
 }
 
+function getBonusMeta(bonuses) {
+  const tags = [];
+  let points = 0;
+  (bonuses || []).forEach(b => {
+    points += b.Points || b.points || 0;
+    const desc = (b.Description || b.description || '').toLowerCase();
+    if (desc.includes('pole')) tags.push('Pole');
+    if (desc.includes('fastest')) tags.push('FL');
+    if (desc.includes('0 incidents')) tags.push('0x');
+    if (desc.includes('3 or less')) tags.push('Clean');
+  });
+  return {
+    points,
+    html: tags.length > 0 ? ` <span style="font-size: 0.7rem; color: rgba(255,255,255,0.45); margin-left: 4px;">(${tags.join(', ')})</span>` : ''
+  };
+}
+
 async function renderResults(roundId) {
   const dynamicArea = document.getElementById('dynamic-results-area');
   const placeholder = document.getElementById('results-placeholder');
   const legend = document.getElementById('results-legend');
-  
+
   if (!roundId) {
     if (dynamicArea) dynamicArea.innerHTML = '';
     if (legend) legend.style.display = 'none';
@@ -382,165 +365,146 @@ async function renderResults(roundId) {
     if (!res.ok) throw new Error("Results unavailable");
 
     const data = await res.json();
-    
     const rawEntries = data.Results?.EventResults || data.results?.eventResults || [];
     const rosterDetails = data.Results?.Entries || data.results?.entries || [];
     const sessions = data.Results?.EventSessionResults || data.results?.eventSessionResults || [];
 
     if (rawEntries.length === 0) {
       if (dynamicArea) {
-         dynamicArea.innerHTML = '<div style="text-align: center; padding: 60px 20px; color: var(--text-muted); background-color: var(--bg-panel); border: 1.5px solid var(--border-color); border-radius: 12px; margin-bottom: 40px;">Results are currently being processed or this event has not taken place yet.</div>';
+        dynamicArea.innerHTML = '<div style="text-align: center; padding: 60px 20px; color: var(--text-muted); background-color: var(--bg-panel); border: 1.5px solid var(--border-color); border-radius: 12px; margin-bottom: 40px;">Results are currently being processed or this event has not taken place yet.</div>';
       }
       return;
     }
 
+    const rosterMap = {};
+    rosterDetails.forEach(r => {
+      const id = r.RosterId || r.rosterId;
+      if (id) rosterMap[id] = r;
+    });
+
     const overallResults = rawEntries.map(entry => {
-      const rosterMatch = rosterDetails.find(r => r.RosterId === entry.RosterId || r.rosterId === entry.RosterId) || {};
-      const driverData = rosterMatch.PrimaryDrivers?.[0] || rosterMatch.primaryDrivers?.[0] || {};
-      const teamData = rosterMatch.Team || rosterMatch.team || {};
-
-      const bonusesArray = entry.Bonuses || entry.bonuses || [];
-      const calculatedBonus = bonusesArray.reduce((sum, b) => sum + (b.Points || b.points || 0), 0);
-      
-      let bonusTags = [];
-      bonusesArray.forEach(b => {
-        const desc = (b.Description || b.description || '').toLowerCase();
-        if (desc.includes('pole')) bonusTags.push('Pole');
-        if (desc.includes('fastest')) bonusTags.push('FL');
-        if (desc.includes('0 incidents')) bonusTags.push('0x');
-        if (desc.includes('3 or less')) bonusTags.push('Clean');
-      });
-      const bonusDetailHtml = bonusTags.length > 0 
-        ? ` <span style="font-size: 0.7rem; color: rgba(255,255,255,0.45); margin-left: 4px;">(${bonusTags.join(', ')})</span>` 
-        : '';
-
-      const driverPts = entry.DriverEntryPoints?.[0]?.TotalPoints 
-                     ?? entry.driverEntryPoints?.[0]?.totalPoints 
-                     ?? entry.TotalPoints 
-                     ?? entry.totalPoints 
-                     ?? 0;
+      const roster = rosterMap[entry.RosterId] || {};
+      const driver = roster.PrimaryDrivers?.[0] || roster.primaryDrivers?.[0] || {};
+      const team = roster.Team || roster.team || {};
+      const bonus = getBonusMeta(entry.Bonuses || entry.bonuses);
 
       return {
-        driver: driverData.DisplayName || driverData.Name || 'Unknown Driver',
-        team: teamData.Name || 'Independent',
+        driver: driver.DisplayName || driver.Name || 'Unknown Driver',
+        team: team.Name || 'Independent',
         class: entry.RunClass || entry.runClass || 'Pro',
-        pos: entry.ClassFinishPosition !== undefined && entry.ClassFinishPosition !== null && entry.ClassFinishPosition !== 0
-             ? entry.ClassFinishPosition 
-             : (entry.FinishPosition || '-'),
-        inc: entry.Incidents !== undefined ? entry.Incidents : (entry.incidents !== undefined ? entry.incidents : 0),
-        bonus: calculatedBonus,
-        bonusTags: bonusDetailHtml,
-        pts: driverPts,
-        overallFinish: entry.FinishPosition || entry.finishPosition || 9999 
+        pos: entry.ClassFinishPosition || entry.FinishPosition || '-',
+        inc: entry.Incidents ?? entry.incidents ?? 0,
+        bonus: bonus.points,
+        bonusTags: bonus.html,
+        pts: entry.DriverEntryPoints?.[0]?.TotalPoints ?? entry.TotalPoints ?? 0,
+        classFinish: entry.ClassFinishPosition || entry.finishPosition || 9999
       };
     });
 
-    overallResults.sort((a, b) => a.overallFinish - b.overallFinish);
+    const uniqueClasses = [...new Set(overallResults.map(r => r.class))].sort().reverse();
+    let finalHtml = '';
 
-    let finalHtml = `
-      <h3 style="margin-bottom: 15px; color: #fff; text-transform: uppercase; font-size: 1.2rem; letter-spacing: 1px;">Overall Results</h3>
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th style="width: 80px;">Pos</th>
-              <th style="text-align: left;">Driver</th>
-              <th>Class</th>
-              <th>Inc</th>
-              <th>Bonus</th>
-              <th>Pts</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${overallResults.map(r => `
+    uniqueClasses.forEach(cls => {
+      const classResults = overallResults.filter(r => r.class === cls);
+      classResults.sort((a, b) => a.classFinish - b.classFinish);
+
+      finalHtml += `
+        <h3 style="margin-top: 20px; margin-bottom: 15px; color: #fff; text-transform: uppercase; font-size: 1.2rem; letter-spacing: 1px;">${cls} CLASS RESULTS</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead>
               <tr>
-                <td class="text-highlight">${r.pos}</td>
-                <td style="text-align: left;">
-                  <span class="text-highlight" style="display: block;">${r.driver}</span>
-                  <span class="subtext">${r.team}</span>
-                </td>
-                <td>${r.class}</td>
-                <td>${r.inc}</td>
-                <td style="color: #4ade80;">${r.bonus > 0 ? '+' + r.bonus + r.bonusTags : '-'}</td>
-                <td class="text-highlight">${r.pts}</td>
+                <th style="width: 80px;">Pos</th>
+                <th style="text-align: left;">Driver</th>
+                <th>Inc</th>
+                <th>Bonus</th>
+                <th>Pts</th>
               </tr>
-            `).join('')}
-          </tbody>
-        </table>
-      </div>
-    `;
+            </thead>
+            <tbody>
+              ${classResults.map(r => `
+                <tr>
+                  <td class="text-highlight">${r.pos}</td>
+                  <td style="text-align: left;">
+                    <span class="text-highlight" style="display: block;">${r.driver}</span>
+                    <span class="subtext">${r.team}</span>
+                  </td>
+                  <td>${r.inc}</td>
+                  <td style="color: #4ade80;">${r.bonus > 0 ? '+' + r.bonus + r.bonusTags : '-'}</td>
+                  <td class="text-highlight">${r.pts}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    });
 
     const raceSessions = sessions.filter(s => {
-        const t = (s.TypeSession || s.typeSession || '').toLowerCase();
-        return ['race', 'heat', 'feature', 'sprint', 'consolation'].includes(t);
+      const type = (s.TypeSession || s.typeSession || '').toLowerCase();
+      return ['race', 'heat', 'feature', 'sprint', 'consolation'].includes(type);
     });
 
     if (raceSessions.length > 1) {
-        raceSessions.forEach((session, idx) => {
-          const sessionType = session.TypeSession || session.typeSession || 'Race';
-          const sNumber = session.SessionNumber || session.sessionNumber || idx + 1;
-          const title = `${sessionType} (Session ${sNumber})`;
+      raceSessions.forEach((session, idx) => {
+        const title = `${session.TypeSession || session.typeSession || 'Race'} (Session ${session.SessionNumber || session.sessionNumber || idx + 1})`;
+        const entries = session.EventEntryResults || session.eventEntryResults || [];
+        
+        if (entries.length === 0) return;
 
-          const sessionEntries = session.EventEntryResults || session.eventEntryResults || [];
-          sessionEntries.sort((a,b) => (a.FinishPosition || a.finishPosition || 9999) - (b.FinishPosition || b.finishPosition || 9999));
-          
-          if(sessionEntries.length === 0) return;
+        finalHtml += `<h3 style="margin-top: 40px; margin-bottom: 5px; color: var(--brand-red); text-transform: uppercase; font-size: 1.1rem; letter-spacing: 1px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">${title} Breakdown</h3>`;
+
+        const sessionClasses = [...new Set(entries.map(e => e.RunClass || e.runClass || 'Pro'))].sort().reverse();
+
+        sessionClasses.forEach(cls => {
+          const classEntries = entries.filter(e => (e.RunClass || e.runClass || 'Pro') === cls);
+          classEntries.sort((a, b) => (a.ClassFinishPosition || a.FinishPosition || 9999) - (b.ClassFinishPosition || b.FinishPosition || 9999));
 
           finalHtml += `
-            <h3 style="margin-top: 40px; margin-bottom: 15px; color: var(--text-muted); text-transform: uppercase; font-size: 1rem; letter-spacing: 1px;">${title} Breakdown</h3>
-            <div class="table-wrapper">
+            <h4 style="margin-top: 15px; margin-bottom: 10px; color: var(--text-muted); text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;">${cls} Class</h4>
+            <div class="table-wrapper" style="margin-bottom: 20px;">
               <table>
                 <thead>
                   <tr>
                     <th style="width: 80px;">Pos</th>
                     <th style="text-align: left;">Driver</th>
-                    <th>Class</th>
                     <th>Inc</th>
                     <th>Pts</th>
                   </tr>
                 </thead>
                 <tbody>
-                  ${sessionEntries.map(entry => {
-                      const rosterMatch = rosterDetails.find(r => r.RosterId === entry.RosterId || r.rosterId === entry.RosterId) || {};
-                      const driverData = rosterMatch.PrimaryDrivers?.[0] || rosterMatch.primaryDrivers?.[0] || {};
-                      const teamData = rosterMatch.Team || rosterMatch.team || {};
-                      
-                      const driverName = driverData.DisplayName || driverData.Name || 'Unknown Driver';
-                      const teamName = teamData.Name || 'Independent';
-                      const pClass = entry.RunClass || entry.runClass || 'Pro';
-                      const pos = entry.ClassFinishPosition !== undefined && entry.ClassFinishPosition !== null && entry.ClassFinishPosition !== 0 ? entry.ClassFinishPosition : (entry.FinishPosition || '-');
-                      const inc = entry.Incidents !== undefined ? entry.Incidents : (entry.incidents !== undefined ? entry.incidents : 0);
-                      const pts = entry.DriverEntryPoints?.[0]?.TotalPoints ?? entry.TotalPoints ?? 0;
+                  ${classEntries.map(entry => {
+                    const roster = rosterMap[entry.RosterId] || {};
+                    const driver = roster.PrimaryDrivers?.[0] || roster.primaryDrivers?.[0] || {};
+                    const team = roster.Team || roster.team || {};
 
-                      return `
-                        <tr>
-                          <td class="text-highlight">${pos}</td>
-                          <td style="text-align: left;">
-                            <span class="text-highlight" style="display: block;">${driverName}</span>
-                            <span class="subtext">${teamName}</span>
-                          </td>
-                          <td>${pClass}</td>
-                          <td>${inc}</td>
-                          <td class="text-highlight">${pts}</td>
-                        </tr>
-                      `;
+                    return `
+                      <tr>
+                        <td class="text-highlight">${entry.ClassFinishPosition || entry.FinishPosition || '-'}</td>
+                        <td style="text-align: left;">
+                          <span class="text-highlight" style="display: block;">${driver.DisplayName || driver.Name || 'Unknown Driver'}</span>
+                          <span class="subtext">${team.Name || 'Independent'}</span>
+                        </td>
+                        <td>${entry.Incidents ?? entry.incidents ?? 0}</td>
+                        <td class="text-highlight">${entry.DriverEntryPoints?.[0]?.TotalPoints ?? entry.TotalPoints ?? 0}</td>
+                      </tr>
+                    `;
                   }).join('')}
                 </tbody>
               </table>
             </div>
           `;
         });
+      });
     }
 
-    round.resultsHtml = finalHtml; 
-    
+    round.resultsHtml = finalHtml;
     if (dynamicArea) dynamicArea.innerHTML = finalHtml;
     if (legend) legend.style.display = 'block';
-
   } catch (err) {
     console.error("Could not load results:", err);
     if (dynamicArea) {
-       dynamicArea.innerHTML = '<div style="text-align: center; padding: 60px 20px; color: var(--brand-red); background-color: var(--bg-panel); border: 1.5px solid var(--border-color); border-radius: 12px;">Failed to load race results. Please try again later.</div>';
+      dynamicArea.innerHTML = '<div style="text-align: center; padding: 60px 20px; color: var(--brand-red); background-color: var(--bg-panel); border: 1.5px solid var(--border-color); border-radius: 12px;">Failed to load race results. Please try again later.</div>';
     }
   }
 }
@@ -548,14 +512,13 @@ async function renderResults(roundId) {
 function syncBroadcast() {
   const now = new Date();
   const activeThreshold = new Date(now.getTime() - (4 * 60 * 60 * 1000));
-  
   let activeRoundIndex = globalRounds.findIndex(r => r.date >= activeThreshold);
-  
+
   if (activeRoundIndex === -1 && globalRounds.length > 0) {
     activeRoundIndex = globalRounds.length - 1;
   }
-  
-  const currentRound = (activeRoundIndex !== -1) ? (activeRoundIndex + 1) : 1;
+
+  const currentRound = activeRoundIndex !== -1 ? activeRoundIndex + 1 : 1;
   const broadcastUrl = BROADCAST_LINKS[currentRound] || 'https://www.youtube.com/playlist?list=PLINvGbO65PbU';
 
   const watchBtn = document.getElementById('nav-watch-btn');
