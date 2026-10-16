@@ -36,7 +36,7 @@
 
   <header>
     <div class="nav-container">
-      <a href="#" onclick="switchTab('home')">
+      <a href="javascript:void(0)" onclick="switchTab('home')">
         <img src="Background.png" alt="AEPCC Logo" class="brand-logo">
       </a>
       <nav id="nav-tabs">
@@ -65,7 +65,7 @@
       <div style="max-width: 900px; margin-bottom: 30px;">
         <h2>AEPCC Season 1</h2>
         <p>Welcome to the inaugural season of the Australian E-Sport Porsche Cup Championship (AEPCC)! Launching this October, we are bringing single-make racing to the Oceanic region, exclusively featuring the Porsche 911 GT3 Cup (992.2) on iRacing.</p>
-        <p>Our season calendar closely follows the official iRacing Porsche Cup series schedule. Prepare to race across tracks around the world and four different weekend formats ranging from  16-minute super sprints with inverted grids to longer 60-minute endurance feature races requiring compulsory pit stops.</p>
+        <p>Our season calendar closely follows the official iRacing Porsche Cup series schedule. Prepare to race across tracks around the world and four different weekend formats ranging from 16-minute super sprints with inverted grids to longer 60-minute endurance feature races requiring compulsory pit stops.</p>
         <p>To ensure close, competitive racing across a maximum of a 60 car grid, the field is divided into two skill-based divisions (Pro and Am) determined by a mandatory pre-qualifying week. A third class (Pro-Am) will be added if entries exceed 45. Class champions will be awarded trophies, supplemented by a scaling cash prize pool based on total season entries.</p>
         <p>Entry is open to any driver holding an active iRacing Class D Sports Car license. To secure your spot on the grid, simply join our Discord community, complete your registration, and pay the entry fee.</p>
       </div>
@@ -81,7 +81,7 @@
               <li>Setup: <strong>Open Setup</strong></li>
               <li>Divisions: <strong>Pro, Am (Pro-Am)</strong></li>
               <li>Prize Pool: <strong>Trophies + Scaling Cash Pool (Based on entries)</strong></li>
-              <li>Register here:<strong><a href="https://discord.gg/r7UtWHDEXh" target="_blank">AEPCC Discord</a></strong></li>
+              <li>Register here: <strong><a href="https://discord.gg/r7UtWHDEXh" target="_blank">AEPCC Discord</a></strong></li>
             </ul>
           </div>
         </div>
@@ -95,7 +95,7 @@
               <li>Qualifying: <strong>20:00 AEST</strong></li>
               <li>Race(s) start: <strong>20:15 AEST</strong></li>
               <li style="margin-top: 20px;">Platform: <strong>iRacing</strong></li>
-              <li>Coms and Regs:<strong><a href="https://discord.gg/r7UtWHDEXh" target="_blank">AEPCC Discord</a></strong></li>
+              <li>Coms and Regs: <strong><a href="https://discord.gg/r7UtWHDEXh" target="_blank">AEPCC Discord</a></strong></li>
             </ul>
           </div>
         </div>
@@ -239,7 +239,7 @@
       </div>
     </div>
     
-<div id="tab-standings" class="tab-view">
+    <div id="tab-standings" class="tab-view">
       <div class="standings-container">
         <h2>Driver Championship</h2>
         
@@ -247,6 +247,9 @@
           <button class="filter-btn active" onclick="filterDivision('Pro', event)">Pro</button>
           <button class="filter-btn" onclick="filterDivision('Am', event)">Am</button>
         </div>
+
+        <!-- Dynamic Podium Area for Top 3 Drivers -->
+        <div id="podium-area" class="podium-container"></div>
 
         <div class="table-wrapper">
           <table>
@@ -258,7 +261,7 @@
                 <th>Class</th>
                 <th>Net Pts</th>
                 <th>Gap</th>
-                <th>Int</th> <!-- New Interval Column -->
+                <th>Int</th>
               </tr>
             </thead>  
             <tbody id="driver-rows">
@@ -277,7 +280,7 @@
                 <th style="text-align: left;">Team</th>
                 <th>Total Pts</th>
                 <th>Gap</th>
-                <th>Int</th> <!-- New Interval Column -->
+                <th>Int</th>
               </tr>
             </thead>
             <tbody id="team-rows">
@@ -302,7 +305,6 @@
           Select a completed round from the dropdown above to view the official results.
         </div>
 
-        <!-- The JS will now inject dynamic tables into this area -->
         <div id="dynamic-results-area"></div>
 
         <div id="results-legend" style="display: none; margin-top: 15px; padding: 15px; background: rgba(255, 255, 255, 0.03); border-radius: 6px; border: 1px solid var(--border-color); font-size: 0.85rem; color: var(--text-muted);">
@@ -316,6 +318,7 @@
         </div>
       </div>
     </div>
+  </div>
 
   <footer class="site-footer">
     <div class="footer-container">
