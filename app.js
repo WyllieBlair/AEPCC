@@ -210,17 +210,58 @@ function filterDivision(division, event) {
   renderDrivers(filtered);
 }
 
+function renderPodium(topThree) {
+  const podiumContainer = document.getElementById('podium-area');
+  if (!podiumContainer) return;
+
+  if (!topThree || topThree.length === 0) {
+    podiumContainer.innerHTML = '';
+    return;
+  }
+
+  const first = topThree[0];
+  const second = topThree[1];
+  const third = topThree[2];
+
+  const buildStepHtml = (driver, rank, stepClass) => {
+    if (!driver) return `<div class="podium-step ${stepClass}"></div>`;
+    return `
+      <div class="podium-step ${stepClass}">
+        <div class="podium-badge">${rank}</div>
+        <div class="podium-driver-info">
+          <div class="podium-driver-name">${driver.name}</div>
+          <div class="podium-team-wrap">
+            ${driver.teamLogo ? `<img src="${driver.teamLogo}" alt="" class="podium-team-logo">` : ''}
+            <span class="podium-team-name">${driver.team}</span>
+          </div>
+        </div>
+        <div class="podium-pts">${driver.net_points} <span style="font-size:0.75rem; font-weight:400; opacity:0.7;">PTS</span></div>
+      </div>
+    `;
+  };
+
+  podiumContainer.innerHTML = `
+    ${buildStepHtml(second, 2, 'step-2')}
+    ${buildStepHtml(first, 1, 'step-1')}
+    ${buildStepHtml(third, 3, 'step-3')}
+  `;
+}
+
 function renderDrivers(drivers) {
   const tbody = document.getElementById('driver-rows');
   if (!tbody) return;
   
   if (!drivers || drivers.length === 0) {
     tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;">No drivers found in this division.</td></tr>`;
+    renderPodium([]);
     return;
   }
 
   const sorted = [...drivers].sort((a, b) => (b.net_points || 0) - (a.net_points || 0));
   const leaderPts = sorted[0]?.net_points || 0;
+
+  // Render the podium steps for the top 3 drivers of this division
+  renderPodium(sorted.slice(0, 3));
 
   tbody.innerHTML = sorted.map((d, idx) => {
     const gap = d.net_points === leaderPts ? '-' : `-${leaderPts - (d.net_points || 0)}`;
