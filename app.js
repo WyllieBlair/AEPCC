@@ -140,7 +140,8 @@ async function loadStandings() {
         team: teamInfo.name, 
         teamLogo: teamInfo.logo,
         class: item.Class || 'Pro',
-        net_points: item.TotalPoints || 0
+        net_points: item.TotalPoints || 0,
+        change: item.PositionChange ?? item.positionChange ?? item.StandingsChange ?? item.standingsChange ?? 0
       };
 
       if (!teamDriversMap[teamInfo.name]) teamDriversMap[teamInfo.name] = [];
@@ -160,6 +161,7 @@ async function loadStandings() {
         name: teamName,
         logo: item.Team?.TeamLogoPath || null, 
         points: item.TotalPoints || 0,
+        change: item.PositionChange ?? item.positionChange ?? item.StandingsChange ?? item.standingsChange ?? 0,
         drivers: teamDriversMap[teamName] || []
       };
     });
@@ -224,9 +226,16 @@ function renderDrivers(drivers) {
     const gap = d.net_points === leaderPts ? '-' : `-${leaderPts - (d.net_points || 0)}`;
     const interval = idx > 0 ? (sorted[idx - 1].net_points === d.net_points ? '-' : `-${sorted[idx - 1].net_points - d.net_points}`) : '-';
 
+    let momentumHtml = '<span style="color: var(--text-muted); font-size: 0.75rem; margin-left: 6px;">-</span>';
+    if (d.change > 0) {
+      momentumHtml = `<span style="color: #4ade80; font-size: 0.75rem; margin-left: 6px;">▲ ${d.change}</span>`;
+    } else if (d.change < 0) {
+      momentumHtml = `<span style="color: var(--brand-red); font-size: 0.75rem; margin-left: 6px;">▼ ${Math.abs(d.change)}</span>`;
+    }
+
     return `
       <tr>
-        <td class="text-highlight">${idx + 1}</td>
+        <td class="text-highlight" style="white-space: nowrap;">${idx + 1}${momentumHtml}</td>
         <td style="text-align: center; padding-right: 0;">
           ${d.teamLogo 
             ? `<img src="${d.teamLogo}" alt="" style="width: 32px; height: 32px; border-radius: 4px; object-fit: contain; flex-shrink: 0;">` 
@@ -264,10 +273,17 @@ function renderTeams(teams) {
     const gap = team.points === leaderPts ? '-' : `-${leaderPts - (team.points || 0)}`;
     const interval = idx > 0 ? (validTeams[idx - 1].points === team.points ? '-' : `-${validTeams[idx - 1].points - team.points}`) : '-';
     
+    let momentumHtml = '<span style="color: var(--text-muted); font-size: 0.75rem; margin-left: 6px;">-</span>';
+    if (team.change > 0) {
+      momentumHtml = `<span style="color: #4ade80; font-size: 0.75rem; margin-left: 6px;">▲ ${team.change}</span>`;
+    } else if (team.change < 0) {
+      momentumHtml = `<span style="color: var(--brand-red); font-size: 0.75rem; margin-left: 6px;">▼ ${Math.abs(team.change)}</span>`;
+    }
+
     const tr = document.createElement('tr');
     tr.className = 'team-row';
     tr.innerHTML = `
-      <td class="text-highlight">${idx + 1}</td>
+      <td class="text-highlight" style="white-space: nowrap;">${idx + 1}${momentumHtml}</td>
       <td style="text-align: center; padding-right: 0;">
         ${team.logo 
           ? `<img src="${team.logo}" alt="" style="width: 32px; height: 32px; border-radius: 4px; object-fit: contain; flex-shrink: 0;">` 
