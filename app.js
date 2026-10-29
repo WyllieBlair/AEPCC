@@ -260,7 +260,6 @@ function renderDrivers(drivers) {
   const sorted = [...drivers].sort((a, b) => (b.net_points || 0) - (a.net_points || 0));
   const leaderPts = sorted[0]?.net_points || 0;
 
-  // Render the podium steps for the top 3 drivers of this division
   renderPodium(sorted.slice(0, 3));
 
   tbody.innerHTML = sorted.map((d, idx) => {
@@ -386,6 +385,22 @@ function getBonusMeta(bonuses) {
   };
 }
 
+function formatTimeOrGap(timeMs, lapsDown) {
+  if (lapsDown && lapsDown > 0) {
+    return `${lapsDown} L${lapsDown === 1 ? '' : 's'}`;
+  }
+  if (!timeMs || timeMs <= 0) return '-';
+  
+  const totalSeconds = timeMs / 1000;
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = (totalSeconds % 60).toFixed(3);
+  
+  if (minutes > 0) {
+    return `${minutes}:${seconds.padStart(6, '0')}`;
+  }
+  return `${seconds}s`;
+}
+
 async function renderResults(roundId) {
   const dynamicArea = document.getElementById('dynamic-results-area');
   const placeholder = document.getElementById('results-placeholder');
@@ -455,12 +470,18 @@ async function renderResults(roundId) {
           const team = roster.Team || roster.team || {};
           const bonus = getBonusMeta(entry.Bonuses || entry.bonuses);
 
+          const timeVal = entry.FinishTimeMs ?? entry.finishTimeMs ?? entry.TotalTimeMs ?? entry.totalTimeMs ?? 0;
+          const lapsDown = entry.LapsDown ?? entry.lapsDown ?? 0;
+          const penaltyVal = entry.PenaltyPoints ?? entry.penaltyPoints ?? entry.Penalties ?? entry.penalties ?? 0;
+
           return {
             driver: driver.DisplayName || driver.Name || 'Unknown Driver',
             team: team.Name || 'Independent',
             class: (entry.RunClass || entry.runClass || 'PRO').toUpperCase(),
             pos: entry.ClassFinishPosition || entry.FinishPosition || '-',
             inc: entry.Incidents ?? entry.incidents ?? 0,
+            time: formatTimeOrGap(timeVal, lapsDown),
+            penalty: penaltyVal,
             bonus: bonus.points,
             bonusTags: bonus.html,
             pts: entry.DriverEntryPoints?.[0]?.TotalPoints ?? entry.TotalPoints ?? 0,
@@ -481,9 +502,11 @@ async function renderResults(roundId) {
             <table>
               <thead>
                 <tr>
-                  <th style="width: 80px;">Pos</th>
+                  <th style="width: 70px;">Pos</th>
                   <th style="text-align: left;">Driver</th>
+                  <th>Time / Gap</th>
                   <th>Inc</th>
+                  <th>Pen</th>
                   <th>Bonus</th>
                   <th>Pts</th>
                 </tr>
@@ -496,7 +519,9 @@ async function renderResults(roundId) {
                       <span class="text-highlight" style="display: block;">${r.driver}</span>
                       <span class="subtext">${r.team}</span>
                     </td>
+                    <td style="color: var(--text-muted);">${r.time}</td>
                     <td>${r.inc}</td>
+                    <td style="color: ${r.penalty > 0 ? 'var(--brand-red)' : 'var(--text-muted);'}; font-weight: ${r.penalty > 0 ? '800' : '400'};">${r.penalty > 0 ? r.penalty : '-'}</td>
                     <td style="color: #4ade80;">${r.bonus > 0 ? '+' + r.bonus + r.bonusTags : '-'}</td>
                     <td class="text-highlight">${r.pts}</td>
                   </tr>
@@ -528,9 +553,11 @@ async function renderResults(roundId) {
               <table>
                 <thead>
                   <tr>
-                    <th style="width: 80px;">Pos</th>
+                    <th style="width: 70px;">Pos</th>
                     <th style="text-align: left;">Driver</th>
+                    <th>Time / Gap</th>
                     <th>Inc</th>
+                    <th>Pen</th>
                     <th>Pts</th>
                   </tr>
                 </thead>
@@ -545,6 +572,10 @@ async function renderResults(roundId) {
                     
                     if (driverName === 'Unknown Driver' && pos === '-') return ''; 
 
+                    const timeVal = entry.FinishTimeMs ?? entry.finishTimeMs ?? entry.TotalTimeMs ?? entry.totalTimeMs ?? 0;
+                    const lapsDown = entry.LapsDown ?? entry.lapsDown ?? 0;
+                    const penaltyVal = entry.PenaltyPoints ?? entry.penaltyPoints ?? entry.Penalties ?? entry.penalties ?? 0;
+
                     return `
                       <tr>
                         <td class="text-highlight">${pos}</td>
@@ -552,7 +583,9 @@ async function renderResults(roundId) {
                           <span class="text-highlight" style="display: block;">${driverName}</span>
                           <span class="subtext">${team.Name || 'Independent'}</span>
                         </td>
+                        <td style="color: var(--text-muted);">${formatTimeOrGap(timeVal, lapsDown)}</td>
                         <td>${entry.Incidents ?? entry.incidents ?? 0}</td>
+                        <td style="color: ${penaltyVal > 0 ? 'var(--brand-red)' : 'var(--text-muted);'}; font-weight: ${penaltyVal > 0 ? '800' : '400'};">${penaltyVal > 0 ? penaltyVal : '-'}</td>
                         <td class="text-highlight">${entry.DriverEntryPoints?.[0]?.TotalPoints ?? entry.TotalPoints ?? 0}</td>
                       </tr>
                     `;
@@ -579,7 +612,7 @@ async function renderResults(roundId) {
 function syncBroadcast() {
   const now = new Date();
   const activeThreshold = new Date(now.getTime() - (4 * 60 * 60 * 1000));
-  let activeRoundIndex = globalRounds.findIndex(r => r.date >= activeThreshold);
+  let activeRoundIndex = globalRounds.eventsub ? -1 : globalRounds.findIndex(r => r.date >= activeThreshold);
 
   if (activeRoundIndex === -1 && globalRounds.length > 0) {
     activeRoundIndex = globalRounds.length - 1;
