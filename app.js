@@ -437,18 +437,9 @@ async function renderResults(roundId) {
     if (!res.ok) throw new Error("Results unavailable");
 
     const data = await res.json();
-    
-    // DEBUG: Inspect this in your browser console (Press F12 -> Console)
-    console.log("Raw XtremeScoring API Result Payload:", data);
-
     const rawEntries = data.Results?.EventResults || data.results?.eventResults || [];
     const rosterDetails = data.Results?.Entries || data.results?.entries || [];
     const sessions = data.Results?.EventSessionResults || data.results?.eventSessionResults || [];
-
-    if (rawEntries.length > 0) {
-      console.log("Sample Driver Result Object Keys:", Object.keys(rawEntries[0]));
-      console.log("Sample Driver Result Object Data:", rawEntries[0]);
-    }
 
     if (rawEntries.length === 0) {
       if (dynamicArea) {
@@ -479,10 +470,10 @@ async function renderResults(roundId) {
           const team = roster.Team || roster.team || {};
           const bonus = getBonusMeta(entry.Bonuses || entry.bonuses);
 
-          // Check all possible casing variants for time and penalties
-          const timeVal = entry.FinishTimeMs ?? entry.finishTimeMs ?? entry.TotalTimeMs ?? entry.totalTimeMs ?? entry.TimeMs ?? entry.timeMs ?? 0;
-          const lapsDown = entry.LapsDown ?? entry.lapsDown ?? 0;
-          const penaltyVal = entry.PenaltyPoints ?? entry.penaltyPoints ?? entry.Penalties ?? entry.penalties ?? entry.PenaltyTimeMs ?? entry.penaltyTimeMs ?? 0;
+          // Expanded property check covering camelCase, PascalCase, and lower case variants
+          const timeVal = entry.FinishTimeMs ?? entry.finishTimeMs ?? entry.TotalTimeMs ?? entry.totalTimeMs ?? entry.TimeMs ?? entry.timeMs ?? entry.FinishTime ?? entry.finishTime ?? 0;
+          const lapsDown = entry.LapsDown ?? entry.lapsDown ?? entry.LapsBehind ?? entry.lapsBehind ?? 0;
+          const penaltyVal = entry.PenaltyPoints ?? entry.penaltyPoints ?? entry.Penalties ?? entry.penalties ?? entry.PenaltyTimeMs ?? entry.penaltyTimeMs ?? entry.PenaltyTime ?? entry.penaltyTime ?? 0;
 
           return {
             driver: driver.DisplayName || driver.Name || 'Unknown Driver',
@@ -582,9 +573,9 @@ async function renderResults(roundId) {
                     
                     if (driverName === 'Unknown Driver' && pos === '-') return ''; 
 
-                    const timeVal = entry.FinishTimeMs ?? entry.finishTimeMs ?? entry.TotalTimeMs ?? entry.totalTimeMs ?? entry.TimeMs ?? entry.timeMs ?? 0;
-                    const lapsDown = entry.LapsDown ?? entry.lapsDown ?? 0;
-                    const penaltyVal = entry.PenaltyPoints ?? entry.penaltyPoints ?? entry.Penalties ?? entry.penalties ?? entry.PenaltyTimeMs ?? entry.penaltyTimeMs ?? 0;
+                    const timeVal = entry.FinishTimeMs ?? entry.finishTimeMs ?? entry.TotalTimeMs ?? entry.totalTimeMs ?? entry.TimeMs ?? entry.timeMs ?? entry.FinishTime ?? entry.finishTime ?? 0;
+                    const lapsDown = entry.LapsDown ?? entry.lapsDown ?? entry.LapsBehind ?? entry.lapsBehind ?? 0;
+                    const penaltyVal = entry.PenaltyPoints ?? entry.penaltyPoints ?? entry.Penalties ?? entry.penalties ?? entry.PenaltyTimeMs ?? entry.penaltyTimeMs ?? entry.PenaltyTime ?? entry.penaltyTime ?? 0;
 
                     return `
                       <tr>
