@@ -385,6 +385,35 @@ function getBonusMeta(bonuses) {
   };
 }
 
+function formatFinishTimeOrInterval(entry) {
+  // Use ElapsedTime or ClassInterval / Interval from the diagnostic payload
+  const interval = entry.ClassInterval || entry.classInterval || entry.Interval || entry.interval;
+  const finishPos = entry.ClassFinishPosition ?? entry.FinishPosition ?? 999;
+  
+  if (finishPos === 1) {
+    const elapsed = entry.ElapsedTime || entry.elapsedTime;
+    if (elapsed) {
+      // e.g. "00:25:44.7408000" -> clean up
+      return elapsed.substring(3, 11); // MM:SS.ms
+    }
+  }
+  
+  if (interval) {
+    return interval;
+  }
+  
+  return '-';
+}
+
+function parsePenalties(entry) {
+  const pens = entry.Penalties || entry.penalties;
+  if (Array.isArray(pens) && pens.length > 0) {
+    return pens.map(p => p.Description || p.description || p.Type || p.type || 'Penalty').join(', ');
+  }
+  const pts = entry.CarEntryPoints?.PenaltyPoints ?? entry.penaltyPoints ?? 0;
+  return pts > 0 ? `${pts} pts` : '';
+}
+
 async function renderResults(roundId) {
   const dynamicArea = document.getElementById('dynamic-results-area');
   const placeholder = document.getElementById('results-placeholder');
@@ -413,7 +442,7 @@ async function renderResults(roundId) {
   }
 
   if (dynamicArea) {
-    dynamicArea.innerHTML = '<div style="text-align: center; padding: 60px 20px; color: var(--text-muted); background-color: var(--bg-panel); border: 1.5px solid var(--border-color); border-radius: 12px; margin-bottom: 40px;">Running diagnostics on API payload...</div>';
+    dynamicArea.innerHTML = '<div style="text-align: center; padding: 60px 20px; color: var(--text-muted); background-color: var(--bg-panel); border: 1.5px solid var(--border-color); border-radius: 12px; margin-bottom: 40px;">Loading official race results...</div>';
   }
 
   try {
@@ -422,36 +451,165 @@ async function renderResults(roundId) {
 
     const data = await res.json();
     const rawEntries = data.Results?.EventResults || data.results?.eventResults || [];
+    const rosterDetails = data.Results?.Entries || data.results?.entries || [];
     const sessions = data.Results?.EventSessionResults || data.results?.eventSessionResults || [];
 
-    // DIAGNOSTIC OUTPUT: Print raw JSON directly onto the page
-    let diagnosticHtml = `
-      <div style="background: #12141a; border: 2px solid var(--brand-red); border-radius: 12px; padding: 25px; margin-bottom: 40px; color: #fff; font-family: monospace; font-size: 0.85rem; overflow-x: auto;">
-        <h3 style="color: var(--brand-red); margin-bottom: 15px;">Diagnostic: Raw EventResult Payload</h3>
-        <p style="color: var(--text-muted); margin-bottom: 15px;">Total raw entries found: ${rawEntries.length}</p>
-        <p style="color: var(--text-muted); margin-bottom: 15px;">Total session results found: ${sessions.length}</p>
-        <pre style="white-space: pre-wrap; word-break: break-all; color: #4ade80;">${JSON.stringify(rawEntries[0] || { message: "No entries found" }, null, 2)}</pre>
-      </div>
-    `;
-
-    if (sessions.length > 0) {
-      const firstSessionEntries = sessions[0].EventEntryResults || sessions[0].eventEntryResults || [];
-      diagnosticHtml += `
-        <div style="background: #12141a; border: 2px solid var(--brand-blue); border-radius: 12px; padding: 25px; margin-bottom: 40px; color: #fff; font-family: monospace; font-size: 0.85rem; overflow-x: auto;">
-          <h3 style="color: var(--brand-blue); margin-bottom: 15px;">Diagnostic: Raw Session Entry Result Payload</h3>
-          <pre style="white-space: pre-wrap; word-break: break-all; color: #60a5fa;">${JSON.stringify(firstSessionEntries[0] || { message: "No session entries found" }, null, 2)}</pre>
-        </div>
-      `;
+    if (rawEntries.length === 0) {
+      if (dynamicArea) {
+        dynamicArea.innerHTML = '<div style="text-align: center; padding: 60px 20px; color: var(--text-muted); background-color: var(--bg-panel); border: 1.5px solid var(--border-color); border-radius: 12px; margin-bottom: 40px;">Results are currently being processed or this event has not taken place yet.</div>';
+      }
+      return;
     }
 
-    round.resultsHtml = diagnosticHtml;
-    if (dynamicArea) dynamicArea.innerHTML = diagnosticHtml;
-    if (legend) legend.style.display = 'none';
+    const rosterMap = {};
+    rosterDetails.forEach(r => {
+      const id = r.RosterId || r.rosterId;
+      if (id) rosterMap[id] = r;
+    });
 
+    const raceSessions = sessions.filter(s => {
+      const type = (s.TypeSession || s.typeSession || '').toLowerCase();
+      return ['race', 'heat', 'feature', 'sprint', 'consolation'].includes(type);
+    });
+
+    const isSprintFormat = raceSessions.length > 1;
+    let finalHtml = '';
+
+    if (!isSprintFormat) {
+      const overallResults = rawEntries
+        .map(entry => {
+          const roster = rosterMap[entry.RosterId] || {};
+          const driver = roster.PrimaryDrivers?.[0] || roster.primaryDrivers?.[0] || {};
+          const team = roster.Team || roster.team || {};
+          const bonus = getBonusMeta(entry.Bonuses || entry.bonuses);
+
+          return {
+            driver: driver.DisplayName || driver.Name || 'Unknown Driver',
+            team: team.Name || 'Independent',
+            class: (entry.RunClass || entry.runClass || 'PRO').toUpperCase(),
+            pos: entry.ClassFinishPosition || entry.FinishPosition || '-',
+            inc: entry.Incidents ?? entry.incidents ?? 0,
+            time: formatFinishTimeOrInterval(entry),
+            penalty: parsePenalties(entry),
+            bonus: bonus.points,
+            bonusTags: bonus.html,
+            pts: entry.DriverEntryPoints?.[0]?.TotalPoints ?? entry.TotalPoints ?? 0,
+            classFinish: entry.ClassFinishPosition || entry.finishPosition || 9999
+          };
+        })
+        .filter(r => !(r.driver === 'Unknown Driver' && r.pos === '-'));
+
+      const uniqueClasses = [...new Set(overallResults.map(r => r.class))].sort().reverse();
+
+      uniqueClasses.forEach(cls => {
+        const classResults = overallResults.filter(r => r.class === cls);
+        classResults.sort((a, b) => a.classFinish - b.classFinish);
+
+        finalHtml += `
+          <h3 style="margin-top: 20px; margin-bottom: 15px; color: #fff; text-transform: uppercase; font-size: 1.2rem; letter-spacing: 1px;">${cls} CLASS RESULTS</h3>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 70px;">Pos</th>
+                  <th style="text-align: left;">Driver</th>
+                  <th>Time / Gap</th>
+                  <th>Inc</th>
+                  <th>Pen</th>
+                  <th>Bonus</th>
+                  <th>Pts</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${classResults.map(r => `
+                  <tr>
+                    <td class="text-highlight">${r.pos}</td>
+                    <td style="text-align: left;">
+                      <span class="text-highlight" style="display: block;">${r.driver}</span>
+                      <span class="subtext">${r.team}</span>
+                    </td>
+                    <td style="color: var(--text-muted); font-size: 0.9rem;">${r.time}</td>
+                    <td>${r.inc}</td>
+                    <td style="color: ${r.penalty ? 'var(--brand-red)' : 'var(--text-muted)'}; font-weight: ${r.penalty ? '800' : '400'};">${r.penalty || '-'}</td>
+                    <td style="color: #4ade80;">${r.bonus > 0 ? '+' + r.bonus + r.bonusTags : '-'}</td>
+                    <td class="text-highlight">${r.pts}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+      });
+    } else {
+      raceSessions.forEach((session, idx) => {
+        const title = `${session.TypeSession || session.typeSession || 'Race'} (Session ${session.SessionNumber || session.sessionNumber || idx + 1})`;
+        const entries = session.EventEntryResults || session.eventEntryResults || [];
+        
+        if (entries.length === 0) return;
+
+        finalHtml += `<h3 style="margin-top: ${idx === 0 ? '20px' : '40px'}; margin-bottom: 5px; color: var(--brand-red); text-transform: uppercase; font-size: 1.1rem; letter-spacing: 1px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">${title} Results</h3>`;
+
+        const sessionClasses = [...new Set(entries.map(e => (e.RunClass || e.runClass || 'PRO').toUpperCase()))].sort().reverse();
+
+        sessionClasses.forEach(cls => {
+          const classEntries = entries
+            .filter(e => (e.RunClass || e.runClass || 'PRO').toUpperCase() === cls)
+            .sort((a, b) => (a.ClassFinishPosition || a.FinishPosition || 9999) - (b.ClassFinishPosition || b.FinishPosition || 9999));
+
+          finalHtml += `
+            <h4 style="margin-top: 15px; margin-bottom: 10px; color: var(--text-muted); text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;">${cls} Class</h4>
+            <div class="table-wrapper" style="margin-bottom: 20px;">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width: 70px;">Pos</th>
+                    <th style="text-align: left;">Driver</th>
+                    <th>Time / Gap</th>
+                    <th>Inc</th>
+                    <th>Pen</th>
+                    <th>Pts</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${classEntries.map(entry => {
+                    const roster = rosterMap[entry.RosterId] || {};
+                    const driver = roster.PrimaryDrivers?.[0] || roster.primaryDrivers?.[0] || {};
+                    const team = roster.Team || roster.team || {};
+                    
+                    const driverName = driver.DisplayName || driver.Name || 'Unknown Driver';
+                    const pos = entry.ClassFinishPosition || entry.FinishPosition || '-';
+                    
+                    if (driverName === 'Unknown Driver' && pos === '-') return ''; 
+
+                    return `
+                      <tr>
+                        <td class="text-highlight">${pos}</td>
+                        <td style="text-align: left;">
+                          <span class="text-highlight" style="display: block;">${driverName}</span>
+                          <span class="subtext">${team.Name || 'Independent'}</span>
+                        </td>
+                        <td style="color: var(--text-muted); font-size: 0.9rem;">${formatFinishTimeOrInterval(entry)}</td>
+                        <td>${entry.Incidents ?? entry.incidents ?? 0}</td>
+                        <td style="color: ${parsePenalties(entry) ? 'var(--brand-red)' : 'var(--text-muted)'}; font-weight: ${parsePenalties(entry) ? '800' : '400'};">${parsePenalties(entry) || '-'}</td>
+                        <td class="text-highlight">${entry.DriverEntryPoints?.[0]?.TotalPoints ?? entry.TotalPoints ?? 0}</td>
+                      </tr>
+                    `;
+                  }).join('')}
+                </tbody>
+              </table>
+            </div>
+          `;
+        });
+      });
+    }
+
+    round.resultsHtml = finalHtml;
+    if (dynamicArea) dynamicArea.innerHTML = finalHtml;
+    if (legend) legend.style.display = isSprintFormat ? 'none' : 'block';
   } catch (err) {
-    console.error("Could not run diagnostics:", err);
+    console.error("Could not load results:", err);
     if (dynamicArea) {
-      dynamicArea.innerHTML = '<div style="text-align: center; padding: 60px 20px; color: var(--brand-red); background-color: var(--bg-panel); border: 1.5px solid var(--border-color); border-radius: 12px;">Failed to fetch diagnostic data.</div>';
+      dynamicArea.innerHTML = '<div style="text-align: center; padding: 60px 20px; color: var(--brand-red); background-color: var(--bg-panel); border: 1.5px solid var(--border-color); border-radius: 12px;">Failed to load race results. Please try again later.</div>';
     }
   }
 }
@@ -466,7 +624,7 @@ function syncBroadcast() {
   }
 
   const currentRound = activeRoundIndex !== -1 ? activeRoundIndex + 1 : 1;
-  const broadcastUrl = BROADCAST_LINKS[currentRound] || 'https://www.youtube.com/playlist?list=PLINvGbO65PbU';
+  const broadcastUrl = BROADCAST_LINKS[currentRound] || 'https://www.youtube.com/playlist?List=PLINvGbO65PbU';
 
   const watchBtn = document.getElementById('nav-watch-btn');
   if (watchBtn) {
