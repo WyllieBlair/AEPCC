@@ -401,6 +401,14 @@ function formatTimeOrGap(timeMs, lapsDown) {
   return `${seconds}s`;
 }
 
+function parsePenalty(val) {
+  if (!val) return '';
+  if (typeof val === 'object') {
+    return val.Points ?? val.points ?? val.Value ?? val.value ?? val.Time ?? val.time ?? '';
+  }
+  return val;
+}
+
 async function renderResults(roundId) {
   const dynamicArea = document.getElementById('dynamic-results-area');
   const placeholder = document.getElementById('results-placeholder');
@@ -470,10 +478,11 @@ async function renderResults(roundId) {
           const team = roster.Team || roster.team || {};
           const bonus = getBonusMeta(entry.Bonuses || entry.bonuses);
 
-          // Expanded property check covering camelCase, PascalCase, and lower case variants
           const timeVal = entry.FinishTimeMs ?? entry.finishTimeMs ?? entry.TotalTimeMs ?? entry.totalTimeMs ?? entry.TimeMs ?? entry.timeMs ?? entry.FinishTime ?? entry.finishTime ?? 0;
           const lapsDown = entry.LapsDown ?? entry.lapsDown ?? entry.LapsBehind ?? entry.lapsBehind ?? 0;
-          const penaltyVal = entry.PenaltyPoints ?? entry.penaltyPoints ?? entry.Penalties ?? entry.penalties ?? entry.PenaltyTimeMs ?? entry.penaltyTimeMs ?? entry.PenaltyTime ?? entry.penaltyTime ?? 0;
+          
+          const rawPen = entry.PenaltyPoints ?? entry.penaltyPoints ?? entry.Penalties ?? entry.penalties ?? entry.PenaltyTimeMs ?? entry.penaltyTimeMs ?? entry.PenaltyTime ?? entry.penaltyTime ?? entry.Penalty ?? entry.penalty ?? 0;
+          const penaltyVal = parsePenalty(rawPen);
 
           return {
             driver: driver.DisplayName || driver.Name || 'Unknown Driver',
@@ -575,7 +584,9 @@ async function renderResults(roundId) {
 
                     const timeVal = entry.FinishTimeMs ?? entry.finishTimeMs ?? entry.TotalTimeMs ?? entry.totalTimeMs ?? entry.TimeMs ?? entry.timeMs ?? entry.FinishTime ?? entry.finishTime ?? 0;
                     const lapsDown = entry.LapsDown ?? entry.lapsDown ?? entry.LapsBehind ?? entry.lapsBehind ?? 0;
-                    const penaltyVal = entry.PenaltyPoints ?? entry.penaltyPoints ?? entry.Penalties ?? entry.penalties ?? entry.PenaltyTimeMs ?? entry.penaltyTimeMs ?? entry.PenaltyTime ?? entry.penaltyTime ?? 0;
+                    
+                    const rawPen = entry.PenaltyPoints ?? entry.penaltyPoints ?? entry.Penalties ?? entry.penalties ?? entry.PenaltyTimeMs ?? entry.penaltyTimeMs ?? entry.PenaltyTime ?? entry.penaltyTime ?? entry.Penalty ?? entry.penalty ?? 0;
+                    const penaltyVal = parsePenalty(rawPen);
 
                     return `
                       <tr>
