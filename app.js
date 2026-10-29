@@ -385,7 +385,11 @@ function getBonusMeta(bonuses) {
   };
 }
 
-function formatTimeOrGap(timeMs, lapsDown) {
+function formatTimeOrGap(entry) {
+  // Try every possible time field in the entry object
+  const timeMs = entry.FinishTimeMs ?? entry.finishTimeMs ?? entry.TotalTimeMs ?? entry.totalTimeMs ?? entry.TimeMs ?? entry.timeMs ?? entry.FinishTime ?? entry.finishTime ?? entry.RaceTimeMs ?? entry.raceTimeMs ?? 0;
+  const lapsDown = entry.LapsDown ?? entry.lapsDown ?? entry.LapsBehind ?? entry.lapsBehind ?? 0;
+
   if (lapsDown && lapsDown > 0) {
     return `${lapsDown} L${lapsDown === 1 ? '' : 's'}`;
   }
@@ -401,12 +405,15 @@ function formatTimeOrGap(timeMs, lapsDown) {
   return `${seconds}s`;
 }
 
-function parsePenalty(val) {
-  if (!val) return '';
-  if (typeof val === 'object') {
-    return val.Points ?? val.points ?? val.Value ?? val.value ?? val.Time ?? val.time ?? '';
+function parsePenalty(entry) {
+  // Check direct penalty properties on the entry object
+  const rawPen = entry.PenaltyPoints ?? entry.penaltyPoints ?? entry.Penalties ?? entry.penalties ?? entry.PenaltyTimeMs ?? entry.penaltyTimeMs ?? entry.PenaltyTime ?? entry.penaltyTime ?? entry.Penalty ?? entry.penalty ?? 0;
+  
+  if (!rawPen) return '';
+  if (typeof rawPen === 'object') {
+    return rawPen.Points ?? rawPen.points ?? rawPen.Value ?? rawPen.value ?? rawPen.Time ?? rawPen.time ?? '';
   }
-  return val;
+  return rawPen;
 }
 
 async function renderResults(roundId) {
@@ -478,20 +485,14 @@ async function renderResults(roundId) {
           const team = roster.Team || roster.team || {};
           const bonus = getBonusMeta(entry.Bonuses || entry.bonuses);
 
-          const timeVal = entry.FinishTimeMs ?? entry.finishTimeMs ?? entry.TotalTimeMs ?? entry.totalTimeMs ?? entry.TimeMs ?? entry.timeMs ?? entry.FinishTime ?? entry.finishTime ?? 0;
-          const lapsDown = entry.LapsDown ?? entry.lapsDown ?? entry.LapsBehind ?? entry.lapsBehind ?? 0;
-          
-          const rawPen = entry.PenaltyPoints ?? entry.penaltyPoints ?? entry.Penalties ?? entry.penalties ?? entry.PenaltyTimeMs ?? entry.penaltyTimeMs ?? entry.PenaltyTime ?? entry.penaltyTime ?? entry.Penalty ?? entry.penalty ?? 0;
-          const penaltyVal = parsePenalty(rawPen);
-
           return {
             driver: driver.DisplayName || driver.Name || 'Unknown Driver',
             team: team.Name || 'Independent',
             class: (entry.RunClass || entry.runClass || 'PRO').toUpperCase(),
             pos: entry.ClassFinishPosition || entry.FinishPosition || '-',
             inc: entry.Incidents ?? entry.incidents ?? 0,
-            time: formatTimeOrGap(timeVal, lapsDown),
-            penalty: penaltyVal,
+            time: formatTimeOrGap(entry),
+            penalty: parsePenalty(entry),
             bonus: bonus.points,
             bonusTags: bonus.html,
             pts: entry.DriverEntryPoints?.[0]?.TotalPoints ?? entry.TotalPoints ?? 0,
@@ -582,12 +583,6 @@ async function renderResults(roundId) {
                     
                     if (driverName === 'Unknown Driver' && pos === '-') return ''; 
 
-                    const timeVal = entry.FinishTimeMs ?? entry.finishTimeMs ?? entry.TotalTimeMs ?? entry.totalTimeMs ?? entry.TimeMs ?? entry.timeMs ?? entry.FinishTime ?? entry.finishTime ?? 0;
-                    const lapsDown = entry.LapsDown ?? entry.lapsDown ?? entry.LapsBehind ?? entry.lapsBehind ?? 0;
-                    
-                    const rawPen = entry.PenaltyPoints ?? entry.penaltyPoints ?? entry.Penalties ?? entry.penalties ?? entry.PenaltyTimeMs ?? entry.penaltyTimeMs ?? entry.PenaltyTime ?? entry.penaltyTime ?? entry.Penalty ?? entry.penalty ?? 0;
-                    const penaltyVal = parsePenalty(rawPen);
-
                     return `
                       <tr>
                         <td class="text-highlight">${pos}</td>
@@ -595,9 +590,9 @@ async function renderResults(roundId) {
                           <span class="text-highlight" style="display: block;">${driverName}</span>
                           <span class="subtext">${team.Name || 'Independent'}</span>
                         </td>
-                        <td style="color: var(--text-muted);">${formatTimeOrGap(timeVal, lapsDown)}</td>
+                        <td style="color: var(--text-muted);">${formatTimeOrGap(entry)}</td>
                         <td>${entry.Incidents ?? entry.incidents ?? 0}</td>
-                        <td style="color: ${penaltyVal ? 'var(--brand-red)' : 'var(--text-muted)'}; font-weight: ${penaltyVal ? '800' : '400'};">${penaltyVal || '-'}</td>
+                        <td style="color: ${parsePenalty(entry) ? 'var(--brand-red)' : 'var(--text-muted)'}; font-weight: ${parsePenalty(entry) ? '800' : '400'};">${parsePenalty(entry) || '-'}</td>
                         <td class="text-highlight">${entry.DriverEntryPoints?.[0]?.TotalPoints ?? entry.TotalPoints ?? 0}</td>
                       </tr>
                     `;
