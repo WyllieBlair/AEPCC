@@ -385,21 +385,40 @@ function getBonusMeta(bonuses) {
   };
 }
 
+function formatTimeSpan(timeStr) {
+  if (!timeStr) return '-';
+  // If it's formatted like "00:00:41.6847000", convert to clean MM:SS.ms or seconds
+  try {
+    const parts = timeStr.split(':');
+    if (parts.length === 3) {
+      const hours = parseInt(parts[0], 10);
+      const minutes = parseInt(parts[1], 10);
+      const secondsParts = parseFloat(parts[2]);
+      
+      const totalMin = (hours * 60) + minutes;
+      if (totalMin > 0) {
+        return `${totalMin}:${secondsParts.toFixed(3).padStart(6, '0')}`;
+      }
+      return `${secondsParts.toFixed(3)}s`;
+    }
+  } catch (e) {
+    // fallback
+  }
+  return timeStr;
+}
+
 function formatFinishTimeOrInterval(entry) {
-  // Use ElapsedTime or ClassInterval / Interval from the diagnostic payload
-  const interval = entry.ClassInterval || entry.classInterval || entry.Interval || entry.interval;
   const finishPos = entry.ClassFinishPosition ?? entry.FinishPosition ?? 999;
   
   if (finishPos === 1) {
     const elapsed = entry.ElapsedTime || entry.elapsedTime;
-    if (elapsed) {
-      // e.g. "00:25:44.7408000" -> clean up
-      return elapsed.substring(3, 11); // MM:SS.ms
-    }
+    if (elapsed) return formatTimeSpan(elapsed);
   }
   
+  const interval = entry.ClassInterval || entry.classInterval || entry.Interval || entry.interval;
   if (interval) {
-    return interval;
+    // If interval starts with +, clean it up or format it
+    return formatTimeSpan(interval);
   }
   
   return '-';
@@ -408,7 +427,12 @@ function formatFinishTimeOrInterval(entry) {
 function parsePenalties(entry) {
   const pens = entry.Penalties || entry.penalties;
   if (Array.isArray(pens) && pens.length > 0) {
-    return pens.map(p => p.Description || p.description || p.Type || p.type || 'Penalty').join(', ');
+    return pens.map(p => {
+      if (typeof p === 'object') {
+        return p.Description || p.description || p.Type || p.type || JSON.stringify(p);
+      }
+      return p;
+    }).join(', ');
   }
   const pts = entry.CarEntryPoints?.PenaltyPoints ?? entry.penaltyPoints ?? 0;
   return pts > 0 ? `${pts} pts` : '';
@@ -624,7 +648,7 @@ function syncBroadcast() {
   }
 
   const currentRound = activeRoundIndex !== -1 ? activeRoundIndex + 1 : 1;
-  const broadcastUrl = BROADCAST_LINKS[currentRound] || 'https://www.youtube.com/playlist?List=PLINvGbO65PbU';
+  const broadcastUrl = BROADCAST_LINKS[currentRound] || 'https://www.youtube.com/playlist?list=PLINvGbO65PbU';
 
   const watchBtn = document.getElementById('nav-watch-btn');
   if (watchBtn) {
