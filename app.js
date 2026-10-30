@@ -80,16 +80,51 @@ function switchTab(tabId) {
 
 function updateScheduleBadges() {
   const today = new Date();
-  document.querySelectorAll('.round-date-badge').forEach(badge => {
+  let nextRoundFound = false;
+
+  document.querySelectorAll('.round-card').forEach((card, index) => {
+    const badge = card.querySelector('.round-date-badge');
+    if (!badge) return;
+
     const raceDateStr = badge.getAttribute('data-date');
-    const raceDate = new Date(raceDateStr);
-    
-    if (today >= raceDate) {
-      badge.outerHTML = `<a href="javascript:void(0)" onclick="switchTab('results')" class="round-results-link">View Results</a>`;
+    // Set to end of race night (23:59) so the round stays "Next" on race day
+    const raceDate = new Date(`${raceDateStr}T23:59:59`);
+    const displayDate = new Date(raceDateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }).toUpperCase();
+
+    if (today > raceDate) {
+      badge.outerHTML = `<a href="javascript:void(0)" onclick="openRoundResults(${index})" class="round-results-link">View Results</a>`;
     } else {
-      badge.textContent = raceDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }).toUpperCase();
+      badge.textContent = displayDate;
+
+      if (!nextRoundFound) {
+        nextRoundFound = true;
+        const roundTitle = card.querySelector('.round-header')?.textContent || `Round ${index + 1}`;
+        const trackName = card.querySelector('h3')?.textContent || '';
+        const pill = document.getElementById('next-round-pill');
+
+        if (pill) {
+          pill.style.display = 'inline-flex';
+          pill.onclick = () => switchTab('schedule');
+          pill.innerHTML = `
+            <span class="pill-tag">NEXT</span>
+            <span><strong>${roundTitle}</strong> &mdash; ${trackName}</span>
+            <span class="pill-sep">|</span>
+            <span style="color: var(--text-muted);">${displayDate}</span>
+          `;
+        }
+      }
     }
   });
+}
+
+function openRoundResults(roundIndex) {
+  switchTab('results');
+  const selector = document.getElementById('round-selector');
+  const targetRound = globalRounds[roundIndex];
+  if (selector && targetRound) {
+    selector.value = targetRound.id;
+    renderResults(targetRound.id);
+  }
 }
 
 async function loadStandings() {
@@ -188,6 +223,15 @@ async function loadStandings() {
         opt.textContent = r.name;
         selector.appendChild(opt);
       });
+
+      // Auto-select the latest completed round
+      const now = new Date();
+      const completedRounds = globalRounds.filter(r => r.date <= now);
+      if (completedRounds.length > 0) {
+        const latestRound = completedRounds[completedRounds.length - 1];
+        selector.value = latestRound.id;
+        renderResults(latestRound.id);
+      }
     }
 
   } catch (err) {
