@@ -16,6 +16,7 @@
   --brand-red: #da291c;
   --brand-blue: #001489;
   --brand-discord: #5865F2;
+  --brand-youtube: #FF0000;
   --brand-gradient: linear-gradient(90deg, var(--brand-blue), var(--brand-red));
   
   --bg-page: #0f1115;
@@ -103,8 +104,44 @@ nav {
 
 nav::-webkit-scrollbar { display: none; }
 
-nav button { background: none; border: none; color: var(--text-muted); font-family: var(--font-brand); font-weight: 800; font-size: 0.9rem; letter-spacing: 0.5px; text-transform: uppercase; cursor: pointer; padding: 10px 0; border-bottom: 2px solid transparent; transition: color 0.2s; white-space: nowrap; }
-nav button:hover, nav button.active { color: #fff; border-bottom-color: var(--brand-red); }
+nav button:not(.btn-watch) { background: none; border: none; color: var(--text-muted); font-family: var(--font-brand); font-weight: 800; font-size: 0.9rem; letter-spacing: 0.5px; text-transform: uppercase; cursor: pointer; padding: 10px 0; border-bottom: 2px solid transparent; transition: color 0.2s; white-space: nowrap; }
+nav button:not(.btn-watch):hover, nav button:not(.btn-watch).active { color: #fff; border-bottom-color: var(--brand-red); }
+
+.btn-watch {
+  background: rgba(255, 0, 0, 0.12);
+  border: 1.5px solid rgba(255, 0, 0, 0.45);
+  color: #fff;
+  padding: 7px 14px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-brand);
+  text-transform: uppercase;
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+}
+
+.btn-watch svg {
+  color: var(--brand-youtube);
+  transition: color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.btn-watch:hover {
+  background: var(--brand-youtube);
+  border-color: var(--brand-youtube);
+  color: #fff;
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.35);
+}
+
+.btn-watch:hover svg {
+  color: #fff;
+}
 
 .btn-discord { background: var(--brand-discord); color: #fff; padding: 8px 16px; border-radius: 4px; font-size: 0.85rem; font-weight: 800; text-decoration: none; transition: opacity 0.2s; display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-brand); text-transform: uppercase; white-space: nowrap; }
 .btn-discord:hover { opacity: 0.9; }
@@ -143,12 +180,13 @@ nav button:hover, nav button.active { color: #fff; border-bottom-color: var(--br
   text-align: center;
 }
 .hero-content h1 {
-  font-size: 3rem;
+  font-size: 2.6rem;
   text-transform: uppercase;
   color: #fff;
   text-shadow: 0 4px 25px rgba(0,0,0,0.9);
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   letter-spacing: 1px;
+  line-height: 1.2;
 }
 .hero-content p {
   font-size: 1.1rem;
@@ -677,10 +715,10 @@ tr:hover td { background-color: rgba(255,255,255,0.02); }
 @media (max-width: 768px) {
   .nav-container { flex-direction: column; align-items: flex-start; gap: 15px; padding: 15px; }
   nav { width: 100%; padding-bottom: 5px; }
-  nav button { padding: 10px 12px; }
+  nav button:not(.btn-watch) { padding: 10px 12px; }
   .btn-discord { width: 100%; justify-content: center; margin-top: 5px; }
   .hero { height: 350px; }
-  .hero-content h1 { font-size: 1.8rem; }
+  .hero-content h1 { font-size: 1.6rem; }
   th, td { padding: 10px 8px; font-size: 0.85rem; }
   .footer-bottom {
     flex-direction: column;
