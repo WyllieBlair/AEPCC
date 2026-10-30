@@ -62,12 +62,12 @@ function initDynamicSlider() {
 
 function switchTab(tabId) {
   document.querySelectorAll('.tab-view').forEach(view => view.classList.remove('active'));
-  document.querySelectorAll('#nav-tabs button').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('#nav-tabs button:not(.btn-watch)').forEach(btn => btn.classList.remove('active'));
   
   const targetTab = document.getElementById(`tab-${tabId}`);
   if (targetTab) targetTab.classList.add('active');
   
-  const matchingBtn = Array.from(document.querySelectorAll('#nav-tabs button')).find(btn => btn.getAttribute('onclick')?.includes(tabId));
+  const matchingBtn = Array.from(document.querySelectorAll('#nav-tabs button:not(.btn-watch)')).find(btn => btn.getAttribute('onclick')?.includes(tabId));
   if (matchingBtn) matchingBtn.classList.add('active');
   
   if (window.innerWidth <= 768) {
