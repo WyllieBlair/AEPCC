@@ -609,6 +609,13 @@ async function renderResults(roundId) {
         `;
       });
     } else {
+      // Map event-level bonuses by RosterId in case XtremeScoring attaches them to EventResults instead of sessions
+      const eventBonusMap = {};
+      rawEntries.forEach(e => {
+        const b = getBonusMeta(e.Bonuses || e.bonuses);
+        if (b.points > 0) eventBonusMap[e.RosterId] = b;
+      });
+
       raceSessions.forEach((session, idx) => {
         const title = `${session.TypeSession || session.typeSession || 'Race'} (Session ${session.SessionNumber || session.sessionNumber || idx + 1})`;
         const entries = session.EventEntryResults || session.eventEntryResults || [];
@@ -635,6 +642,7 @@ async function renderResults(roundId) {
                     <th>Time / Gap</th>
                     <th>Inc</th>
                     <th>Pen</th>
+                    <th>Bonus</th>
                     <th>Pts</th>
                   </tr>
                 </thead>
@@ -649,6 +657,12 @@ async function renderResults(roundId) {
                     
                     if (driverName === 'Unknown Driver' && pos === '-') return ''; 
 
+                    // Check session-level bonuses first; on the final session, fall back to event-level bonuses
+                    let bonus = getBonusMeta(entry.Bonuses || entry.bonuses);
+                    if (bonus.points === 0 && idx === raceSessions.length - 1 && eventBonusMap[entry.RosterId]) {
+                      bonus = eventBonusMap[entry.RosterId];
+                    }
+
                     return `
                       <tr>
                         <td class="text-highlight">${pos}</td>
@@ -659,6 +673,7 @@ async function renderResults(roundId) {
                         <td style="color: var(--text-muted); font-size: 0.9rem;">${formatFinishTimeOrInterval(entry)}</td>
                         <td>${entry.Incidents ?? entry.incidents ?? 0}</td>
                         <td style="color: ${parsePenalties(entry) ? 'var(--brand-red)' : 'var(--text-muted)'}; font-weight: ${parsePenalties(entry) ? '800' : '400'};">${parsePenalties(entry) || '-'}</td>
+                        <td style="color: #4ade80;">${bonus.points > 0 ? '+' + bonus.points + bonus.html : '-'}</td>
                         <td class="text-highlight">${entry.DriverEntryPoints?.[0]?.TotalPoints ?? entry.TotalPoints ?? 0}</td>
                       </tr>
                     `;
@@ -673,7 +688,7 @@ async function renderResults(roundId) {
 
     round.resultsHtml = finalHtml;
     if (dynamicArea) dynamicArea.innerHTML = finalHtml;
-    if (legend) legend.style.display = isSprintFormat ? 'none' : 'block';
+    if (legend) legend.style.display = 'block';
   } catch (err) {
     console.error("Could not load results:", err);
     if (dynamicArea) {
