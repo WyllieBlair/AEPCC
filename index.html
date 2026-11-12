@@ -4,33 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AEPCC | Australian E-Sport Porsche Cup Championship</title>
-  
   <link rel="stylesheet" href="styles.css">
-  <style>
-    .footer-sponsors .sponsor-grid {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 30px;
-      flex-wrap: wrap;
-      margin-top: 15px;
-    }
-    .footer-sponsors .sponsor-item {
-      display: block;
-      max-width: 220px;
-      height: auto;
-    }
-    .footer-sponsors .sponsor-item img {
-      width: 100%;
-      height: auto;
-      object-fit: contain;
-      border-radius: 6px;
-      transition: opacity 0.2s ease;
-    }
-    .footer-sponsors .sponsor-item img:hover {
-      opacity: 0.85;
-    }
-  </style>
 </head>
 <body>
 
@@ -67,12 +41,10 @@
 
     <div id="tab-home" class="tab-view active">
       
-      <div style="max-width: 900px; margin-bottom: 30px;">
+      <div class="intro-block">
         <h2>AEPCC Season 1</h2>
-        <p>Welcome to the inaugural season of the Australian E-Sport Porsche Cup Championship (AEPCC)! Launching this October, we are bringing single-make racing to the Oceanic region, exclusively featuring the Porsche 911 GT3 Cup (992.2) on iRacing.</p>
-        <p>Our season calendar closely follows the official iRacing Porsche Cup series schedule. Prepare to race across tracks around the world and four different weekend formats ranging from 16-minute super sprints with inverted grids to longer 60-minute endurance feature races requiring compulsory pit stops.</p>
-        <p>To ensure close, competitive racing across a maximum of a 60 car grid, the field is divided into two skill-based divisions (Pro and Am) determined by a mandatory pre-qualifying week. A third class (Pro-Am) will be added if entries exceed 45. Class podium finishers compete for a $350 AUD cash prize pool alongside trophies and Hymo Setups subscriptions.</p>
-        <p>Entry is open to any driver holding an active iRacing Class D Sports Car license. To secure your spot on the grid, simply join our Discord community, complete your registration, and pay the entry fee.</p>
+        <p>The Australian E-Sport Porsche Cup Championship (AEPCC) is an Oceanic single-make league running the Porsche 911 GT3 Cup (992.2) on iRacing. Following the official iRacing Porsche Cup calendar across eight rounds, the championship tests drivers across 40-minute regular sessions, twin-race sprints, a 60-minute Bathurst endurance round, and a three-heat finale at Road Atlanta.</p>
+        <p>Up to 60 entries are split into Pro and Am divisions via pre-season qualifying, with drivers competing for class trophies, a $350 AUD cash prize pool, and Hymo Setups subscriptions. Entry is open to all drivers holding an iRacing Class D Sports Car license or higher via the AEPCC Discord.</p>
       </div>
 
       <div class="grid-feature">
@@ -80,13 +52,13 @@
         <div class="img-card img-bg-1">
           <div class="img-card-overlay"></div>
           <div class="img-card-content">
-            <h3>Series Information</h3>
+            <h3>Series Specifications</h3>
             <ul class="info-list">
-              <li>Car: <strong>Porsche 911 GT3 Cup (992.2)</strong></li>
-              <li>Setup: <strong>Open Setup</strong></li>
-              <li>Divisions: <strong>Pro, Am (Pro-Am)</strong></li>
-              <li>Prize Pool: <strong>$350 AUD Cash + Trophies &amp; Hymo Setups</strong></li>
-              <li>Register here: <strong><a href="https://discord.gg/r7UtWHDEXh" target="_blank">AEPCC Discord</a></strong></li>
+              <li><span>Car</span> <strong>Porsche 911 GT3 Cup (992.2)</strong></li>
+              <li><span>Setup</span> <strong>Open Setup</strong></li>
+              <li><span>Divisions</span> <strong>Pro / Am</strong></li>
+              <li><span>Prize Pool</span> <strong>$350 AUD + Trophies &amp; Hymo Subs</strong></li>
+              <li><span>Registration</span> <strong><a href="https://discord.gg/r7UtWHDEXh" target="_blank">AEPCC Discord</a></strong></li>
             </ul>
           </div>
         </div>
@@ -94,21 +66,20 @@
         <div class="img-card img-bg-2">
           <div class="img-card-overlay"></div>
           <div class="img-card-content">
-            <h3>Race Day Schedule</h3>
+            <h3>Session Times (Thursdays)</h3>
             <ul class="info-list">
-              <li>Practice: <strong>19:00 AEST</strong></li>
-              <li>Qualifying: <strong>20:00 AEST</strong></li>
-              <li>Race(s) start: <strong>20:15 AEST</strong></li>
-              <li style="margin-top: 20px;">Platform: <strong>iRacing</strong></li>
-              <li>Coms and Regs: <strong><a href="https://discord.gg/r7UtWHDEXh" target="_blank">AEPCC Discord</a></strong></li>
+              <li><span>Practice</span> <strong>19:00 AEST</strong></li>
+              <li><span>Qualifying</span> <strong>20:00 AEST</strong></li>
+              <li><span>Race Start</span> <strong>20:15 AEST</strong></li>
+              <li><span>Platform</span> <strong>iRacing</strong></li>
+              <li><span>Sporting Regs</span> <strong><a href="https://discord.gg/r7UtWHDEXh" target="_blank">AEPCC Discord</a></strong></li>
             </ul>
           </div>
         </div>
 
       </div>
 
-      <!-- Season 1 Prize Pool Section -->
-      <div style="margin-top: 40px;">
+      <div class="prize-section">
         <h2>Season 1 Prize Pool</h2>
         <div class="prize-grid">
           
@@ -119,20 +90,20 @@
             </div>
             <ul class="prize-list">
               <li class="prize-row gold">
-                <span class="prize-pos">1st Place</span>
+                <span class="prize-pos">1st</span>
                 <span class="prize-reward">$125 AUD + Trophy + 1-Year Hymo Setups Sub</span>
               </li>
               <li class="prize-row silver">
-                <span class="prize-pos">2nd Place</span>
+                <span class="prize-pos">2nd</span>
                 <span class="prize-reward">$75 AUD</span>
               </li>
               <li class="prize-row bronze">
-                <span class="prize-pos">3rd Place</span>
+                <span class="prize-pos">3rd</span>
                 <span class="prize-reward">$45 AUD</span>
               </li>
               <li class="prize-row bonus">
-                <span class="prize-pos">Random Draw</span>
-                <span class="prize-reward">1-Month Hymo Setups Sub (1 Random Pro Finisher)</span>
+                <span class="prize-pos">Draw</span>
+                <span class="prize-reward">1-Month Hymo Setups Sub (1 Random Finisher)</span>
               </li>
             </ul>
           </div>
@@ -144,20 +115,20 @@
             </div>
             <ul class="prize-list">
               <li class="prize-row gold">
-                <span class="prize-pos">1st Place</span>
+                <span class="prize-pos">1st</span>
                 <span class="prize-reward">$55 AUD + Trophy + 1-Year Hymo Setups Sub</span>
               </li>
               <li class="prize-row silver">
-                <span class="prize-pos">2nd Place</span>
+                <span class="prize-pos">2nd</span>
                 <span class="prize-reward">$30 AUD</span>
               </li>
               <li class="prize-row bronze">
-                <span class="prize-pos">3rd Place</span>
+                <span class="prize-pos">3rd</span>
                 <span class="prize-reward">$20 AUD</span>
               </li>
               <li class="prize-row bonus">
-                <span class="prize-pos">Random Draw</span>
-                <span class="prize-reward">1-Month Hymo Setups Sub (1 Random Am Finisher)</span>
+                <span class="prize-pos">Draw</span>
+                <span class="prize-reward">1-Month Hymo Setups Sub (1 Random Finisher)</span>
               </li>
             </ul>
           </div>
@@ -183,8 +154,8 @@
             <div class="track-location">Florida, USA</div>
             <div class="round-meta">
               <span>Format: <strong>Regular</strong></span>
+              <span>40 Minutes</span>
             </div>
-            <p>40 Minutes</p>
           </div>
         </div>
 
@@ -199,8 +170,8 @@
             <div class="track-location">New South Wales, Australia</div>
             <div class="round-meta">
               <span>Format: <strong>Endurance</strong></span>
+              <span>60 Minutes</span>
             </div>
-            <p>60 Minutes</p>
           </div>
         </div>
 
@@ -215,8 +186,8 @@
             <div class="track-location">Wisconsin, USA</div>
             <div class="round-meta">
               <span>Format: <strong>Sprint</strong></span>
+              <span>16m Sprint &rarr; 24m Feature</span>
             </div>
-            <p>16m Sprint &rarr; 24m Feature</p>
           </div>
         </div>
 
@@ -231,8 +202,8 @@
             <div class="track-location">Texas, USA</div>
             <div class="round-meta">
               <span>Format: <strong>Sprint</strong></span>
+              <span>16m Sprint &rarr; 24m Feature</span>
             </div>
-            <p>16m Sprint &rarr; 24m Feature</p>
           </div>
         </div>
 
@@ -247,8 +218,8 @@
             <div class="track-location">Mogyoród, Hungary</div>
             <div class="round-meta">
               <span>Format: <strong>Regular</strong></span>
+              <span>40 Minutes</span>
             </div>
-            <p>40 Minutes</p>
           </div>
         </div>
 
@@ -263,8 +234,8 @@
             <div class="track-location">Portimão, Portugal</div>
             <div class="round-meta">
               <span>Format: <strong>Sprint</strong></span>
+              <span>16m Sprint &rarr; 24m Feature</span>
             </div>
-            <p>16m Sprint &rarr; 24m Feature</p>
           </div>
         </div>
 
@@ -279,8 +250,8 @@
             <div class="track-location">California, USA</div>
             <div class="round-meta">
               <span>Format: <strong>Regular</strong></span>
+              <span>40 Minutes</span>
             </div>
-            <p>40 Minutes</p>
           </div>
         </div>
 
@@ -295,8 +266,8 @@
             <div class="track-location">Georgia, USA</div>
             <div class="round-meta">
               <span>Format: <strong>Super Sprint</strong></span>
+              <span>20m &rarr; 20m &rarr; 30m</span>
             </div>
-            <p>20m Race 1 &rarr; 20m Race 2 &rarr; 30m Feature</p>
           </div>
         </div>
 
@@ -312,16 +283,15 @@
           <button class="filter-btn" onclick="filterDivision('Am', event)">Am</button>
         </div>
 
-        <!-- Dynamic Podium Area for Top 3 Drivers -->
         <div id="podium-area" class="podium-container"></div>
 
         <div class="table-wrapper">
           <table>
             <thead>
               <tr>
-                <th style="width: 80px;">Pos</th>
-                <th style="width: 45px;"></th>
-                <th style="text-align: left;">Driver</th>
+                <th class="col-pos">Pos</th>
+                <th class="col-logo"></th>
+                <th class="col-left">Driver</th>
                 <th>Class</th>
                 <th>Net Pts</th>
                 <th>Gap</th>
@@ -329,7 +299,7 @@
               </tr>
             </thead>  
             <tbody id="driver-rows">
-              <tr><td colspan="7" style="text-align:center;">Loading data...</td></tr>
+              <tr><td colspan="7">Loading data...</td></tr>
             </tbody>
           </table>
         </div>
@@ -339,16 +309,16 @@
           <table>
             <thead>
               <tr>
-                <th style="width: 80px;">Pos</th>
-                <th style="width: 45px;"></th>
-                <th style="text-align: left;">Team</th>
+                <th class="col-pos">Pos</th>
+                <th class="col-logo"></th>
+                <th class="col-left">Team</th>
                 <th>Total Pts</th>
                 <th>Gap</th>
                 <th>Int</th>
               </tr>
             </thead>
             <tbody id="team-rows">
-              <tr><td colspan="6" style="text-align:center;">Loading data...</td></tr>
+              <tr><td colspan="6">Loading data...</td></tr>
             </tbody>
           </table>
         </div>
@@ -360,24 +330,24 @@
         <h2>Race Results</h2>
         
         <div class="filter-container">
-          <select id="round-selector" class="filter-btn" style="padding: 10px; min-width: 250px; text-align: center;" onchange="renderResults(this.value)">
+          <select id="round-selector" class="filter-btn round-select" onchange="renderResults(this.value)">
             <option value="">-- Select a Round --</option>
           </select>
         </div>
 
-        <div id="results-placeholder" style="text-align: center; padding: 60px 20px; color: var(--text-muted); background-color: var(--bg-panel); border: 1.5px solid var(--border-color); border-radius: 12px; margin-bottom: 40px;">
+        <div id="results-placeholder" class="status-box">
           Select a completed round from the dropdown above to view the official results.
         </div>
 
         <div id="dynamic-results-area"></div>
 
-        <div id="results-legend" style="display: none; margin-top: 15px; padding: 15px; background: rgba(255, 255, 255, 0.03); border-radius: 6px; border: 1px solid var(--border-color); font-size: 0.85rem; color: var(--text-muted);">
-          <strong style="color: #fff; margin-bottom: 8px; display: block;">Bonus Points Allocation</strong>
-          <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-            <span><span style="color: #4ade80;">+2 Pts</span> Pole Position (Class)</span>
-            <span><span style="color: #4ade80;">+1 Pt</span> Fastest Race Lap (Class)</span>
-            <span><span style="color: #4ade80;">+3 Pts</span> Clean Race (0x Incidents)</span>
-            <span><span style="color: #4ade80;">+1 Pt</span> 3 or less Incidents</span>
+        <div id="results-legend" class="results-legend">
+          <strong>Bonus Points Allocation</strong>
+          <div class="legend-items">
+            <span><em class="bonus-val">+2 Pts</em> Pole Position (Class)</span>
+            <span><em class="bonus-val">+1 Pt</em> Fastest Race Lap (Class)</span>
+            <span><em class="bonus-val">+3 Pts</em> Clean Race (0x Incidents)</span>
+            <span><em class="bonus-val">+1 Pt</em> 3 or fewer Incidents</span>
           </div>
         </div>
       </div>
@@ -391,10 +361,10 @@
         <h4>Official Partners</h4>
         <div class="sponsor-grid">
           <a href="https://www.caloundracityrealty.com.au/" target="_blank" class="sponsor-item">
-            <img src="fonts/sponsors/CCR_Logo_Primary_RGB2x_copy.jpg" alt="CCR Sponsor Logo">
+            <img src="fonts/sponsors/CCR_Logo_Primary_RGB2x_copy.jpg" alt="Caloundra City Realty">
           </a>
           <a href="https://www.hymosetups.com/?via=blair" target="_blank" class="sponsor-item">
-            <img src="fonts/sponsors/Curves.png" alt="Hymo Setups Sponsor Logo">
+            <img src="fonts/sponsors/Curves.png" alt="Hymo Setups">
           </a>
         </div>
       </div>
