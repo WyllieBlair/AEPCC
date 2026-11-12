@@ -87,12 +87,11 @@ function updateScheduleBadges() {
     if (!badge) return;
 
     const raceDateStr = badge.getAttribute('data-date');
-    // Set to end of race night (23:59) so the round stays "Next" on race day
     const raceDate = new Date(`${raceDateStr}T23:59:59`);
     const displayDate = new Date(raceDateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }).toUpperCase();
 
     if (today > raceDate) {
-      badge.outerHTML = `<a href="javascript:void(0)" onclick="openRoundResults(${index})" class="round-results-link">View Results</a>`;
+      badge.outerHTML = `<a href="javascript:void(0)" onclick="openRoundResults(${index})" class="round-results-link">Results</a>`;
     } else {
       badge.textContent = displayDate;
 
@@ -109,7 +108,7 @@ function updateScheduleBadges() {
             <span class="pill-tag">NEXT</span>
             <span><strong>${roundTitle}</strong> &mdash; ${trackName}</span>
             <span class="pill-sep">|</span>
-            <span style="color: var(--text-muted);">${displayDate}</span>
+            <span>${displayDate}</span>
           `;
         }
       }
@@ -224,7 +223,6 @@ async function loadStandings() {
         selector.appendChild(opt);
       });
 
-      // Auto-select the latest completed round
       const now = new Date();
       const completedRounds = globalRounds.filter(r => r.date <= now);
       if (completedRounds.length > 0) {
@@ -242,11 +240,11 @@ async function loadStandings() {
 }
 
 function filterDivision(division, event) {
-  document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('#tab-standings .filter-btn').forEach(btn => btn.classList.remove('active'));
   if (event?.target) {
     event.target.classList.add('active');
   } else {
-    document.querySelector('.filter-btn')?.classList.add('active');
+    document.querySelector('#tab-standings .filter-btn')?.classList.add('active');
   }
 
   const divLower = division.toLowerCase();
@@ -263,15 +261,14 @@ function renderPodium(topThree) {
     return;
   }
 
-  const first = topThree[0];
-  const second = topThree[1];
-  const third = topThree[2];
-
   const buildStepHtml = (driver, rank, stepClass) => {
-    if (!driver) return `<div class="podium-step ${stepClass}"></div>`;
+    if (!driver) return '';
     return `
       <div class="podium-step ${stepClass}">
-        <div class="podium-badge">${rank}</div>
+        <div class="podium-top-bar">
+          <span class="podium-badge">P${rank}</span>
+          <div class="podium-pts">${driver.net_points} <span>PTS</span></div>
+        </div>
         <div class="podium-driver-info">
           <div class="podium-driver-name">${driver.name}</div>
           <div class="podium-team-wrap">
@@ -279,15 +276,14 @@ function renderPodium(topThree) {
             <span class="podium-team-name">${driver.team}</span>
           </div>
         </div>
-        <div class="podium-pts">${driver.net_points} <span style="font-size:0.75rem; font-weight:400; opacity:0.7;">PTS</span></div>
       </div>
     `;
   };
 
   podiumContainer.innerHTML = `
-    ${buildStepHtml(second, 2, 'step-2')}
-    ${buildStepHtml(first, 1, 'step-1')}
-    ${buildStepHtml(third, 3, 'step-3')}
+    ${buildStepHtml(topThree[0], 1, 'step-1')}
+    ${buildStepHtml(topThree[1], 2, 'step-2')}
+    ${buildStepHtml(topThree[2], 3, 'step-3')}
   `;
 }
 
@@ -296,7 +292,7 @@ function renderDrivers(drivers) {
   if (!tbody) return;
   
   if (!drivers || drivers.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;">No drivers found in this division.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7">No drivers found in this division.</td></tr>`;
     renderPodium([]);
     return;
   }
@@ -310,29 +306,29 @@ function renderDrivers(drivers) {
     const gap = d.net_points === leaderPts ? '-' : `-${leaderPts - (d.net_points || 0)}`;
     const interval = idx > 0 ? (sorted[idx - 1].net_points === d.net_points ? '-' : `-${sorted[idx - 1].net_points - d.net_points}`) : '-';
 
-    let momentumHtml = '<span style="color: var(--text-muted); font-size: 0.75rem; margin-left: 6px;">-</span>';
+    let momentumHtml = '<span class="pos-change-flat">-</span>';
     if (d.change > 0) {
-      momentumHtml = `<span style="color: #4ade80; font-size: 0.75rem; margin-left: 6px;">▲ ${d.change}</span>`;
+      momentumHtml = `<span class="pos-change-up">▲ ${d.change}</span>`;
     } else if (d.change < 0) {
-      momentumHtml = `<span style="color: var(--brand-red); font-size: 0.75rem; margin-left: 6px;">▼ ${Math.abs(d.change)}</span>`;
+      momentumHtml = `<span class="pos-change-down">▼ ${Math.abs(d.change)}</span>`;
     }
 
     return `
       <tr>
-        <td class="text-highlight" style="white-space: nowrap;">${idx + 1}${momentumHtml}</td>
-        <td style="text-align: center; padding-right: 0;">
+        <td class="text-highlight">${idx + 1}${momentumHtml}</td>
+        <td class="team-logo-cell">
           ${d.teamLogo 
-            ? `<img src="${d.teamLogo}" alt="" style="width: 32px; height: 32px; border-radius: 4px; object-fit: contain; flex-shrink: 0;">` 
-            : `<div style="width: 32px; height: 32px; flex-shrink: 0;"></div>`}
+            ? `<img src="${d.teamLogo}" alt="" class="team-logo-img">` 
+            : `<span class="team-logo-spacer"></span>`}
         </td>
-        <td style="text-align: left;">
-          <span class="text-highlight" style="display: block;">${d.name}</span>
+        <td class="col-left">
+          <span class="text-highlight">${d.name}</span>
           <span class="subtext">${d.team}</span>
         </td>
         <td>${d.class}</td>
         <td class="text-highlight">${d.net_points ?? 0}</td>
-        <td style="color: var(--text-muted); font-weight: 800;">${gap}</td>
-        <td style="color: var(--text-muted); font-weight: 800;">${interval}</td>
+        <td class="text-muted-bold">${gap}</td>
+        <td class="text-muted-bold">${interval}</td>
       </tr>
     `;
   }).join('');
@@ -346,7 +342,7 @@ function renderTeams(teams) {
   validTeams.sort((a, b) => (b.points || 0) - (a.points || 0));
 
   if (validTeams.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No team standings available.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6">No team standings available.</td></tr>`;
     return;
   }
 
@@ -357,29 +353,29 @@ function renderTeams(teams) {
     const gap = team.points === leaderPts ? '-' : `-${leaderPts - (team.points || 0)}`;
     const interval = idx > 0 ? (validTeams[idx - 1].points === team.points ? '-' : `-${validTeams[idx - 1].points - team.points}`) : '-';
     
-    let momentumHtml = '<span style="color: var(--text-muted); font-size: 0.75rem; margin-left: 6px;">-</span>';
+    let momentumHtml = '<span class="pos-change-flat">-</span>';
     if (team.change > 0) {
-      momentumHtml = `<span style="color: #4ade80; font-size: 0.75rem; margin-left: 6px;">▲ ${team.change}</span>`;
+      momentumHtml = `<span class="pos-change-up">▲ ${team.change}</span>`;
     } else if (team.change < 0) {
-      momentumHtml = `<span style="color: var(--brand-red); font-size: 0.75rem; margin-left: 6px;">▼ ${Math.abs(team.change)}</span>`;
+      momentumHtml = `<span class="pos-change-down">▼ ${Math.abs(team.change)}</span>`;
     }
 
     const tr = document.createElement('tr');
     tr.className = 'team-row';
     tr.innerHTML = `
-      <td class="text-highlight" style="white-space: nowrap;">${idx + 1}${momentumHtml}</td>
-      <td style="text-align: center; padding-right: 0;">
+      <td class="text-highlight">${idx + 1}${momentumHtml}</td>
+      <td class="team-logo-cell">
         ${team.logo 
-          ? `<img src="${team.logo}" alt="" style="width: 32px; height: 32px; border-radius: 4px; object-fit: contain; flex-shrink: 0;">` 
-          : `<div style="width: 32px; height: 32px; flex-shrink: 0;"></div>`}
+          ? `<img src="${team.logo}" alt="" class="team-logo-img">` 
+          : `<span class="team-logo-spacer"></span>`}
       </td>
-      <td class="text-highlight" style="text-align: left;">
+      <td class="text-highlight col-left">
         ${team.name}
-        <span class="expand-icon" style="float: right; opacity: 0.5;">▼</span>
+        <span class="expand-icon">▼</span>
       </td>
       <td class="text-highlight">${team.points ?? 0}</td>
-      <td style="color: var(--text-muted); font-weight: 800;">${gap}</td>
-      <td style="color: var(--text-muted); font-weight: 800;">${interval}</td>
+      <td class="text-muted-bold">${gap}</td>
+      <td class="text-muted-bold">${interval}</td>
     `;
     
     const subTr = document.createElement('tr');
@@ -388,11 +384,11 @@ function renderTeams(teams) {
     const driverHtml = team.drivers.length > 0 
       ? team.drivers.map(d => `
           <div class="team-driver-item">
-            <span><strong>${d.name}</strong> <span style="opacity:0.6; font-size:0.8em;">(${d.class})</span></span>
+            <span><strong class="text-highlight">${d.name}</strong> (${d.class})</span>
             <span>${d.points} pts</span>
           </div>
         `).join('')
-      : '<div style="opacity: 0.5; font-size: 0.85rem;">Roster details not available in this view.</div>';
+      : '<div class="team-driver-item">Roster details unavailable.</div>';
 
     subTr.innerHTML = `
       <td colspan="6" style="padding: 0;">
@@ -425,13 +421,12 @@ function getBonusMeta(bonuses) {
   });
   return {
     points,
-    html: tags.length > 0 ? ` <span style="font-size: 0.7rem; color: rgba(255,255,255,0.45); margin-left: 4px;">(${tags.join(', ')})</span>` : ''
+    html: tags.length > 0 ? `<span class="bonus-tags">(${tags.join(', ')})</span>` : ''
   };
 }
 
 function formatTimeSpan(timeStr) {
   if (!timeStr) return '-';
-  // If it's formatted like "00:00:41.6847000", convert to clean MM:SS.ms or seconds
   try {
     const parts = timeStr.split(':');
     if (parts.length === 3) {
@@ -461,7 +456,6 @@ function formatFinishTimeOrInterval(entry) {
   
   const interval = entry.ClassInterval || entry.classInterval || entry.Interval || entry.interval;
   if (interval) {
-    // If interval starts with +, clean it up or format it
     return formatTimeSpan(interval);
   }
   
@@ -510,7 +504,7 @@ async function renderResults(roundId) {
   }
 
   if (dynamicArea) {
-    dynamicArea.innerHTML = '<div style="text-align: center; padding: 60px 20px; color: var(--text-muted); background-color: var(--bg-panel); border: 1.5px solid var(--border-color); border-radius: 12px; margin-bottom: 40px;">Loading official race results...</div>';
+    dynamicArea.innerHTML = '<div class="status-box">Loading official race results...</div>';
   }
 
   try {
@@ -524,7 +518,7 @@ async function renderResults(roundId) {
 
     if (rawEntries.length === 0) {
       if (dynamicArea) {
-        dynamicArea.innerHTML = '<div style="text-align: center; padding: 60px 20px; color: var(--text-muted); background-color: var(--bg-panel); border: 1.5px solid var(--border-color); border-radius: 12px; margin-bottom: 40px;">Results are currently being processed or this event has not taken place yet.</div>';
+        dynamicArea.innerHTML = '<div class="status-box">Results are currently being processed or this event has not taken place yet.</div>';
       }
       return;
     }
@@ -574,13 +568,13 @@ async function renderResults(roundId) {
         classResults.sort((a, b) => a.classFinish - b.classFinish);
 
         finalHtml += `
-          <h3 style="margin-top: 20px; margin-bottom: 15px; color: #fff; text-transform: uppercase; font-size: 1.2rem; letter-spacing: 1px;">${cls} CLASS RESULTS</h3>
+          <h3 class="results-section-title">${cls} Class Results</h3>
           <div class="table-wrapper">
             <table>
               <thead>
                 <tr>
-                  <th style="width: 70px;">Pos</th>
-                  <th style="text-align: left;">Driver</th>
+                  <th class="col-pos">Pos</th>
+                  <th class="col-left">Driver</th>
                   <th>Time / Gap</th>
                   <th>Inc</th>
                   <th>Pen</th>
@@ -592,14 +586,14 @@ async function renderResults(roundId) {
                 ${classResults.map(r => `
                   <tr>
                     <td class="text-highlight">${r.pos}</td>
-                    <td style="text-align: left;">
-                      <span class="text-highlight" style="display: block;">${r.driver}</span>
+                    <td class="col-left">
+                      <span class="text-highlight">${r.driver}</span>
                       <span class="subtext">${r.team}</span>
                     </td>
-                    <td style="color: var(--text-muted); font-size: 0.9rem;">${r.time}</td>
+                    <td>${r.time}</td>
                     <td>${r.inc}</td>
-                    <td style="color: ${r.penalty ? 'var(--brand-red)' : 'var(--text-muted)'}; font-weight: ${r.penalty ? '800' : '400'};">${r.penalty || '-'}</td>
-                    <td style="color: #4ade80;">${r.bonus > 0 ? '+' + r.bonus + r.bonusTags : '-'}</td>
+                    <td class="${r.penalty ? 'penalty-active' : ''}">${r.penalty || '-'}</td>
+                    <td>${r.bonus > 0 ? `<span class="bonus-val">+${r.bonus}</span>${r.bonusTags}` : '-'}</td>
                     <td class="text-highlight">${r.pts}</td>
                   </tr>
                 `).join('')}
@@ -609,7 +603,6 @@ async function renderResults(roundId) {
         `;
       });
     } else {
-      // Map event-level bonuses by RosterId in case XtremeScoring attaches them to EventResults instead of sessions
       const eventBonusMap = {};
       rawEntries.forEach(e => {
         const b = getBonusMeta(e.Bonuses || e.bonuses);
@@ -622,7 +615,7 @@ async function renderResults(roundId) {
         
         if (entries.length === 0) return;
 
-        finalHtml += `<h3 style="margin-top: ${idx === 0 ? '20px' : '40px'}; margin-bottom: 5px; color: var(--brand-red); text-transform: uppercase; font-size: 1.1rem; letter-spacing: 1px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">${title} Results</h3>`;
+        finalHtml += `<h3 class="session-header">${title} Results</h3>`;
 
         const sessionClasses = [...new Set(entries.map(e => (e.RunClass || e.runClass || 'PRO').toUpperCase()))].sort().reverse();
 
@@ -632,13 +625,13 @@ async function renderResults(roundId) {
             .sort((a, b) => (a.ClassFinishPosition || a.FinishPosition || 9999) - (b.ClassFinishPosition || b.FinishPosition || 9999));
 
           finalHtml += `
-            <h4 style="margin-top: 15px; margin-bottom: 10px; color: var(--text-muted); text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;">${cls} Class</h4>
-            <div class="table-wrapper" style="margin-bottom: 20px;">
+            <h4 class="class-sub-header">${cls} Class</h4>
+            <div class="table-wrapper">
               <table>
                 <thead>
                   <tr>
-                    <th style="width: 70px;">Pos</th>
-                    <th style="text-align: left;">Driver</th>
+                    <th class="col-pos">Pos</th>
+                    <th class="col-left">Driver</th>
                     <th>Time / Gap</th>
                     <th>Inc</th>
                     <th>Pen</th>
@@ -657,23 +650,24 @@ async function renderResults(roundId) {
                     
                     if (driverName === 'Unknown Driver' && pos === '-') return ''; 
 
-                    // Check session-level bonuses first; on the final session, fall back to event-level bonuses
                     let bonus = getBonusMeta(entry.Bonuses || entry.bonuses);
                     if (bonus.points === 0 && idx === raceSessions.length - 1 && eventBonusMap[entry.RosterId]) {
                       bonus = eventBonusMap[entry.RosterId];
                     }
 
+                    const penText = parsePenalties(entry);
+
                     return `
                       <tr>
                         <td class="text-highlight">${pos}</td>
-                        <td style="text-align: left;">
-                          <span class="text-highlight" style="display: block;">${driverName}</span>
+                        <td class="col-left">
+                          <span class="text-highlight">${driverName}</span>
                           <span class="subtext">${team.Name || 'Independent'}</span>
                         </td>
-                        <td style="color: var(--text-muted); font-size: 0.9rem;">${formatFinishTimeOrInterval(entry)}</td>
+                        <td>${formatFinishTimeOrInterval(entry)}</td>
                         <td>${entry.Incidents ?? entry.incidents ?? 0}</td>
-                        <td style="color: ${parsePenalties(entry) ? 'var(--brand-red)' : 'var(--text-muted)'}; font-weight: ${parsePenalties(entry) ? '800' : '400'};">${parsePenalties(entry) || '-'}</td>
-                        <td style="color: #4ade80;">${bonus.points > 0 ? '+' + bonus.points + bonus.html : '-'}</td>
+                        <td class="${penText ? 'penalty-active' : ''}">${penText || '-'}</td>
+                        <td>${bonus.points > 0 ? `<span class="bonus-val">+${bonus.points}</span>${bonus.html}` : '-'}</td>
                         <td class="text-highlight">${entry.DriverEntryPoints?.[0]?.TotalPoints ?? entry.TotalPoints ?? 0}</td>
                       </tr>
                     `;
@@ -692,7 +686,7 @@ async function renderResults(roundId) {
   } catch (err) {
     console.error("Could not load results:", err);
     if (dynamicArea) {
-      dynamicArea.innerHTML = '<div style="text-align: center; padding: 60px 20px; color: var(--brand-red); background-color: var(--bg-panel); border: 1.5px solid var(--border-color); border-radius: 12px;">Failed to load race results. Please try again later.</div>';
+      dynamicArea.innerHTML = '<div class="status-box error">Failed to load race results. Please try again later.</div>';
     }
   }
 }
